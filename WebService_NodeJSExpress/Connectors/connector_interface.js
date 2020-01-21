@@ -4,11 +4,11 @@ class MenuInterface {
         this.database =  this.Connect();
     }
 
-    Execute(params)
+    async Execute(params)
     {
         return null;
     }
-    Connect()
+     Connect()
     {
         return null;
     }

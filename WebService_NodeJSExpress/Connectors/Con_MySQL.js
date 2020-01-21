@@ -8,9 +8,9 @@ class Con_MySQL extends IConnector
         super();
     
     }
-  Connect()
+    Connect()
   {
-    return mysql.createConnection({
+    return mysql.createPool({
         connectionLimit: 10,
         password: '0fecf3c613dffed104bf',
         user: 'csrv_708300',
@@ -19,14 +19,19 @@ class Con_MySQL extends IConnector
         post: '3306'
     });
   }
-  Execute(query)
+  async Execute(query)
     {
-     this.database.connect();
-     this.database.query(query, function(err, rows, fields) 
-     {
-        if (!err)     return    console.log(rows);
-        else          return    console.log('[]');
+
+        
+     this.database.getConnection(function (err, connection)
+      {
+        connection.query(query, function(err, rows, fields) 
+        {
+            return JSON.stringify(rows);
+         });
       });
+  
+     
     }
 }
 module.exports = Con_MySQL

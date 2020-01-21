@@ -8,16 +8,16 @@ const Con_MySQL = require("../Connectors/Con_MySQL");
 
 router.get('/', async (req, res, next) => {
 
+
     Con_MySQL.Execute("SELECT * FROM MC_Players", res);
 });
 
 router.get('/:UUID', (req, res, next) => {
     Con_MySQL.Execute('SELECT * FROM MC_Players WHERE Nick = \"' + req.params.UUID + '\"', res);
 });
-router.put('/:UUID', (req, res, next) => {
+router.put('/:UUID/:Password', (req, res, next) => {
 
-    let query = 'UPDATE MC_Players WHERE Nick = \"' + req.params.UUID +
-        '\"SET Player_Password = \"' + req.params.UUID + '\"';
+    let query = 'UPDATE MC_Players SET Player_Password = \"' + req.params.Password + '\" WHERE Nick = \"' + req.params.UUID + '\"';
     Con_MySQL.Execute(query, res);
 });
 router.post('/:UUID/:Password/:Nick', (req, res, next) => {
@@ -30,6 +30,7 @@ router.post('/:UUID/:Password/:Nick', (req, res, next) => {
 router.delete('/:UUID', (req, res, next) => {
 
     let query = 'DELETE FROM MC_Players WHERE Nick =\"' + req.params.UUID + '\"';
+    query = 'DELETE FROM MC_Players WHERE Nick = \"kuba\"';
     Con_MySQL.Execute(query, res);
 });
 module.exports = router;

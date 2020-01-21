@@ -13,7 +13,8 @@ const player = require('./roudes/R_Player');
 app.use('/player', player);
 
 app.get('/', async function (req, res) {
-  res.send("Testowa wiadomosc");
+  let query = 'UPDATE MC_Players SET Player_Password = \"' + req.params.Password + '\" WHERE Nick = \"' + req.params.UUID + '\"';
+  res.send(query);
 });
 
 app.listen('2222', () => {

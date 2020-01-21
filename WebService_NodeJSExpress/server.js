@@ -1,13 +1,13 @@
 const express = require('express');
-const sql = require("./Connectors/Con_MySQL");
-
+const Con_MySQL = require("./Connectors/Con_MySQL");
+const conncector = new Con_MySQL(); 
 const app = express();
 
-var db =  sql.get();
+
 
 app.use(express.json());
 
-db.get();
+conncector.Execute("sdsd");
 
 
 

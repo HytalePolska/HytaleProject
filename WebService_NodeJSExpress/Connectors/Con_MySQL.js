@@ -1,49 +1,32 @@
 const mysql = require('mysql');
+const IConnector = require('./connector_interface');
 
-
-module.exports = class Con_MySQL
+class Con_MySQL extends IConnector
 {
     constructor()
     {
-        this.database = mysql.createPool({
-            connectionLimit: 10,
-            password: '0fecf3c613dffed104bf',
-            user: 'csrv_708300',
-            database: 'csrv_708300',
-            host: 'mysql.craftserve.pl',
-            post: '3306'
-        });
+        super();
+    
     }
-
-    Get()
+  Connect()
+  {
+    return mysql.createConnection({
+        connectionLimit: 10,
+        password: '0fecf3c613dffed104bf',
+        user: 'csrv_708300',
+        database: 'csrv_708300',
+        host: 'mysql.craftserve.pl',
+        post: '3306'
+    });
+  }
+  Execute(query)
     {
      this.database.connect();
-
-     this.database.query('SELECT * from MC_Players', function(err, rows, fields) {
-
-        if (!err)    console.log('The solution is: ', rows);
-        else         console.log('Error while performing Query.');
-
+     this.database.query('SELECT * from MC_Players', function(err, rows, fields) 
+     {
+        if (!err)     return    console.log(rows);
+        else          return    console.log('[]');
       });
-
-     this.database.end();
-    }
-    Post()
-    {
-    this.database.connect();
-
-     this.database.end();
-    }
-    Delete()
-    {
-        this.database.connect();
-
-        this.database.end();
-    }
-    Update()
-    {
-        this.database.connect();
-
-        this.database.end();
     }
 }
+module.exports = Con_MySQL

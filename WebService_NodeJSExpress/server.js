@@ -7,7 +7,7 @@ const app = express();
 
 app.use(express.json());
 
-conncector.Execute("sdsd");
+conncector.Execute("SELECT * from MC_Players");
 
 
 

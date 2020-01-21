@@ -1,17 +1,17 @@
 class MenuInterface {
-    constructor()
-    {
-        this.database =  this.Connect();
+    constructor() {
+
+        if (this.database == null)
+            this.database = this.Connect();
+
     }
 
-    async Execute(params)
-    {
+    Execute(params) {
         return null;
     }
-     Connect()
-    {
+    Connect() {
         return null;
     }
 
-  }
-  module.exports = MenuInterface
+}
+module.exports = MenuInterface

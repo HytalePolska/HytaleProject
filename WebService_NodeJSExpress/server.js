@@ -10,7 +10,10 @@ app.use(express.json());
 //conncector.Execute("SELECT * from MC_Players");
 console.log(conncector.Execute("SELECT * FROM MC_Players"));
 app.get('/J', function (req, res) {
-    res.send( conncector.Execute("SELECT * FROM MC_Players"));
+    res.send(  conncector.Execute("SELECT * FROM MC_Players"));
+  })
+  app.get('/K', function (req, res) {
+    res.send( "sdsd'");
   })
 
 

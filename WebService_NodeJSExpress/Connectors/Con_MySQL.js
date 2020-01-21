@@ -10,7 +10,7 @@ class Con_MySQL extends IConnector
     }
     Connect()
   {
-    return mysql.createPool({
+    return mysql.createConnection({
         connectionLimit: 10,
         password: '0fecf3c613dffed104bf',
         user: 'csrv_708300',
@@ -23,15 +23,22 @@ class Con_MySQL extends IConnector
     {
 
         
-     this.database.getConnection(function (err, connection)
+    /* this.database.getConnection(function (res, connection)
       {
-        connection.query(query, function(err, rows, fields) 
+        await connection.query(query, function(err, rows, fields) 
         {
-            return JSON.stringify(rows);
+           
+            connection.release();
+            console.log(rows);
+            return rows;
          });
-      });
-  
+      });*/
+        this.database.connect();
+        var result = await this.database.query(query);
+        this.database.end();
+       return result;
      
     }
+  
 }
 module.exports = Con_MySQL

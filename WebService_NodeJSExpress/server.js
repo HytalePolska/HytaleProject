@@ -1,11 +1,13 @@
 const express = require('express');
-const apiRoudes = require('./roudes');
+const sql = require("./Connectors/Con_MySQL");
 
 const app = express();
 
+var db =  sql.get();
+
 app.use(express.json());
 
-app.use('/api', apiRoudes);
+db.get();
 
 
 

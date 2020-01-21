@@ -22,7 +22,7 @@ class Con_MySQL extends IConnector
   Execute(query)
     {
      this.database.connect();
-     this.database.query('SELECT * from MC_Players', function(err, rows, fields) 
+     this.database.query(query, function(err, rows, fields) 
      {
         if (!err)     return    console.log(rows);
         else          return    console.log('[]');

@@ -33,21 +33,26 @@ class SQL_Builder
 
     return this;
    }
-   Delete(filds,table)
+   Delete(table)
    {
-
+    this.result +=' DELETE FROM '+table;
+    return this;
    }
    Insert(filds,table)
    {
-
+    this.result +=' INSERT INTO '+table;
+    let size = this.Get_Size(filds);
+    let i =0;
+    return this;
    }
    Update(filds,tabel)
    {
 
    }
-   Where()
+   Where(filds)
    {
      this.result +=' WHERE ';
+     this.Condition(filds);
     return this;
    }
    And()
@@ -57,9 +62,8 @@ class SQL_Builder
    }
    Condition(dictionary)
    {
-       let i =0;
-       for(var k in dictionary){ i++};
-       let size = i;  i=1;
+       let i =1;
+       let size = this.Get_Size(dictionary);
        
        for(var key in dictionary)
        {
@@ -82,6 +86,12 @@ class SQL_Builder
        let ret = this.result;
        this.result = " ";
        return ret;
+   }
+   Get_Size(dictionary)
+   {
+    let i =0;
+    for(var k in dictionary){ i++};
+       return i;
    }
 
 }

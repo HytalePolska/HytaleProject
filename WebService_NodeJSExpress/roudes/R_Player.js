@@ -15,7 +15,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:UUID', (req, res, next) => {
     let cond =[];
     cond['Nick'] = req.params.UUID;
-    let query=query_Builder.Select("*","MC_Players").Where().Condition(cond).Get();
+    query=query_Builder.Select("*","MC_Players").Where(cond).Get();
     Con_MySQL.Execute(query, res);
 });
 router.put('/:UUID/:Password', (req, res, next) => {
@@ -25,16 +25,19 @@ router.put('/:UUID/:Password', (req, res, next) => {
 });
 router.post('/:UUID/:Password/:Nick', (req, res, next) => {
 
-    let query = 'INSERT INTO MC_Players VALUES(\"' + req.params.UUID + '\",\"' + req.params.Password + '\",\"' +
-        req.params.Nick + '\")';
-
+    let con = [];
+    con["Player_ID"]=req.params.UUID ;
+    con["Player_Password"]=req.params.Password ;
+    con["Nick"]=req.params.UUID ;
+    let query = query_Builder.Insert("MC_Players",con).Get(); 
     Con_MySQL.Execute(query, res);
 });
-router.delete('/:UUID', (req, res, next) => {
 
-    let query = 'DELETE FROM MC_Players WHERE Nick =\"' + req.params.UUID + '\"';
-    query = 'DELETE FROM MC_Players WHERE Nick = \"kuba\"';
-    Con_MySQL.Execute(query, res);
+router.delete('/:UUID', (req, res, next) => {
+   let con = [];
+   con["Nick"]=req.params.UUID ;
+   let query = query_Builder.Delete("MC_Players").Where(con).Get(); 
+   Con_MySQL.Execute(query, res);
 });
 module.exports = router;
 

@@ -19,31 +19,32 @@ router.get('/:UUID', (req, res, next) => {
     console.log( req.params.UUID);
     Con_MySQL.Execute(query, res);
 });
-///:UUID/:Password/:Nick
-router.put('/', (req, res, next) => {
+
+router.put('/:Player_ID/:Nick/:Player_Password', (req, res, next) => {
     let con = [];
-    con["Player_ID"]='1232344334';
-    con["Player_Password"]='qaz3421';
-    con["Nick"]='pawel433' ;
+    con["Nick"]=req.params.Nick;
+    con["Player_Password"] =req.params.Player_Password;
+    con["Player_ID"]=req.params.Player_ID;
     let query = query_Builder.Insert(con,"MC_Players").Get(); 
    Con_MySQL.Execute(query, res);
-   // res.send(query);
 });
-router.post('/', (req, res, next) => {
-    let con = [];
-    con["Player_ID"]="#1322323#";
-    con["Player_Password"] ="Zeb123";
-    con["Nick"]="Pawel4";
 
+router.post('/:Player_ID/:Nick/:Player_Password', (req, res, next) => {
+    console.log(req.body);
+    let con = [];
+    con["Nick"]=req.params.Nick;
+    con["Player_Password"] =req.params.Player_Password;
+   
     let wher = [];
-    wher["Player_ID"]="#123#";
+    wher["Player_ID"]=req.params.Player_ID;
 
     let query=query_Builder.Update(con,"MC_Players").Where(wher).Get();
    Con_MySQL.Execute(query, res);
 });
-router.delete('/:UUID', (req, res, next) => {
+
+router.delete('/:Player_ID', (req, res, next) => {
    let con = [];
-   con["Nick"]=req.params.UUID ;
+   con["Player_ID"]=req.params.Player_ID;
    let query = query_Builder.Delete("MC_Players").Where(con).Get(); 
   Con_MySQL.Execute(query, res);
 });

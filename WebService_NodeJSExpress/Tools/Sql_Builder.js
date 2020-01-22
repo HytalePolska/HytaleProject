@@ -42,17 +42,43 @@ class SQL_Builder
    {
     this.result +=' INSERT INTO '+table;
     let size = this.Get_Size(filds);
-    let i =0;
+    let i =1;
+    let fild =' (';
+    let values =' VALUES(';
+    for(var key in filds)
+    {
+      fild+=key;
+
+      if(typeof filds[key] === 'string')
+        values+= "\'"+filds[key]+"\'";
+  
+      if(typeof filds[key]  === "number")
+         values+=filds[key];
+      
+
+      if(i < size)
+      {
+        fild+=  ',';
+        values+=',';
+      }
+     i++;   
+    }
+    fild+=' ) ';
+    values+=' ) ';
+    this.result +=fild+values;
+
     return this;
    }
-   Update(filds,tabel)
+   Update(filds,table)
    {
-
+    this.result +=' UPDATE '+table+' SET ';
+    this.Condition(filds,' , ');
+    return this;
    }
    Where(filds)
    {
      this.result +=' WHERE ';
-     this.Condition(filds);
+     this.Condition(filds,' AND ');
     return this;
    }
    And()
@@ -60,7 +86,7 @@ class SQL_Builder
     this.result +=' AND ';
     return this;
    }
-   Condition(dictionary)
+   Condition(dictionary,separator)
    {
        let i =1;
        let size = this.Get_Size(dictionary);
@@ -74,7 +100,7 @@ class SQL_Builder
             this.result += key+" = "+dictionary[key];
               console.log(size);
             if(i < size)
-            this.result+=  ' AND ';
+            this.result+=  separator;
          i++;   
         
       
@@ -93,6 +119,7 @@ class SQL_Builder
     for(var k in dictionary){ i++};
        return i;
    }
+   
 
 }
 module.exports = SQL_Builder;

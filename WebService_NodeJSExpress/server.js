@@ -1,24 +1,25 @@
 const express = require('express');
 const app = express();
 
-
+const SQl_Builder = require("./Tools/Sql_Builder");
+const query_Builder = new SQl_Builder();
 
 const player = require('./roudes/R_Player');
 
-let t_tab = [];
-t_tab[0] = 'Nick';
-t_tab[1] = 'Password';
-
-let tab = [];
-tab['jacek']=12;
-tab['gracz']='kuba';
-tab['haslo']='1223';
 
 
 app.use('/player', player);
 
-app.get('/', async function (req, res) {
-  
+app.get('/paw', async (req, res, next) => {
+    let con = [];
+    con["Player_ID"]="#123#";
+    con["Player_Password"] ="Zeb123";
+    con["Nick"]="Pawel12";
+
+    let wher = [];
+    wher["Player_ID"]="#123#";
+    let query=query_Builder.Update(con,"MC_Players").Where(wher).Get();
+    res.send(query);
 });
 
 app.listen('2222', () => {

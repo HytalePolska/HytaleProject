@@ -4,16 +4,19 @@ const router = express.Router();
 
 const Con_MySQL = require("../Connectors/Con_MySQL");
 
-
+const SQl_Builder = require("../Tools/Sql_Builder");
+const query_Builder = new SQl_Builder();
 
 router.get('/', async (req, res, next) => {
-
-
-    Con_MySQL.Execute("SELECT * FROM MC_Players", res);
+    let query=query_Builder.Select("*","MC_Players").Get();
+    Con_MySQL.Execute(query, res);
 });
 
 router.get('/:UUID', (req, res, next) => {
-    Con_MySQL.Execute('SELECT * FROM MC_Players WHERE Nick = \"' + req.params.UUID + '\"', res);
+    let cond =[];
+    cond['Nick'] = req.params.UUID;
+    let query=query_Builder.Select("*","MC_Players").Where().Condition(cond).Get();
+    Con_MySQL.Execute(query, res);
 });
 router.put('/:UUID/:Password', (req, res, next) => {
 

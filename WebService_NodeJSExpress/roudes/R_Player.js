@@ -14,31 +14,31 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:UUID', (req, res, next) => {
     let cond =[];
-    cond['Nick'] = req.params.UUID;
+    cond['Player_ID'] = req.params.UUID;
     query=query_Builder.Select("*","MC_Players").Where(cond).Get();
     console.log( req.params.UUID);
     Con_MySQL.Execute(query, res);
+  
 });
 
-router.put('/:Player_ID/:Nick/:Player_Password', (req, res, next) => {
+router.put('/', (req, res, next) => {
     let con = [];
-    con["Nick"]=req.params.Nick;
-    con["Player_Password"] =req.params.Player_Password;
-    con["Player_ID"]=req.params.Player_ID;
+    con["Nick"]=req.body.Nick;
+    con["Player_Password"] =req.body.Player_Password;
+    con["Player_ID"]=req.body.Player_ID;
     let query = query_Builder.Insert(con,"MC_Players").Get(); 
    Con_MySQL.Execute(query, res);
+  
 });
 
 router.post('/', (req, res, next) => {
     
-   console.log(req.body);
-    res.send("dsd");
+     
     let con = [];
-    con["Nick"]=req.params.Nick;
-    con["Player_Password"] =req.params.Player_Password;
-   
+    con["Nick"]=req.body.Nick;
+    con["Player_Password"] =req.body.Player_Password;
     let wher = [];
-   wher["Player_ID"]=req.params.Player_ID;
+   wher["Player_ID"]=req.body.Player_ID;
 
     let query=query_Builder.Update(con,"MC_Players").Where(wher).Get();
    Con_MySQL.Execute(query, res);

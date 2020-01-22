@@ -98,7 +98,7 @@ class SQL_Builder
       
         if(typeof dictionary[key]  === "number")
             this.result += key+" = "+dictionary[key];
-              console.log(size);
+           
             if(i < size)
             this.result+=  separator;
          i++;   

@@ -29,14 +29,16 @@ router.put('/:Player_ID/:Nick/:Player_Password', (req, res, next) => {
    Con_MySQL.Execute(query, res);
 });
 
-router.post('/:Player_ID/:Nick/:Player_Password', (req, res, next) => {
-    console.log(req.body);
+router.post('/', (req, res, next) => {
+    
+   console.log(req.body);
+    res.send("dsd");
     let con = [];
     con["Nick"]=req.params.Nick;
     con["Player_Password"] =req.params.Player_Password;
    
     let wher = [];
-    wher["Player_ID"]=req.params.Player_ID;
+   wher["Player_ID"]=req.params.Player_ID;
 
     let query=query_Builder.Update(con,"MC_Players").Where(wher).Get();
    Con_MySQL.Execute(query, res);

@@ -1,12 +1,13 @@
 const express = require('express');
 const app = express();
-
+var bodyParser     =        require("body-parser");
 const SQl_Builder = require("./Tools/Sql_Builder");
 const query_Builder = new SQl_Builder();
 
 const player = require('./roudes/R_Player');
 
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/player', player);
 

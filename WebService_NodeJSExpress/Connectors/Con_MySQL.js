@@ -22,7 +22,7 @@ class Con_MySQL extends IConnector {
     this.database = this.Connect();
     this.database.query(query, (err, sql_result) => {
       if (!err && sql_result != null) {
-        res.json(sql_result); console.log('TEST' + sql_result);
+        res.json(sql_result); 
       }
       else {
         return "[]";

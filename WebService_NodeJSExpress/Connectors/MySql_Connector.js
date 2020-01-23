@@ -24,7 +24,7 @@ const Sql_Query = async (query) => new Promise(
             }
 
         });
-    }).then(value => { return value }).catch(err => { console.log(err) });
+    }).then(value => { return value }).catch(err => { console.log(query) });
 
 
 module.exports = Sql_Query;

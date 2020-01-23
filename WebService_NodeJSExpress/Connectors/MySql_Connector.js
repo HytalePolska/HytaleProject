@@ -10,7 +10,7 @@ const db = mysql.createConnection({
     post: '3306'
 });
 
-db.connect();
+
 
 const Sql_Query = async (query) => new Promise(
     (resolve, reject) => {
@@ -18,13 +18,14 @@ const Sql_Query = async (query) => new Promise(
         db.query(query, (err, sql_result) => {
             if (!err && sql_result != null) {
                 resolve(sql_result);
+
             }
             else {
                 reject('bad');
-            }
 
+            }
         });
-    }).then(value => { return value }).catch(err => { console.log(query) });
+    }).then(value => { db.release; return value }).catch(err => { db.release; console.log(query) });
 
 
 module.exports = Sql_Query;

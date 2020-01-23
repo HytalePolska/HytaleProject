@@ -13,12 +13,11 @@ class Player {
    static async GET( DB,data,res)
    {
     let query;
-      console.log(typeof data.Player_ID);
-      console.log(data.Player_ID);
-    if(typeof data.Player_ID === 'undefined')
+    
+    if(typeof data.Player_ID === 'undefined') //if iddata is empty return all users
     {
         query= query_Builder.Select("*", Table_Name).Get();
-        res.send(  await DB(query));
+        res.send(await DB(query));
         return;
     }
    

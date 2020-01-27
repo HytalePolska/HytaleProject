@@ -19,9 +19,23 @@ class Group {
         res.send(await DB(query));
         return;
     }
+
+    //// DLA /Group/members
+    if(data.Members !== 'undefined')
+      {
+        
+      }
+      /////////////////////////////////////////////
+   
     let cond = [];
-    cond['G_GroupID'] = data.G_GroupID;
+
+    if(!isNaN(data.G_GroupID))  //sprawdza czy podano Idgracza czy idgrupy
+        cond['G_GroupID'] = data.G_GroupID;
+     else
+        cond['G_Name'] = data.G_GroupID;
+
     query = query_Builder.Select("*", Table_Name).Where(cond).Get();
+
     res.send( await DB(query));
    }
    ///////////////////////////////////////////////

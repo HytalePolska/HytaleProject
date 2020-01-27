@@ -102,7 +102,17 @@ class SQL_Builder {
     for (var k in dictionary) { i++ };
     return i;
   }
-
+  In(filds)
+  {
+    for(let f in filds)
+    {
+      console.log(f);
+    }
+    this.result+=" In ( 0";
+        
+    this.result+=")"
+    return this;
+  }
 
 }
 module.exports = SQL_Builder;

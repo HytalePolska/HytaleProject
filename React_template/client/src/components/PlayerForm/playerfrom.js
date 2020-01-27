@@ -2,44 +2,39 @@ import React, { Component } from 'react';
 
 
 class playerform extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {Nick: '',Password:''};
+    constructor(props){
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+       }
+       handleSubmit(event){ 
+        event.preventDefault();
+        console.log(this.refs.Nick.value);
+        fetch('/player', {
+         method: 'PUT',
+         headers: {'Content-Type':'application/json'},
+         body: JSON.stringify( {
+          "Player_ID": "1000000000000",
+          "Player_Password": this.refs.Nick.value,
+          "Nick": this.refs.Pass.value
+         })
+        }).then( res =>console.log(res));
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleChange(event) {
-    this.setState({Nick: event.target.Nick,Password:event.target.Password});
-  }
-  handleSubmit(event) {
-    alert('Podano następujące imię: ' + this.state.value);
-    event.preventDefault();
-  }
-  componentDidMount() {
-    fetch('/player')
+
+        fetch('/player')
       .then(res => res.json())
       .then(customers => this.setState({customers}, () => console.log('Customers fetched...', customers)));
-  }
-
-  render() {
-    return (
-      <div>
-        <h2>Send Player</h2>
-        <form onSubmit={this.handleSubmit}>
-        <label>
-          Imię:
-          <input type="text" value={this.state.Nick} onChange={this.handleChange} />
-        </label>
-        <label>
-        Password:
-          <input type="text" value={this.state.Password} onChange={this.handleChange} />
-       </label>
-        <input type="submit" value="Wyślij" />
-      </form>
-      </div>
-    );
-  }
-}
-
+       };
+       render () {
+        return (
+         
+         <div id="signup">
+          <form onSubmit={this.handleSubmit}>
+              <input ref="Nick" placeholder="First Name" type="text" name="first_name"/><br />
+              <input ref="Pass" placeholder="Last Name" type="text" name="last_name"/><br />
+             <button type="Submit">Start</button>
+          </form>
+         </div>
+        )
+       }
+      }
 export default playerform;

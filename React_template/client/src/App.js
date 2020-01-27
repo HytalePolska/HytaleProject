@@ -4,7 +4,10 @@ import './App.css';
 import Customers from './components/customers';
 import Playerform from "./components/PlayerForm/playerfrom"
 class App extends Component {
+
+  
   render() {
+   
     return (
       <div className="App">
         <header className="App-header">

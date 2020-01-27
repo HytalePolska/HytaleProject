@@ -16,7 +16,9 @@ router.get('/:G_GroupID', async (req, res, next) => {
     await Group.GET(SQL_query, req.params, res);
 });
 
-router.get('/members:G_GroupID', async (req, res, next) => {
+router.get('/members/:G_GroupID', async (req, res, next) => {
+    req.body.members = "true";
+    req.body.G_GroupID = req.params.G_GroupID;
     await Group.GET(SQL_query, req.body, res);
 });
 

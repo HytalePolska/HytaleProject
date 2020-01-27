@@ -21,9 +21,20 @@ class Group {
     }
 
     //// DLA /Group/members
-    if(data.Members !== 'undefined')
+    if(data.G_GroupID  !== 'undefined' )
       {
-        
+        let cond = [];
+
+        if(!isNaN(data.G_GroupID))  //sprawdza czy podano Idgracza czy idgrupy
+        cond['G_GroupID'] = data.G_GroupID;
+     else
+        cond['G_Type'] = data.G_GroupID;
+
+        query= "SELECT p.*,m.M_Rang FROM S_Members m INNER JOIN MC_Players p ON m.M_playerID = p.Player_ID ";
+        query+="WHERE m.M_GroupID = "+data.G_GroupID;
+       
+        res.send(await DB(query));
+        return;
       }
       /////////////////////////////////////////////
    

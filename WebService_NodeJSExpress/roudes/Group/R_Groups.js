@@ -7,13 +7,15 @@ const Group = require("../../Classes/Group/Group");
 
 const Memebers = require("./R_Members");
 
-router.use("/Memebers",Memebers);
+const SQL_query = require('../../Connectors/MySql_Connector');
+
+router.use("/members",Memebers);
 
 router.get('/', async (req, res, next) => {
     await Group.GET(SQL_query, req.body, res);
 });
 
-router.get('/:MemeberID', async (req, res, next) => {
+router.get('/:G_GroupID', async (req, res, next) => {
     await Group.GET(SQL_query, req.params, res);
 });
 
@@ -25,7 +27,7 @@ router.post('/', async (req, res, next) => {
     await Group.POST(SQL_query, req.body, res);
 });
 
-router.delete('/:GroupID', async (req, res, next) => {
+router.delete('/:G_GroupID', async (req, res, next) => {
     await Group.DELETE(SQL_query, req.params, res);
 });
 

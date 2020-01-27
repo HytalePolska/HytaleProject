@@ -41,7 +41,7 @@ class SQL_Builder {
       fild += key;
 
       if (typeof filds[key] === 'string')
-        values += `\' ${filds[key]} \'`;
+        values += `\'${filds[key]}\'`;
 
       if (typeof filds[key] === "number")
         values += filds[key];
@@ -53,8 +53,8 @@ class SQL_Builder {
       }
       i++;
     }
-    fild += ' ) ';
-    values += ' ) ';
+    fild += ') ';
+    values += ') ';
     this.result += fild + values;
 
     return this;
@@ -79,7 +79,7 @@ class SQL_Builder {
 
     for (var key in dictionary) {
       if (typeof dictionary[key] === 'string')
-        this.result += `${key}  = \'${dictionary[key]} \'`;
+        this.result += `${key}  = \'${dictionary[key]}\'`;
 
       if (typeof dictionary[key] === "number")
         this.result += `${key}  = ${dictionary[key]}`;

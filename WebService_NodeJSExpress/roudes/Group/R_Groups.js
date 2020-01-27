@@ -13,11 +13,11 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get('/:G_GroupID', async (req, res, next) => {
+   
     await Group.GET(SQL_query, req.params, res);
 });
-
-router.get('/members/:G_GroupID', async (req, res, next) => {
-    req.body.members = "true";
+router.get('/:G_GroupID/members', async (req, res, next) => {
+    req.body.token = "true";
     req.body.G_GroupID = req.params.G_GroupID;
     await Group.GET(SQL_query, req.body, res);
 });

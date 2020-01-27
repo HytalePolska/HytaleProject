@@ -12,18 +12,18 @@ class Group {
    static async GET(DB,data,res)
    {
     let query;
-     
+    let cond = [];
     if(typeof data.G_GroupID === 'undefined') //if iddata is empty return all users
     {
         query= query_Builder.Select("*", Table_Name).Get();
         res.send(await DB(query));
         return;
     }
-
-    //// DLA /Group/members
-    if(data.G_GroupID  !== 'undefined' )
+ 
+    //// DLA /Group/:ID/MEMBERS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if(data.token==='true' && typeof data.G_GroupID  !== 'undefined' )
       {
-        let cond = [];
+        
 
         if(!isNaN(data.G_GroupID))  //sprawdza czy podano Idgracza czy idgrupy
         cond['G_GroupID'] = data.G_GroupID;
@@ -36,11 +36,8 @@ class Group {
         res.send(await DB(query));
         return;
       }
-      /////////////////////////////////////////////
-   
-    let cond = [];
-
-    if(!isNaN(data.G_GroupID))  //sprawdza czy podano Idgracza czy idgrupy
+      //// DLA /Group/:ID/ (G_ID lub G_Name) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
+    if(!isNaN(data.G_GroupID))  
         cond['G_GroupID'] = data.G_GroupID;
      else
         cond['G_Name'] = data.G_GroupID;

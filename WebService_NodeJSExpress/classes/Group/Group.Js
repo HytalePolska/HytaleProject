@@ -4,12 +4,9 @@ const query_Builder = new SQL_Builder();
 const Table_Name = "S_Groups";
 class Group {
     constructor() {
-
         this.G_GroupID = '';
         this.G_Name='';
-        this.G_ShortName='';
         this.G_Type='';
-        this.G_Members = '';
     }
   /////////////////////////////////////////////////
    static async GET(DB,data,res)
@@ -29,21 +26,17 @@ class Group {
     query = query_Builder.Select("*", Table_Name).Where(cond).Get();
     res.send( await DB(query));
    }
-   ////////////////DO ZROBIENIA///////////////////////////
+   ///////////////////////////////////////////////
    static async PUT(DB,data,res)
    {
      let con = [];
 
-    con["G_GroupID"] = data.G_GroupID;
     con["G_Name"] = data.G_Name;
-    con["G_ShortName"] =data.G_ShortName;
     con["G_Type"] =data.G_Type;
-    con["G_Members"] =data.G_Members;
 
     let wher = []; wher["G_Name"] =data.G_Name;   //check if player exists
     let query = query_Builder.Select("*", Table_Name).Where(wher).Get();
  
-    
       if (JSON.stringify(await DB(query)) != "[]")  //in other case return filled JSON with data
      {
         res.send("The Player is already existing");
@@ -60,7 +53,6 @@ class Group {
     let con = [];
     con["G_GroupID"] = data.G_GroupID;
     con["G_Name"] = data.G_Name;
-    con["G_ShortName"] =data.G_ShortName;
     con["G_Type"] =data.G_Type;
   
    

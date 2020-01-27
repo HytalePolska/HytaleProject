@@ -51,7 +51,8 @@ class Member {
        
     query = query_Builder.Insert(con, Table_Name).Get();   //add new player
     await DB(query);
-      res.send("The Players has been added");
+     res.send("The Players has been added");
+      
  
    }
    static async POST( DB,data,res)

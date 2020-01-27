@@ -3,7 +3,7 @@ const app = express();
 var bodyParser = require("body-parser");
 
 const player = require('./roudes/R_Player');
-
+const group = require('./roudes/Group/R_Groups');
 const SQL = require('./Connectors/MySql_Connector');
 
 
@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/player', player);
-
+app.use('/group', group);
 
 app.get('/test', async (req,res) =>{
  

@@ -3,6 +3,7 @@ const express = require("express");
 
 const router = express.Router();
 
+const Member = require("../../Classes/Group/Member");
 
 router.get('/', async (req, res, next) => {
     await Player.GET(SQL_query, req.body, res);

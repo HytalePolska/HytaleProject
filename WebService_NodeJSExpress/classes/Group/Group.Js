@@ -1,5 +1,5 @@
 
-const SQL_Builder = require("../Tools/Sql_Builder");
+const SQL_Builder = require("../../Tools/Sql_Builder");
 const query_Builder = new SQL_Builder();
 const Table_Name = "S_Groups";
 class Group {
@@ -46,7 +46,7 @@ class Group {
     query = query_Builder.Insert(con, Table_Name).Get();   //add new player
     await DB(query);
       res.send("The Players has been added");
- 
+ //////////////////////////////////////////////////////////////////////
    }
    static async POST( DB,data,res)
    {

@@ -3,7 +3,7 @@ const express = require("express");
 
 const router = express.Router();
 
-const Player = require("../classes/Player");
+const Player = require("../Classes/Player");
 
 const SQL_query = require('../Connectors/MySql_Connector');
 

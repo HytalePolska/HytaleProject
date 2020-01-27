@@ -13,7 +13,8 @@ router.get('/:M_GroupID', async (req, res, next) => {
   //  await Member.GET(SQL_query, req.params, res);
 });
 
-router.get('/M_GroupID:M_PlayerID', async (req, res, next) => {
+router.get('/:M_GroupID/user:M_PlayerID', async (req, res, next) => {
+   
     console.log("Witam" +res.params.M_PlayerID +" "+res.params.M_GroupID);
     res.send(res.params.M_PlayerID +" "+res.params.M_GroupID);
   //  await Member.GET(SQL_query, req.params, res);

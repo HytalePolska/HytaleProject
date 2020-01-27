@@ -7,13 +7,12 @@ const Member = require("../../Classes/Group/Member");
 
 const SQL_query = require('../../Connectors/MySql_Connector');
 
-router.get('/:M_GroupID', async (req, res, next) => {
-    // await Member.GET(SQL_query, req.params, res);
+router.get('/:M_PlayerID', async (req, res, next) => {
+   await Member.GET(SQL_query, req.params, res);
 });
 
 router.get('/', async (req, res, next) => {
-   console.log(req.params.G_GroupID);
-  // await Member.GET(SQL_query, req.params, res);
+  await Member.GET(SQL_query, req.params, res);
 });
 
 router.put('/', async (req, res, next) => {

@@ -34,7 +34,7 @@ class Group {
     con["G_Name"] = data.G_Name;
     con["G_Type"] =data.G_Type;
 
-    let wher = []; wher["G_Name"] =data.G_Name;   //check if player exists
+    let wher = []; wher["G_GroupID"] =data.G_GroupID;   //check if player exists
     let query = query_Builder.Select("*", Table_Name).Where(wher).Get();
  
       if (JSON.stringify(await DB(query)) != "[]")  //in other case return filled JSON with data
@@ -51,12 +51,10 @@ class Group {
    static async POST( DB,data,res)
    {
     let con = [];
-    con["G_GroupID"] = data.G_GroupID;
-    con["G_Name"] = data.G_Name;
     con["G_Type"] =data.G_Type;
   
    
-    let wher = []; wher["G_Name"] =data.G_Name;   //check if player exists
+    let wher = []; wher["G_GroupID"] =data.G_GroupID;   //check if player exists
     let query = query_Builder.Select("*", Table_Name).Where(wher).Get();
  
       if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
@@ -73,11 +71,13 @@ class Group {
    static async DELETE(DB,data,res)
    {
     let con = [];
-    con["Player_ID"] = data.Player_ID;
-    let query = query_Builder.Delete(Table_Name).Where(con).Get();
+    con["G_GroupID"] = data.G_GroupID;
+    let query = query_Builder.Delete("S_Members").Where(con).Get(); //usuwanie czlonkow
+    await DB(query); //wykonanie 
+     query = query_Builder.Delete(Table_Name).Where(con).Get();//usuwanie grupy
     await DB(query);
-    res.send("Player has been deleted");
+    res.send("Group has been deleted");
    }
    /////////////////////////////////////////////////
 }
-module.exports = Player;
+module.exports = Group;

@@ -1,7 +1,7 @@
 
 const SQL_Builder = require("../Tools/Sql_Builder");
 const query_Builder = new SQL_Builder();
-const Table_Name = "S_Member";
+const Table_Name = "S_Members";
 class Member {
     constructor() {
 
@@ -48,7 +48,14 @@ class Member {
         res.send("The Player is already existing");
         return;
      }
-       
+     where =[];
+     where["M_GroupID"] =data.M_GroupID;   //check if group exists
+    let query = query_Builder.Select("*", Table_Name).Where(wher).Get();
+     if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
+     {
+        res.send("The group is not existing");
+        return;
+     }  
     query = query_Builder.Insert(con, Table_Name).Get();   //add new player
     await DB(query);
      res.send("The Players has been added");

@@ -37,6 +37,7 @@ class Group {
         return;
       }
       //// DLA /Group/:ID/ (G_ID lub G_Name) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
+
     if(!isNaN(data.G_GroupID))  
         cond['G_GroupID'] = data.G_GroupID;
      else
@@ -67,6 +68,7 @@ class Group {
       res.send("The Players has been added");
  //////////////////////////////////////////////////////////////////////
    }
+  ///////////////////////////////////////////////
    static async POST( DB,data,res)
    {
     let con = [];

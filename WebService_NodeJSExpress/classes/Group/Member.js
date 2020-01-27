@@ -18,13 +18,18 @@ class Member {
     if(typeof data.M_GroupID !== 'undefined') //if iddata is empty return all users
     {
         let where = [];
+        let con =["M_PlayerID"];
         where["M_GroupID"] = data.M_GroupID;
-        query= query_Builder.Select("M_PlayerID", Table_Name).Where(where).Get();
-        console.log(query);
+        
+        query= query_Builder.Select(con, Table_Name).Where(where).Get();
         res.send(await DB(query));
         return;
     }
-    res.send('[]');
+
+    query= query_Builder.Select("*", Table_Name).Get();
+    res.send(await DB(query));
+    return;
+  
    }
    /////////////////////////////////////////////////
    static async PUT(DB,data,res)

@@ -50,6 +50,7 @@ class Player {
       res.send("The Players has been added");
  
    }
+   /////////////////////////////////////////////////
    static async POST( DB,data,res)
    {
     let con = [];

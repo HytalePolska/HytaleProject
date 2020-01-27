@@ -10,6 +10,7 @@ const SQL = require('./Connectors/MySql_Connector');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use('/members', members);
 app.use('/player', player);
 app.use('/group', group);

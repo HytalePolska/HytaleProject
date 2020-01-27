@@ -62,6 +62,7 @@ class Member {
       
  
    }
+     /////////////////////////////////////////////////
    static async POST( DB,data,res)
    {
     let con = [];

@@ -7,6 +7,9 @@ const Group = require("../../Classes/Group/Group");
 
 const SQL_query = require('../../Connectors/MySql_Connector');
 
+const members = require("./R_Members");
+
+router.use('/:G_GroupID/members', members);
 
 router.get('/', async (req, res, next) => {
     await Group.GET(SQL_query, req.body, res);
@@ -16,11 +19,11 @@ router.get('/:G_GroupID', async (req, res, next) => {
    
     await Group.GET(SQL_query, req.params, res);
 });
-router.get('/:G_GroupID/members', async (req, res, next) => {
+/*router.get('/:G_GroupID/members', async (req, res, next) => {
     req.body.token = "true";
     req.body.G_GroupID = req.params.G_GroupID;
     await Group.GET(SQL_query, req.body, res);
-});
+});*/
 
 
 router.put('/', async (req, res, next) => {

@@ -17,8 +17,9 @@ router.get('/', async (req, res, next) => {
 });
 
 router.put('/', async (req, res, next) => {
-    
+   
    let data =  JSON.parse(JSON.stringify(req.body))[0];
+   data.M_GroupID =  req.params.G_GroupID;
     await Member.PUT(SQL_query,data, res);
 });
 

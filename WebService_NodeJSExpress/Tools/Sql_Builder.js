@@ -66,7 +66,10 @@ class SQL_Builder {
   }
   Where(filds) {
     this.result += ' WHERE ';
+    
+    if(typeof filds !== 'undefined' )
     this.Condition(filds, ' AND ');
+
     return this;
   }
   And() {
@@ -78,11 +81,7 @@ class SQL_Builder {
     let size = this.Get_Size(dictionary);
 
     for (var key in dictionary) {
-      if (typeof dictionary[key] === 'string')
-        this.result += `${key}  = \'${dictionary[key]}\'`;
-
-      if (typeof dictionary[key] === "number")
-        this.result += `${key}  = ${dictionary[key]}`;
+      this.result +=key+' = '+this.NumberOrString(dictionary[key]);
 
       if (i < size)
         this.result += separator;
@@ -102,15 +101,31 @@ class SQL_Builder {
     for (var k in dictionary) { i++ };
     return i;
   }
-  In(filds)
+  NumberOrString(input) //jesli wyraz jest stringiem dodaje cudzysłow jesli nie po porstu go zwraca
   {
-    for(let f in filds)
+    if (typeof input === 'string')
+   return  `\'${input}\'`;
+
+  if (typeof input === "number")
+  return   input;
+
+  return 'str';
+  }
+  In(filds,TableName)
+  {
+    filds = JSON.parse(JSON.stringify(filds));
+    let size = this.Get_Size(filds);
+    this.result+= TableName+" In (";
+    for(let i=0;i<size;i++)
     {
-      console.log(f);
+      this.result+= this.NumberOrString(filds[i][TableName]);
+      if(i<size-1)
+      this.result+=',';
+    
     }
-    this.result+=" In ( 0";
-        
     this.result+=")"
+        
+    
     return this;
   }
 

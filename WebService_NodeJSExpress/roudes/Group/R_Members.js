@@ -17,7 +17,8 @@ router.get('/', async (req, res, next) => {
 
 router.put('/', async (req, res, next) => {
     
-    await Member.PUT(SQL_query, req.body, res);
+   let data =  JSON.parse(JSON.stringify(req.body))[0];
+    await Member.PUT(SQL_query,data, res);
 });
 
 router.post('/', async (req, res, next) => {

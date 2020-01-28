@@ -34,6 +34,8 @@ class Member {
    /////////////////////////////////////////////////
    static async PUT(DB,data,res)
    {
+    
+    
      let con = [];
     con["M_GroupID"] = data.M_GroupID;
     con["M_PlayerID"] = data.M_PlayerID;
@@ -49,8 +51,8 @@ class Member {
         return;
      }
      where =[];
-     where["M_GroupID"] =data.M_GroupID;   //check if group exists
-     query = query_Builder.Select("*", Table_Name).Where(wher).Get();
+     where["M_GroupID"] =parseInt(data.M_GroupID);   //check if group exists
+     query = query_Builder.Select("*", "S_Groups").Where(where).Get();
      if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
      {
         res.send("The group is not existing");

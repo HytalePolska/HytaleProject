@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use('/player', player);
-app.use('/group', group);
+app.use('/groups', group);
 
 app.get('/test', async (req,res) =>{
  

@@ -15,13 +15,12 @@ class Member {
     let query;
     
   
-    if(typeof data.M_GroupID !== 'undefined') //if iddata is empty return all users
+    if(typeof data.G_GroupID !== 'undefined') //if iddata is empty return all users
     {
         let where = [];
-        let con =["M_PlayerID"];
-        where["M_GroupID"] = data.M_GroupID;
+        where["M_GroupID"] = data.G_GroupID;
         
-        query= query_Builder.Select(con, Table_Name).Where(where).Get();
+        query= query_Builder.Select("*", Table_Name).Where(where).Get();
         res.send(await DB(query));
         return;
     }

@@ -26,12 +26,28 @@ router.post('/', async (req, res, next) => {
 
     if (JSON.stringify(await SQL_query(query)) != "[]")  //in other case return filled JSON with data
     {
+        let filds = [];
+        filds["P_Online"] = "1";
+        let where = [];
+        where["PlayerID"] = reqbody.PlayerID;
+        let query = new SQL_builder().Update(filds, "S_Players").Where(where).Get();
+
+        await SQL_query(query)
         res.send('success');
         return;
     }
     res.send('wrong_password');
     return;
 
+});
+router.delete('/:PlayerID', async (req, res, next) => {
+    let filds = [];
+    filds["P_Online"] = "0";
+    let where = [];
+    where["PlayerID"] = req.params.PlayerID;
+    let query = new SQL_builder().Update(filds, "S_Players").Where(where).Get();
+    await SQL_query(query)
+    res.send("Logined Out")
 });
 
 

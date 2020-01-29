@@ -37,7 +37,7 @@ const Sql_Query = async (query) => new Promise(
 
             }
         });
-    }).then(value => { db.release; return value }).catch(err => { db.release; console.log(query) });
+    }).then(value => { db.release; return value }).catch(err => { db.release; console.log("ERROR" +query)});
 
 
 module.exports = Sql_Query;

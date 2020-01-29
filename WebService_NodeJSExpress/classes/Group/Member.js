@@ -42,12 +42,13 @@ class Member {
     con["M_Rang"] =data.Rang;
   
     let where = []; 
-    where["M_PlayerID"] =data.M_PlayerID; 
-    where["M_GroupID"] =data.M_GroupID; //check if player exists
+    where["M_PlayerID"] =data.PlayerID; 
+    where["M_GroupID"] =data.GroupID; //check if player exists
 
      query= query_Builder.Select("*", Table_Name).Where(where).Get();
      result = JSON.stringify(await DB(query));
-      if (result!= "[]")  //in other case return filled JSON with data
+     
+      if (result !== "[]")  //in other case return filled JSON with data
      {
        if(typeof res == 'undefined')
         return 'error'
@@ -58,7 +59,7 @@ class Member {
      }
      
      where =[];
-     where["M_GroupID"] =data.M_GroupID   //check if group exists
+     where["M_GroupID"] =data.GroupID   //check if group exists
      query = query_Builder.Select("*", "S_Groups").Where(where).Get();
      result = JSON.stringify(await DB(query));
       if (result == "[]")  //in other case return filled JSON with data
@@ -72,7 +73,7 @@ class Member {
      }
 
     query = query_Builder.Insert(con, Table_Name).Get();   //add new player
-   
+     result = await DB(query);
     if(typeof res !== "undefined") 
         res.send("The Players has been added");
     else 
@@ -82,23 +83,32 @@ class Member {
      /////////////////////////////////////////////////
    static async POST( DB,data,res)
    {
+    let result;
     let con = [];
-   // con["M_GroupID"] = data.M_GroupID;
-   // con["M_PlayerID"] = data.M_PlayerID;
-    con["M_Rang"] =data.M_Rang;
    
-    let where = []; wher["Player_ID"] =data.Player_ID;   //check if player exists
+    con["M_Rang"] =data.Rang;
+   
+    let where = [];
+    where["M_PlayerID"] =data.PlayerID;   //check if player exists
+    where["M_GroupID"] =data.GroupID; 
     let query = query_Builder.Select("*", Table_Name).Where(where).Get();
- 
-      if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
-     {
-        res.send("The Player is not existing");
-        return;
-     }
+    
+    result = JSON.stringify(await DB(query));
+    if (result === "[]")  //in other case return filled JSON with data
+   {
+     if(typeof res == 'undefined')
+      return 'error'
+     else
+      res.send("The Member is not existing");
 
-    query = query_Builder.Update(con, Table_Name).Where(wher).Get();
-     await DB(query);
-    res.send("Player has been updated");
+      return;
+   }
+    query = query_Builder.Update(con, Table_Name).Where(where).Get();
+    result = await DB(query);
+    if(typeof res !== "undefined") 
+        res.send("The Member has been updated");
+    else 
+       return JSON.parse(JSON.stringify(result));
    }
    /////////////////////////////////////////////////
    static async DELETE(DB,data,res)

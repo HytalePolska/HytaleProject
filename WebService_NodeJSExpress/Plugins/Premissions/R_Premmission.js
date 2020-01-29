@@ -68,18 +68,28 @@ router.put('/:GroupID/players', async (req, res, next) => {
     let get_data = [];
     get_data["Type"] = "Premission";
     get_data["Name"] = req.params.GroupID;
-
     let result = await Group.GET(SQL_query,get_data);
     let bodyData =  JSON.parse(JSON.stringify(req.body));
     get_data = [];
     get_data["GroupID"] = result[0].G_GroupID;
     get_data["PlayerID"] = bodyData[0].M_PlayerID;
     get_data["Rang"] = bodyData[0].M_Rang;
-
+     
     await Member.PUT(SQL_query,get_data, res);
 });
-router.post('/:GroupID/players:/PlayerID', async (req, res, next) => {
-    await Group.POST(SQL_query, req.body, res);
+router.post('/:GroupID/players', async (req, res, next) => {
+    let get_data = [];
+    get_data["Type"] = "Premission";
+    get_data["Name"] = req.params.GroupID;
+   
+    let result = await Group.GET(SQL_query,get_data);
+    let bodyData =  JSON.parse(JSON.stringify(req.body));
+    get_data = [];
+    get_data["GroupID"] = result[0].G_GroupID;
+    get_data["PlayerID"] = bodyData[0].M_PlayerID;
+    get_data["Rang"] = bodyData[0].M_Rang;
+   
+    await Member.POST(SQL_query, get_data, res);
 });
 router.delete('/:GroupID/players', async (req, res, next) => {
     console.log(req.params);

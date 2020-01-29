@@ -47,7 +47,7 @@ class Group {
     con["G_Type"] =data.G_Type;
 
     let wher = []; wher["G_GroupID"] =data.G_GroupID;   //check if group exists
-    console.log(data);
+    
     let query = query_Builder.Select("*", Table_Name).Where(wher).Get();
  
     result = JSON.stringify(await DB(query));
@@ -70,6 +70,7 @@ class Group {
   ///////////////////////////////////////////////
    static async POST(DB,data,res)
    {
+     let result;
     let con = [];
     con["G_Type"] =data.G_Type;
     con["G_Name"] =data.G_Name;

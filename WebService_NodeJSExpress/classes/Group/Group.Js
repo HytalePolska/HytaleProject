@@ -20,42 +20,17 @@ class Group {
     cond['G_GroupID'] = data.GroupID;
     cond['G_Name'] = data.Name;
     cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
+    
     query= query_Builder.Select("*", Table_Name).Where(cond).Get();
-
-   /* if(typeof data.GroupID === 'undefined' && typeof data.Name === 'undefined' ) //// DLA /Group!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      {
-        
-          let where = []
-          where["G_type"] = data.Type;
-          where["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
-          query= query_Builder.Select("*", Table_Name).Where(where).Get();
-          
-      }
-    else  //DLA /Group/:ID/MEMBERS oraz/// DLA /Group/:ID/ (G_ID lub G_Name) 
-      {
+   
         if(data.token==='true' ) //// DLA /Group/:ID/MEMBERS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
          {
-           if(!isNaN(data.GroupID))  //sprawdza czy podano Idgracza czy idgrupy
-             cond['G_GroupID'] = data.GroupID;
-          else
-             cond['G_Type'] = data.GroupID;
-
              query= "SELECT p.*,m.M_Rang FROM S_Members m INNER JOIN MC_Players p ON m.M_playerID = p.Player_ID ";
-             query+="WHERE m.M_GroupID = "+data.GroupID;
+             query+=query_Builder.Where(cond).Get();
          }
-        else
-         {
-          //// DLA /Group/:ID/ (G_ID lub G_Name) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-              cond['G_GroupID'] = data.GroupID;
-              cond['G_Name'] = data.Name;
-
-              query = query_Builder.Select("*", Table_Name).Where(cond).Get();
-           }
-           
-      }*/ 
 
     result = await DB(query);
-     console.log(query);
+     
     if(typeof res !== "undefined") 
       res.send(result);
     else 

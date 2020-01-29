@@ -13,7 +13,6 @@ const SQL_query = require('../../Connectors/MySql_Connector');
 
 
 router.get('/', async (req, res, next) => {
-    console.log('test');
     await Group.GET(SQL_query,req.query, res);
 });
 router.put('/:GroupID', async (req, res, next) => {

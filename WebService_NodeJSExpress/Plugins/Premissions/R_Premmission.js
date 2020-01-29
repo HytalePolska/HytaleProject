@@ -139,6 +139,20 @@ router.delete('/:GroupID/Cmds/:Plugin', async (req, res, next) =>
    await Member.CUSTOM(SQL_query,query,res);
 });
 ////////////////////Dodawanie Graczy///////////////////////////////
+router.get('/Players/:PlayerID', async (req, res, next) => {
+    let get_data = [];
+    get_data["G_Type"] = "Premission";
+
+    let result = await Group.GET(SQL_query,get_data);
+    let PlayerID = req.params.PlayerID;
+    
+   
+  let query = " SELECT p.* FROM S_Players p INNER JOIN S_Members m ON p.PlayerID = m.M_ValueID ";
+  query+=`WHERE  m.M_ValueTable = 'Player' AND m.M_ValueID = ${PlayerID} `;
+
+   await Member.CUSTOM(SQL_query,query,res);
+   
+});
 router.get('/:GroupID/Players', async (req, res, next) => {
     let get_data = [];
     get_data["G_Type"] = "Premission";
@@ -161,7 +175,7 @@ router.put('/:GroupID/Players', async (req, res, next) => {
     let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
     let bodyData =  JSON.parse(JSON.stringify(req.body));
     get_data = [];
-    get_data["GroupID"] = result[0].G_GroupID;
+    get_data["GroupID"] = result[0].GroupID;
     get_data["PlayerID"] = bodyData[0].CommandID;
     get_data["Rang"] = "Player";
      

@@ -107,8 +107,12 @@ router.delete('/:GroupID/players', async (req, res, next) => {
 });
 ////////////////////Dodawanie Komand Premissji///////////////////////////////
 router.get('/:GroupID/Cmds', async (req, res, next) => {
-  
-    await Command.GET(SQL_query,req.params.GroupID, res);
+    let get_data = [];
+    get_data["Type"] = "Premission";
+    get_data["Name"] = req.params.GroupID;
+    let result = await Group.GET(SQL_query,get_data);
+   
+    await Command.GET(SQL_query,result[0], res);
 });
 router.get('/:GroupID/Cmds/:Plugin', async (req, res, next) => {
 
@@ -116,7 +120,7 @@ router.get('/:GroupID/Cmds/:Plugin', async (req, res, next) => {
     get_data["Type"] = "Premission";
     get_data["Name"] = req.params.GroupID;
     let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
-
+    
     get_data = [];
     get_data["GroupID"] = result.G_GroupID;
     get_data["Plugin"] = req.params.Plugin;

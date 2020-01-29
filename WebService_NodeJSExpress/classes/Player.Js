@@ -24,6 +24,7 @@ class Player {
     let cond = [];
     cond['Player_ID'] = data.Player_ID;
     query = query_Builder.Select("*", Table_Name).Where(cond).Get();
+     
     res.send( await DB(query));
    }
    /////////////////////////////////////////////////

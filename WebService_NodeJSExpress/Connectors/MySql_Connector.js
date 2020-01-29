@@ -1,7 +1,7 @@
 
 const mysql = require('mysql');
 
-const db = handleDisconnect();
+let db = handleDisconnect();
 
 
 function handleDisconnect() 

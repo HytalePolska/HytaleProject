@@ -5,6 +5,7 @@ const Table_Name = "S_Commands";
 class Command {
     constructor() {
         this.CommandID = '';
+        this.GroupID = '';
         this.C_Name = '';
         this.C_Plugin = '';
     }
@@ -15,6 +16,7 @@ class Command {
    let cond = [];
    let result;
    cond['CommandID'] = data.CommandID;
+   cond['GroupID'] = data.G_GroupID;
    cond["C_Name"] = data.Name;
    cond['C_Plugin'] = data.Plugin;
    cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
@@ -34,15 +36,16 @@ class Command {
   {
     let con = [];
     let result;
-   con["C_Name"] = data.C_Name;
-   con["C_Plugin"] =data.C_Plugin;
+   con["GroupID"] =data.GroupID;  
+   con["C_Name"] = data.Name;
+   con["C_Plugin"] =data.Plugin;
  
    let where = []; 
-    //check if command exists
-   where["C_Name"] = data.C_Name;
-   where["C_Plugin"] =data.C_Plugin;
+   where["GroupID"] =data.GroupID;   //check if command exists
+   where["C_Name"] = data.Name;
+   where["C_Plugin"] =data.Plugin;
    let query = query_Builder.Select("*", Table_Name).Where(where).Get();
-    
+
    result = JSON.stringify(await DB(query));
      if (result != "[]")  //in other case return filled JSON with data
     {
@@ -82,25 +85,8 @@ class Command {
         res.send("The Command is not existing");
        return;
     }
-
-     where = []; 
-    //check if command exists
-   where["C_Name"] = data.C_Name;
-   where["C_Plugin"] =data.C_Plugin;
-    query = query_Builder.Select("*", Table_Name).Where(where).Get();
-    
-   result = JSON.stringify(await DB(query));
-     if (result != "[]")  //in other case return filled JSON with data
-    {
-      if(typeof res == 'undefined')
-        return "error";
-      else
-        res.send("The Command is already existing");
-       return;
-    }
-
    query = query_Builder.Update(con, Table_Name).Where(where).Get();
-  
+   console.log(query);
    result =await DB(query); 
    if(typeof res == 'undefined')
        return  "true";
@@ -113,6 +99,7 @@ class Command {
    let con = [];
    con["CommandID"] =  data.CommandID;
    con["C_Plugin"] =  data.Plugin;
+   con["GroupID"] =  data.GroupID;
    let query = query_Builder.Delete(Table_Name).Where(con).Get();//usuwanie grupy
    await DB(query);
     

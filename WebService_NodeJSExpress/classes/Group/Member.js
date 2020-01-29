@@ -40,7 +40,7 @@ class Member {
      let con = [];
      con['GroupID'] = data.GroupID;
      con['M_ValueID'] = data.M_ValueID;
-     con['M_ValueTabel'] = data.M_ValueTabel;
+     con['M_ValueTable'] = data.M_ValueTable;
   
     let where = []; 
     where['GroupID'] = data.GroupID;
@@ -48,7 +48,7 @@ class Member {
 
      query= query_Builder.Select("*", Table_Name).Where(where).Get();
      result = JSON.stringify(await DB(query));
-     
+    
       if (result !== "[]")  //in other case return filled JSON with data
      {
        if(typeof res == 'undefined')

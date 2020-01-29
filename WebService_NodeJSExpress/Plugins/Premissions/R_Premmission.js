@@ -143,7 +143,6 @@ router.get('/Players/:PlayerID', async (req, res, next) => {
     let get_data = [];
     get_data["G_Type"] = "Premission";
 
-    let result = await Group.GET(SQL_query,get_data);
     let PlayerID = req.params.PlayerID;
     
    
@@ -176,8 +175,8 @@ router.put('/:GroupID/Players', async (req, res, next) => {
     let bodyData =  JSON.parse(JSON.stringify(req.body));
     get_data = [];
     get_data["GroupID"] = result[0].GroupID;
-    get_data["PlayerID"] = bodyData[0].CommandID;
-    get_data["Rang"] = "Player";
+    get_data["M_ValueID"] = bodyData[0].PlayerID;
+    get_data["M_ValueTable"] = "Player";
      
     await Member.PUT(SQL_query,get_data, res);
 });

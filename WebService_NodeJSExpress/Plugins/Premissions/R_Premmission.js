@@ -149,6 +149,24 @@ router.put('/:GroupID/Cmds', async (req, res, next) => {
      
     await Member.PUT(SQL_query,get_data, res);
 });
+router.put('/:GroupID/Cmds/:Plugin', async (req, res, next) => {
+    let get_data = [];
+    get_data["Type"] = "Premission";
+    get_data["Name"] = req.params.GroupID;
+    let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
+    get_data = [];
+    let GroupID = result[0].G_GroupID;
+    let Plugin = req.params.Plugin;
+   
+
+    let commandids = `SELECT M_PlayerID FROM S_Members WHERE M_GroupID = ${GroupID} AND M_Rang = 'Command' `;
+
+    let query = " INSERT INTO S_Members (M_GroupID,M_PlayerID,M_Rang) ";
+    query+= ` SELECT ${GroupID} , CommandID ,'Command' FROM S_Commands`;
+    query+= ` WHERE C_Plugin = '${Plugin}' AND CommandID NOT IN (${commandids})`;
+     
+    await Member.CUSTOM(SQL_query,query,res);
+});
 router.delete('/:GroupID/Cmds', async (req, res, next) => {
     let bodyData =  JSON.parse(JSON.stringify(req.body));
     let data = [];
@@ -167,8 +185,9 @@ router.delete('/:GroupID/Cmds/:Plugin', async (req, res, next) =>
     let GroupId= result[0].G_GroupID;
     let Plugin= req.params.Plugin;
    
-  let query = " DELETE FROM S_Members m  INNER JOIN S_Command c on c.CommandID = m.M_PlayerID ";
-      query+=`WHERE m.M_GroupID = ${GroupId} AND c.C_Plugin = '${Plugin}' AND m.M_Rang = 'Command' `;
+  let query = "DELETE m FROM S_Members m INNER JOIN S_Commands c ON m.M_PlayerID = c.CommandID";
+      query += ` WHERE m.M_GroupID =${GroupId} AND m.M_Rang = 'Command' AND c.C_Plugin = '${Plugin}' `;
+ 
 
    await Member.CUSTOM(SQL_query,query,res);
 });

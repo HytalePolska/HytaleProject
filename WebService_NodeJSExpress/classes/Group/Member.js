@@ -13,22 +13,28 @@ class Member {
    static async GET(DB,data,res)
    {
     let query;
-    
-  
-    if(typeof data.G_GroupID !== 'undefined') //if iddata is empty return all users
-    {
-        let where = [];   //wynik w zalezosci od int/stringa
-        where["M_GroupID"] = data.G_GroupID;
-        
-        query= query_Builder.Select("*", Table_Name).Where(where).Get();
-        console.log(query);
-        res.send(await DB(query));
-        return;
-    }
+    let cond = [];
+    let result;
 
-    query= query_Builder.Select("*", Table_Name).Get();
-    res.send(await DB(query));
-    return;
+   
+    cond['M_GroupID'] = data.GroupID;
+    cond['M_PlayerID'] = data.Player_ID;
+    cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
+    
+    query= query_Builder.Select("*", Table_Name).Where(cond).Get();
+   
+      /*  if(data.token==='true' ) //// DLA /Group/:ID/MEMBERS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         {
+             query= "SELECT p.*,m.M_Rang FROM S_Members m INNER JOIN MC_Players p ON m.M_playerID = p.Player_ID ";
+             query+=query_Builder.Where(cond).Get();
+         }*/
+
+    result = await DB(query);
+     
+    if(typeof res !== "undefined") 
+      res.send(result);
+    else 
+       return JSON.parse(JSON.stringify(result));
   
    }
    /////////////////////////////////////////////////

@@ -1,7 +1,7 @@
 
 const SQL_Builder = require("../Tools/Sql_Builder");
 const query_Builder = new SQL_Builder();
-const Table_Name = "C_Commands";
+const Table_Name = "S_Commands";
 class Command {
     constructor() {
 
@@ -16,13 +16,13 @@ class Command {
    let cond = [];
    let result;
   
-   cond["C_Name"] = data.Type;
    cond['GroupID'] = data.GroupID;
-   cond['C_Plugin'] = data.Name;
+   cond["C_Name"] = data.Name;
+   cond['C_Plugin'] = data.Plugin;
    cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
-   
+  
    query= query_Builder.Select("*", Table_Name).Where(cond).Get();
-
+   
    result = await DB(query);
     
    if(typeof res !== "undefined") 
@@ -39,10 +39,11 @@ class Command {
    con["GroupID"] =data.GroupID;  
    con["C_Name"] = data.Name;
    con["C_Plugin"] =data.Plugin;
-
+ 
    let where = []; 
    where["GroupID"] =data.GroupID;   //check if command exists
    where["C_Name"] = data.Name;
+   where["C_Plugin"] =data.Plugin;
    let query = query_Builder.Select("*", Table_Name).Where(where).Get();
 
    result = JSON.stringify(await DB(query));
@@ -67,12 +68,13 @@ class Command {
   {
     let result;
    let con = [];
-   con["C_Plugin"] =data.G_Type;
-   con["C_Name"] =data.G_Name;
+   con["C_Plugin"]=data.Plugin;
+   con["C_Name"] =data.Name;
   
    let where = [];
     where["GroupID"] =data.GroupID;
     where["C_Name"] =data.Name;   //check if player exists
+    where["C_Plugin"] =data.Plugin;
    let query = query_Builder.Select("*", Table_Name).Where(where).Get();
 
    result = JSON.stringify(await DB(query));

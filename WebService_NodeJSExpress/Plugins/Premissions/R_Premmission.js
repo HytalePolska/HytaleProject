@@ -5,6 +5,7 @@ const router = express.Router({ mergeParams: true });
 
 const Group = require("../../Classes/Group/Group");
 const Member = require("../../Classes/Group/Member");
+const Command = require("../../Classes/Command");
 const SQL_query = require('../../Connectors/MySql_Connector');
 
 
@@ -106,15 +107,36 @@ router.delete('/:GroupID/players', async (req, res, next) => {
 });
 ////////////////////Dodawanie Komand Premissji///////////////////////////////
 router.get('/:GroupID/Cmds', async (req, res, next) => {
-   
-});
-router.get('/:GroupID/Cmds/:CmdID', async (req, res, next) => {
   
+    await Command.GET(SQL_query,req.params.GroupID, res);
+});
+router.get('/:GroupID/Cmds/:Plugin', async (req, res, next) => {
+
+    let get_data = [];
+    get_data["Type"] = "Premission";
+    get_data["Name"] = req.params.GroupID;
+    let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
+
+    get_data = [];
+    get_data["GroupID"] = result.G_GroupID;
+    get_data["Plugin"] = req.params.Plugin;
+    
+    await Command.GET(SQL_query,get_data, res);
 });
 router.put('/:GroupID/Cmds', async (req, res, next) => {
-   
+    let get_data = [];
+    get_data["Type"] = "Premission";
+    get_data["Name"] = req.params.GroupID;
+    let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
+    let bodyData =  JSON.parse(JSON.stringify(req.body));
+    get_data = [];
+    get_data["GroupID"] = result[0].G_GroupID;
+    get_data["Name"] = bodyData[0].C_Name;
+    get_data["Plugin"] = bodyData[0].C_Plugin;
+  
+    await Command.PUT(SQL_query,get_data, res);
 });
-router.post('/:GroupID/Cmds:/CmdID', async (req, res, next) => {
+router.post('/:GroupID/Cmds', async (req, res, next) => {
     
 });
 router.delete('/:GroupID/Cmds', async (req, res, next) => {

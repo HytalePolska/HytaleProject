@@ -16,18 +16,11 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get('/:G_GroupID', async (req, res, next) => {
-   
     await Group.GET(SQL_query, req.params, res);
 });
-/*router.get('/:G_GroupID/members', async (req, res, next) => {
-    req.body.token = "true";
-    req.body.G_GroupID = req.params.G_GroupID;
-    await Group.GET(SQL_query, req.body, res);
-});*/
-
-
 router.put('/', async (req, res, next) => {
-    await Group.PUT(SQL_query, req.body, res);
+    let data =  JSON.parse(JSON.stringify(req.body))[0];
+    await Group.PUT(SQL_query,data, res);
 });
 
 router.post('/', async (req, res, next) => {

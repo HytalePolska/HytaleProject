@@ -23,72 +23,92 @@ class Group {
     
     query= query_Builder.Select("*", Table_Name).Where(cond).Get();
    
-        if(data.token==='true' ) //// DLA /Group/:ID/MEMBERS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      /*  if(data.token==='true' ) //// DLA /Group/:ID/MEMBERS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
          {
              query= "SELECT p.*,m.M_Rang FROM S_Members m INNER JOIN MC_Players p ON m.M_playerID = p.Player_ID ";
              query+=query_Builder.Where(cond).Get();
-         }
+         }*/
 
     result = await DB(query);
      
     if(typeof res !== "undefined") 
       res.send(result);
     else 
-       return result;
+       return JSON.parse(JSON.stringify(result));
     
    }
    ///////////////////////////////////////////////
    static async PUT(DB,data,res)
    {
      let con = [];
+     let result;
     con["G_GroupID"] =data.G_GroupID;  
     con["G_Name"] = data.G_Name;
     con["G_Type"] =data.G_Type;
 
     let wher = []; wher["G_GroupID"] =data.G_GroupID;   //check if group exists
+    console.log(data);
     let query = query_Builder.Select("*", Table_Name).Where(wher).Get();
  
-      if (JSON.stringify(await DB(query)) != "[]")  //in other case return filled JSON with data
+    result = JSON.stringify(await DB(query));
+      if (result != "[]")  //in other case return filled JSON with data
      {
-        res.send("The Player is already existing");
+       if(typeof res == 'undefined')
+         return "error";
+       else
+         res.send("The Player is already existing");
         return;
      }
     query = query_Builder.Insert(con, Table_Name).Get();   //add new group
-    await DB(query);
-      res.send("The Players has been added");
- //////////////////////////////////////////////////////////////////////
+    result =await DB(query);
+     
+    if(typeof res === 'undefined')
+    return  result;
+  else
+    res.send("Group has been established");
    }
   ///////////////////////////////////////////////
-   static async POST( DB,data,res)
+   static async POST(DB,data,res)
    {
     let con = [];
     con["G_Type"] =data.G_Type;
-  
+    con["G_Name"] =data.G_Name;
    
     let wher = []; wher["G_GroupID"] =data.G_GroupID;   //check if player exists
     let query = query_Builder.Select("*", Table_Name).Where(wher).Get();
  
-      if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
+    result = JSON.stringify(await DB(query));
+      if (result != "[]")  //in other case return filled JSON with data
      {
-        res.send("The Player is not existing");
+       if(typeof res == 'undefined')
+         return "error";
+       else
+         res.send("The Player is already existing");
         return;
      }
-
     query = query_Builder.Update(con, Table_Name).Where(wher).Get();
-    console.log(query);
-     await DB(query);
-    res.send("Player has been updated");
+    result =await DB(query); 
+    if(typeof res == 'undefined')
+        return  "true";
+     else
+       res.send(result);
    }
    /////////////////////////////////////////////////
    static async DELETE(DB,data,res)
    {
     let con = [];
-    con["G_GroupID"] = data.G_GroupID;
+    con["G_GroupID"] = data.GroupID;
+    con["G_Type"] = data.Type;
     let query = query_Builder.Delete("S_Members").Where(con).Get(); //usuwanie czlonkow
     await DB(query); //wykonanie 
      query = query_Builder.Delete(Table_Name).Where(con).Get();//usuwanie grupy
     await DB(query);
-    res.send("Group has been deleted");
+
+    if(typeof res == 'undefined')
+    return 'deleted';
+   else
+   res.send("Group has been deleted");
+  
    }
    /////////////////////////////////////////////////
 }

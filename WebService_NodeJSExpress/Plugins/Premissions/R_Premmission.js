@@ -58,27 +58,25 @@ router.get('/:GroupID/players', async (req, res, next) => {
     get_data["Name"] = req.params.GroupID;
 
     let result = await Group.GET(SQL_query,get_data);
-     console.log(result);
     get_data = [];
     get_data["GroupID"] = result[0].G_GroupID;
-
-    await Member.GET(SQL_query,get_data, res);
-});
-router.get('/:GroupID/players/:PlayerID', async (req, res, next) => {
-     let get_data = [];
-    get_data["Type"] = "Premission";
-    get_data["Name"] = req.params.GroupID;
-
-    let result = Group.GET(SQL_query,get_data);
-     
-    get_data = [];
-    get_data["GroupID"] = result[0].G_GroupID;
-    get_data["PlayerID"] = req.params.PlayerID;
 
     await Member.GET(SQL_query,get_data, res);
 });
 router.put('/:GroupID/players', async (req, res, next) => {
-    await Group.PUT(SQL_query, req.body, res);
+
+    let get_data = [];
+    get_data["Type"] = "Premission";
+    get_data["Name"] = req.params.GroupID;
+
+    let result = await Group.GET(SQL_query,get_data);
+    let bodyData =  JSON.parse(JSON.stringify(req.body));
+    get_data = [];
+    get_data["GroupID"] = result[0].G_GroupID;
+    get_data["PlayerID"] = bodyData[0].M_PlayerID;
+    get_data["Rang"] = bodyData[0].M_Rang;
+
+    await Member.PUT(SQL_query,get_data, res);
 });
 router.post('/:GroupID/players:/PlayerID', async (req, res, next) => {
     await Group.POST(SQL_query, req.body, res);

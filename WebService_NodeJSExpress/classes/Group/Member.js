@@ -23,12 +23,6 @@ class Member {
     
     query= query_Builder.Select("*", Table_Name).Where(cond).Get();
    
-      /*  if(data.token==='true' ) //// DLA /Group/:ID/MEMBERS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-         {
-             query= "SELECT p.*,m.M_Rang FROM S_Members m INNER JOIN MC_Players p ON m.M_playerID = p.Player_ID ";
-             query+=query_Builder.Where(cond).Get();
-         }*/
-
     result = await DB(query);
      
     if(typeof res !== "undefined") 
@@ -40,33 +34,49 @@ class Member {
    /////////////////////////////////////////////////
    static async PUT(DB,data,res)
    {
-    
+    let result;
+    let query;
      let con = [];
-    con["M_GroupID"] = data.M_GroupID;
-    con["M_PlayerID"] = data.M_PlayerID;
-    con["M_Rang"] =data.M_Rang;
+    con["M_GroupID"] = data.GroupID;
+    con["M_PlayerID"] = data.PlayerID;
+    con["M_Rang"] =data.Rang;
   
-    let where = []; where["M_PlayerID"] =data.M_PlayerID;  where["M_GroupID"] =data.M_GroupID; //check if player exists
-   
-    let query = query_Builder.Select("*", Table_Name).Where(where).Get();
-      if (JSON.stringify(await DB(query)) != "[]")  //in other case return filled JSON with data
+    let where = []; 
+    where["M_PlayerID"] =data.M_PlayerID; 
+    where["M_GroupID"] =data.M_GroupID; //check if player exists
+
+     query= query_Builder.Select("*", Table_Name).Where(where).Get();
+     result = JSON.stringify(await DB(query));
+      if (result!= "[]")  //in other case return filled JSON with data
      {
+       if(typeof res == 'undefined')
+        return 'error'
+       else
         res.send("The Player is already existing");
+
         return;
      }
+     
      where =[];
-     where["M_GroupID"] =parseInt(data.M_GroupID);   //check if group exists
+     where["M_GroupID"] =data.M_GroupID   //check if group exists
      query = query_Builder.Select("*", "S_Groups").Where(where).Get();
-     if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
+     result = JSON.stringify(await DB(query));
+      if (result == "[]")  //in other case return filled JSON with data
      {
-        res.send("The group is not existing");
+       if(typeof res == 'undefined')
+        return 'error'
+       else
+        res.send("The Group is not existing");
+
         return;
-     }  
+     }
+
     query = query_Builder.Insert(con, Table_Name).Get();   //add new player
    
-    await DB(query);
-     res.send("The Players has been added");
-      
+    if(typeof res !== "undefined") 
+        res.send("The Players has been added");
+    else 
+       return JSON.parse(JSON.stringify(result));
  
    }
      /////////////////////////////////////////////////

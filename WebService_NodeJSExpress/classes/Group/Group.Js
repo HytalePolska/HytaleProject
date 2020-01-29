@@ -14,7 +14,6 @@ class Group {
     let query;
     let cond = [];
     let result;
-
    
     cond["G_type"] = data.Type;
     cond['G_GroupID'] = data.GroupID;
@@ -22,12 +21,6 @@ class Group {
     cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
     
     query= query_Builder.Select("*", Table_Name).Where(cond).Get();
-   
-      /*  if(data.token==='true' ) //// DLA /Group/:ID/MEMBERS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-         {
-             query= "SELECT p.*,m.M_Rang FROM S_Members m INNER JOIN MC_Players p ON m.M_playerID = p.Player_ID ";
-             query+=query_Builder.Where(cond).Get();
-         }*/
 
     result = await DB(query);
      

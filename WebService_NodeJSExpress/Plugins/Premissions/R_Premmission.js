@@ -154,7 +154,8 @@ router.delete('/:GroupID/Cmds', async (req, res, next) => {
    
    await Command.DELETE(SQL_query,bodyData[0],res);
 });
-router.delete('/:GroupID/Cmds/:Plugin', async (req, res, next) => {
+router.delete('/:GroupID/Cmds/:Plugin', async (req, res, next) => 
+{
     let get_data = [];
     get_data["Type"] = "Premission";
     get_data["Name"] = req.params.GroupID;

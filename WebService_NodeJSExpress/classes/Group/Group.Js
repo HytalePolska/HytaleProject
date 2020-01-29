@@ -13,39 +13,54 @@ class Group {
    {
     let query;
     let cond = [];
-    if(typeof data.G_GroupID === 'undefined') //if iddata is empty return all users
-    {
-        query= query_Builder.Select("*", Table_Name).Get();
-        res.send(await DB(query));
-        return;
-    }
- 
-    //// DLA /Group/:ID/MEMBERS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if(data.token==='true' && typeof data.G_GroupID  !== 'undefined' )
+    let result;
+
+   
+    cond["G_type"] = data.Type;
+    cond['G_GroupID'] = data.GroupID;
+    cond['G_Name'] = data.Name;
+    cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
+    query= query_Builder.Select("*", Table_Name).Where(cond).Get();
+
+   /* if(typeof data.GroupID === 'undefined' && typeof data.Name === 'undefined' ) //// DLA /Group!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       {
         
-
-        if(!isNaN(data.G_GroupID))  //sprawdza czy podano Idgracza czy idgrupy
-        cond['G_GroupID'] = data.G_GroupID;
-     else
-        cond['G_Type'] = data.G_GroupID;
-
-        query= "SELECT p.*,m.M_Rang FROM S_Members m INNER JOIN MC_Players p ON m.M_playerID = p.Player_ID ";
-        query+="WHERE m.M_GroupID = "+data.G_GroupID;
-       
-        res.send(await DB(query));
-        return;
+          let where = []
+          where["G_type"] = data.Type;
+          where["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
+          query= query_Builder.Select("*", Table_Name).Where(where).Get();
+          
       }
-      //// DLA /Group/:ID/ (G_ID lub G_Name) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  
+    else  //DLA /Group/:ID/MEMBERS oraz/// DLA /Group/:ID/ (G_ID lub G_Name) 
+      {
+        if(data.token==='true' ) //// DLA /Group/:ID/MEMBERS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         {
+           if(!isNaN(data.GroupID))  //sprawdza czy podano Idgracza czy idgrupy
+             cond['G_GroupID'] = data.GroupID;
+          else
+             cond['G_Type'] = data.GroupID;
 
-    if(!isNaN(data.G_GroupID))  
-        cond['G_GroupID'] = data.G_GroupID;
-     else
-        cond['G_Name'] = data.G_GroupID;
+             query= "SELECT p.*,m.M_Rang FROM S_Members m INNER JOIN MC_Players p ON m.M_playerID = p.Player_ID ";
+             query+="WHERE m.M_GroupID = "+data.GroupID;
+         }
+        else
+         {
+          //// DLA /Group/:ID/ (G_ID lub G_Name) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+              cond['G_GroupID'] = data.GroupID;
+              cond['G_Name'] = data.Name;
 
-    query = query_Builder.Select("*", Table_Name).Where(cond).Get();
+              query = query_Builder.Select("*", Table_Name).Where(cond).Get();
+           }
+           
+      }*/ 
 
-    res.send( await DB(query));
+    result = await DB(query);
+     console.log(query);
+    if(typeof res !== "undefined") 
+      res.send(result);
+    else 
+       return result;
+    
    }
    ///////////////////////////////////////////////
    static async PUT(DB,data,res)

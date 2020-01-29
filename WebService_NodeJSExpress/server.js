@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 
 const player = require('./roudes/R_Player');
 const group = require('./roudes/Group/R_Groups');
+const plugins = require('./roudes/R_Plugins');
 
 const SQL = require('./Connectors/MySql_Connector');
 
@@ -14,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/player', player);
 app.use('/groups', group);
+app.use('/plugins', plugins);
 
 app.get('/test', async (req,res) =>{
  

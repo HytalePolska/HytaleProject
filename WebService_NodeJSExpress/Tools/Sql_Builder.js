@@ -77,17 +77,24 @@ class SQL_Builder {
     return this;
   }
   Condition(dictionary, separator) {
-    let i = 1;
+    let i =0;
     let size = this.Get_Size(dictionary);
-
+    let last_null = false;
     for (var key in dictionary) {
-      this.result +=key+' = '+this.NumberOrString(dictionary[key]);
 
-      if (i < size)
-        this.result += separator;
+      if(typeof dictionary[key] !=='undefined')
+       {
+          this.result +=key+' = '+this.NumberOrString(dictionary[key]);
+
+          if (i <size && last_null == false)
+          this.result += separator;
+          
+          last_null = false;
+       }
+       else
+        last_null =true;
+
       i++;
-
-
     }
     return this;
   }

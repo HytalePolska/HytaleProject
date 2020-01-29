@@ -17,14 +17,17 @@ router.get('/:Player_ID', async (req, res, next) => {
 });
 
 router.put('/', async (req, res, next) => {
-    await Player.PUT(SQL_query, req.body, res);
+    let data =  JSON.parse(JSON.stringify(req.body))[0];
+
+    await Player.PUT(SQL_query, data, res);
 });
 
 router.post('/', async (req, res, next) => {
-    await Player.POST(SQL_query, req.body, res);
+    let data =  JSON.parse(JSON.stringify(req.body))[0];
+    await Player.POST(SQL_query, data, res);
 });
 
-router.delete('/:Player_ID', async (req, res, next) => {
+router.delete('/:PlayerID', async (req, res, next) => {
     await Player.DELETE(SQL_query, req.params, res);
 });
 

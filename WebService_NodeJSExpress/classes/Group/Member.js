@@ -5,24 +5,24 @@ const Table_Name = "S_Members";
 class Member {
     constructor() {
 
-        this.M_GroupID = '';
-        this.M_PlayerID ='';
-        this.M_Rang =''
+        this.GroupID = '';
+        this.M_ValueID ='';
+        this.M_ValueTable =''
     }
   /////////////////////////////////////////////////
    static async GET(DB,data,res)
    {
     let query;
-    let cond = [];
+    let con = [];
     let result;
 
    
-    cond['M_GroupID'] = data.GroupID;
-    cond['M_Rang'] = data.Rang;
-    cond['M_PlayerID'] = data.Player_ID;
-    cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
+    con['GroupID'] = data.GroupID;
+    con['M_ValueID'] = data.M_ValueID;
+    con['M_ValueTabel'] = data.M_ValueTabel;
+    con["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
     
-    query= query_Builder.Select("*", Table_Name).Where(cond).Get();
+    query= query_Builder.Select("*", Table_Name).Where(con).Get();
    
     result = await DB(query);
      
@@ -38,13 +38,13 @@ class Member {
     let result;
     let query;
      let con = [];
-    con["M_GroupID"] = data.GroupID;
-    con["M_PlayerID"] = data.PlayerID;
-    con["M_Rang"] =data.Rang;
+     con['GroupID'] = data.GroupID;
+     con['M_ValueID'] = data.M_ValueID;
+     con['M_ValueTabel'] = data.M_ValueTabel;
   
     let where = []; 
-    where["M_PlayerID"] =data.PlayerID; 
-    where["M_GroupID"] =data.GroupID; //check if player exists
+    where['GroupID'] = data.GroupID;
+    where['M_ValueID'] = data.M_ValueID;
 
      query= query_Builder.Select("*", Table_Name).Where(where).Get();
      result = JSON.stringify(await DB(query));
@@ -60,7 +60,7 @@ class Member {
      }
      
      where =[];
-     where["G_GroupID"] =data.GroupID   //check if group exists
+     where['GroupID'] =data.GroupID   //check if group exists
      query = query_Builder.Select("*", "S_Groups").Where(where).Get();
      result = JSON.stringify(await DB(query));
       if (result == "[]")  //in other case return filled JSON with data
@@ -86,12 +86,11 @@ class Member {
    {
     let result;
     let con = [];
-   
-    con["M_Rang"] =data.Rang;
+     con['M_ValueTabel'] = data.M_ValueTabel;
    
     let where = [];
-    where["M_PlayerID"] =data.PlayerID;   //check if player exists
-    where["M_GroupID"] =data.GroupID; 
+    where['M_ValueID'] =data.M_ValueID;   //check if player exists
+    where['GroupID'] =data.GroupID; 
     let query = query_Builder.Select("*", Table_Name).Where(where).Get();
     
     result = JSON.stringify(await DB(query));
@@ -115,8 +114,8 @@ class Member {
    static async DELETE(DB,data,res)
    {
     let where = [];
-    where["M_PlayerID"] = data.value;
-    where["M_GroupID"] = data.GroupID;
+    where['M_ValueID'] = data.M_ValueID;
+    where["GroupID"] = data.GroupID;
     let query = query_Builder.Delete(Table_Name).Where(where).Get();
     
     await DB(query);

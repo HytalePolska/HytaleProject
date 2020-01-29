@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/commands',command)
-app.use('/player', player);
+app.use('/players', player);
 app.use('/groups', group);
 app.use('/plugins', plugins);
 

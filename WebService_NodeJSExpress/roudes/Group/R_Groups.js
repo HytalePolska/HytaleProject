@@ -24,7 +24,8 @@ router.put('/', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-    await Group.POST(SQL_query, req.body, res);
+    let data =  JSON.parse(JSON.stringify(req.body))[0];
+    await Group.POST(SQL_query, data, res);
 });
 
 router.delete('/:G_GroupID', async (req, res, next) => {

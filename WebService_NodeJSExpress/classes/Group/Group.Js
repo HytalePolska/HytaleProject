@@ -4,7 +4,7 @@ const query_Builder = new SQL_Builder();
 const Table_Name = "S_Groups";
 class Group {
     constructor() {
-        this.G_GroupID = '';
+        this.GroupID = '';
         this.G_Name='';
         this.G_Type='';
     }
@@ -15,9 +15,9 @@ class Group {
     let cond = [];
     let result;
    
-    cond["G_type"] = data.Type;
-    cond['G_GroupID'] = data.GroupID;
-    cond['G_Name'] = data.Name;
+    cond["G_type"] = data.G_Type;
+    cond['GroupID'] = data.GroupID;
+    cond['G_Name'] = data.G_Name;
     cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
     
     query= query_Builder.Select("*", Table_Name).Where(cond).Get();
@@ -35,11 +35,11 @@ class Group {
    {
      let con = [];
      let result;
-    con["G_GroupID"] =data.G_GroupID;  
+    con["GroupID"] =data.GroupID;  
     con["G_Name"] = data.G_Name;
     con["G_Type"] =data.G_Type;
 
-    let wher = []; wher["G_GroupID"] =data.G_GroupID;   //check if group exists
+    let wher = []; wher["G_GroupID"] =data.GroupID;   //check if group exists
     
     let query = query_Builder.Select("*", Table_Name).Where(wher).Get();
  
@@ -68,7 +68,7 @@ class Group {
     con["G_Type"] =data.G_Type;
     con["G_Name"] =data.G_Name;
    
-    let wher = []; wher["G_GroupID"] =data.G_GroupID;   //check if player exists
+    let wher = []; wher["GroupID"] =data.GroupID;   //check if player exists
     let query = query_Builder.Select("*", Table_Name).Where(wher).Get();
  
     result = JSON.stringify(await DB(query));
@@ -91,8 +91,8 @@ class Group {
    static async DELETE(DB,data,res)
    {
     let con = [];
-    con["G_GroupID"] = data.GroupID;
-    con["G_Type"] = data.Type;
+    con["GroupID"] = data.GroupID;
+    con["G_Type"] = data.G_Type;
     let query = query_Builder.Delete("S_Members").Where(con).Get(); //usuwanie czlonkow
     await DB(query); //wykonanie 
      query = query_Builder.Delete(Table_Name).Where(con).Get();//usuwanie grupy

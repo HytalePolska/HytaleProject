@@ -110,22 +110,31 @@ router.get('/:GroupID/Cmds', async (req, res, next) => {
     let get_data = [];
     get_data["Type"] = "Premission";
     get_data["Name"] = req.params.GroupID;
+
     let result = await Group.GET(SQL_query,get_data);
+    let GroupId= result[0].G_GroupID;
+  
    
-    await Command.GET(SQL_query,result[0], res);
+  let query = "SELECT c.* FROM S_Commands c INNER JOIN S_Members s on c.CommandID = s.M_PlayerID ";
+  query+=`WHERE s.M_GroupID = ${GroupId} AND M_Rang = 'Command' `;
+
+   await Member.CUSTOM(SQL_query,query,res);
+   
 });
 router.get('/:GroupID/Cmds/:Plugin', async (req, res, next) => {
 
     let get_data = [];
     get_data["Type"] = "Premission";
     get_data["Name"] = req.params.GroupID;
-    let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
-    
-    get_data = [];
-    get_data["GroupID"] = result.G_GroupID;
-    get_data["Plugin"] = req.params.Plugin;
-    
-    await Command.GET(SQL_query,get_data, res);
+
+    let result = await Group.GET(SQL_query,get_data);
+    let GroupId= result[0].G_GroupID;
+    let Plugin= req.params.Plugin;
+   
+  let query = "SELECT c.* FROM S_Commands c INNER JOIN S_Members s on c.CommandID = s.M_PlayerID ";
+      query+=`WHERE s.M_GroupID = ${GroupId} AND c.C_Plugin = '${Plugin}' AND s.M_Rang = 'Command' `;
+
+   await Member.CUSTOM(SQL_query,query,res);
 });
 router.put('/:GroupID/Cmds', async (req, res, next) => {
     let get_data = [];
@@ -135,28 +144,16 @@ router.put('/:GroupID/Cmds', async (req, res, next) => {
     let bodyData =  JSON.parse(JSON.stringify(req.body));
     get_data = [];
     get_data["GroupID"] = result[0].G_GroupID;
-    get_data["Name"] = bodyData[0].C_Name;
-    get_data["Plugin"] = bodyData[0].C_Plugin;
-  
-    await Command.PUT(SQL_query,get_data, res);
-});
-router.post('/:GroupID/Cmds', async (req, res, next) => {
-    let get_data = [];
-    get_data["Type"] = "Premission";
-    get_data["Name"] = req.params.GroupID;
-    let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
-    let bodyData =  JSON.parse(JSON.stringify(req.body));
-    get_data = [];
-    get_data["GroupID"] = result[0].G_GroupID;
-    get_data["Name"] = bodyData[0].C_Name;
-    get_data["Plugin"] = bodyData[0].C_Plugin;
-    get_data["CommandID"] = bodyData[0].CommandID;
-    await Command.POST(SQL_query,get_data, res);
+    get_data["PlayerID"] = bodyData[0].CommandID;
+    get_data["Rang"] = "Command";
+     
+    await Member.PUT(SQL_query,get_data, res);
 });
 router.delete('/:GroupID/Cmds', async (req, res, next) => {
     let bodyData =  JSON.parse(JSON.stringify(req.body));
-   
-   await Command.DELETE(SQL_query,bodyData[0],res);
+    let data = [];
+    data["PlayerID"] =bodyData[0].CommandID;
+   await Command.DELETE(SQL_query,data,res);
 });
 router.delete('/:GroupID/Cmds/:Plugin', async (req, res, next) => 
 {

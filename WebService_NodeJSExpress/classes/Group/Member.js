@@ -18,6 +18,7 @@ class Member {
 
    
     cond['M_GroupID'] = data.GroupID;
+    cond['M_Rang'] = data.Rang;
     cond['M_PlayerID'] = data.Player_ID;
     cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
     
@@ -53,7 +54,7 @@ class Member {
        if(typeof res == 'undefined')
         return 'error'
        else
-        res.send("The Player is already existing");
+        res.send("The Memeber is already existing");
 
         return;
      }
@@ -75,7 +76,7 @@ class Member {
     query = query_Builder.Insert(con, Table_Name).Get();   //add new player
      result = await DB(query);
     if(typeof res !== "undefined") 
-        res.send("The Players has been added");
+        res.send("The Member has been added");
     else 
        return JSON.parse(JSON.stringify(result));
  
@@ -127,5 +128,12 @@ class Member {
    
    }
    /////////////////////////////////////////////////
+   static async CUSTOM(DB,query,res)
+   {
+    if(typeof res !== "undefined") 
+       res.send(await DB(query))
+    else 
+      return "deleted";
+   }
 }
 module.exports = Member;

@@ -111,4 +111,68 @@ class Command {
   }
   /////////////////////////////////////////////////
 }
+router.get('/:GroupID/Cmds', async (req, res, next) => {
+    let get_data = [];
+    get_data["Type"] = "Premission";
+    get_data["Name"] = req.params.GroupID;
+    let result = await Group.GET(SQL_query,get_data);
+   
+    await Command.GET(SQL_query,result[0], res);
+});
+router.get('/:GroupID/Cmds/:Plugin', async (req, res, next) => {
+
+    let get_data = [];
+    get_data["Type"] = "Premission";
+    get_data["Name"] = req.params.GroupID;
+    let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
+    
+    get_data = [];
+    get_data["GroupID"] = result.G_GroupID;
+    get_data["Plugin"] = req.params.Plugin;
+    
+    await Command.GET(SQL_query,get_data, res);
+});
+router.put('/:GroupID/Cmds', async (req, res, next) => {
+    let get_data = [];
+    get_data["Type"] = "Premission";
+    get_data["Name"] = req.params.GroupID;
+    let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
+    let bodyData =  JSON.parse(JSON.stringify(req.body));
+    get_data = [];
+    get_data["GroupID"] = result[0].G_GroupID;
+    get_data["Name"] = bodyData[0].C_Name;
+    get_data["Plugin"] = bodyData[0].C_Plugin;
+  
+    await Command.PUT(SQL_query,get_data, res);
+});
+router.post('/:GroupID/Cmds', async (req, res, next) => {
+    let get_data = [];
+    get_data["Type"] = "Premission";
+    get_data["Name"] = req.params.GroupID;
+    let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
+    let bodyData =  JSON.parse(JSON.stringify(req.body));
+    get_data = [];
+    get_data["GroupID"] = result[0].G_GroupID;
+    get_data["Name"] = bodyData[0].C_Name;
+    get_data["Plugin"] = bodyData[0].C_Plugin;
+    get_data["CommandID"] = bodyData[0].CommandID;
+    await Command.POST(SQL_query,get_data, res);
+});
+router.delete('/:GroupID/Cmds', async (req, res, next) => {
+    let bodyData =  JSON.parse(JSON.stringify(req.body));
+   
+   await Command.DELETE(SQL_query,bodyData[0],res);
+});
+router.delete('/:GroupID/Cmds/:Plugin', async (req, res, next) => 
+{
+    let get_data = [];
+    get_data["Type"] = "Premission";
+    get_data["Name"] = req.params.GroupID;
+    let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
+    get_data = [];
+    get_data["GroupID"] = result[0].G_GroupID;
+    get_data["Plugin"] = req.params.Plugin;
+
+    await Command.DELETE(SQL_query,get_data,res);
+});
 module.exports = Command;

@@ -114,10 +114,17 @@ class Member {
    static async DELETE(DB,data,res)
    {
     let where = [];
-    where["M_PlayerID"] = data.M_PlayerID;
+    where["M_PlayerID"] = data.PlayerID;
+    where["M_GroupID"] = data.GroupID;
     let query = query_Builder.Delete(Table_Name).Where(where).Get();
+    
     await DB(query);
-    res.send("Player has been deleted");
+
+    if(typeof res !== "undefined") 
+       res.send("The Member has been deleted");
+    else 
+      return "deleted";
+   
    }
    /////////////////////////////////////////////////
 }

@@ -17,14 +17,15 @@ router.get('/:Player_ID', async (req, res, next) => {
 });
 
 router.put('/', async (req, res, next) => {
-    let data =  JSON.parse(JSON.stringify(req.body))[0];
+    let data = JSON.parse(JSON.stringify(req.body))[0];
 
     await Player.PUT(SQL_query, data, res);
 });
 
 router.post('/', async (req, res, next) => {
-    let data =  JSON.parse(JSON.stringify(req.body))[0];
-    await Player.POST(SQL_query, data, res);
+    //  let data =  JSON.parse(JSON.stringify(req.body))[0];
+    // await Player.POST(SQL_query, data, res);
+    res.send('tes');
 });
 
 router.delete('/:PlayerID', async (req, res, next) => {

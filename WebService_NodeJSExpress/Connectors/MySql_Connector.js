@@ -4,9 +4,8 @@ const mysql = require('mysql');
 let db = handleDisconnect();
 
 
-function handleDisconnect() 
-{
-    return  mysql.createConnection({
+function handleDisconnect() {
+    return mysql.createConnection({
         connectionLimit: 10,
         password: '0fecf3c613dffed104bf',
         user: 'csrv_708300',
@@ -15,13 +14,13 @@ function handleDisconnect()
         post: '3306'
     });
 }
-db.on('error',function(err){
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
-      db =  handleDisconnect();  
-      console.log("Rozłączono z bazą danych próba podłączenia");                       // lost due to either server restart, or a
-      } else {                                      // connnection idle timeout (the wait_timeout
+db.on('error', function (err) {
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+        db = handleDisconnect();
+        console.log("Rozłączono z bazą danych próba podłączenia");                       // lost due to either server restart, or a
+    } else {                                      // connnection idle timeout (the wait_timeout
         throw err;                                  // server variable configures this)
-      }
+    }
 })
 
 const Sql_Query = async (query) => new Promise(
@@ -33,11 +32,11 @@ const Sql_Query = async (query) => new Promise(
 
             }
             else {
-                reject('bad');
+                reject(err);
 
             }
         });
-    }).then(value => { db.release; return value }).catch(err => { db.release; console.log("ERROR" +query)});
+    }).then(value => { db.release; return value }).catch(err => { db.release; console.log("ERROR" + query) });
 
 
 module.exports = Sql_Query;

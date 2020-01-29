@@ -60,7 +60,7 @@ class Member {
      }
      
      where =[];
-     where["M_GroupID"] =data.GroupID   //check if group exists
+     where["G_GroupID"] =data.GroupID   //check if group exists
      query = query_Builder.Select("*", "S_Groups").Where(where).Get();
      result = JSON.stringify(await DB(query));
       if (result == "[]")  //in other case return filled JSON with data
@@ -115,7 +115,7 @@ class Member {
    static async DELETE(DB,data,res)
    {
     let where = [];
-    where["M_PlayerID"] = data.PlayerID;
+    where["M_PlayerID"] = data.value;
     where["M_GroupID"] = data.GroupID;
     let query = query_Builder.Delete(Table_Name).Where(where).Get();
     

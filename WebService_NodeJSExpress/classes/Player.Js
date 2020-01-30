@@ -21,9 +21,9 @@ class Player {
     cond['P_Pass'] = data.P_Pass;
     cond['P_Online'] = data.P_Online;
     cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
-
+       
     query = query_Builder.Select("*", Table_Name).Where(cond).Get();
-
+    
     result = await DB(query);
 
     if (typeof res !== "undefined")

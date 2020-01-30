@@ -12,7 +12,8 @@ router.get('/', async (req, res, next) => {
     await Player.GET(SQL_query, req.body, res);
 });
 
-router.get('/:Player_ID', async (req, res, next) => {
+router.get('/:PlayerID', async (req, res, next) => {
+    
     await Player.GET(SQL_query, req.params, res);
 });
 

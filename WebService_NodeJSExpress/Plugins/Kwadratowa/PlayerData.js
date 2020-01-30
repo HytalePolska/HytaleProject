@@ -32,7 +32,10 @@ class PlayerData {
       res.send(result);
     else
     {
-        let data = JSON.parse(JSON.stringify(result));
+         let data = JSON.parse(JSON.stringify(result));
+         let index = String(data[0].PD_UnbanDate).indexOf('T');
+         data[0].PD_UnbanDate = String(data[0].PD_UnbanDate).slice(0,index);
+        
         return data[0];
     }
     
@@ -91,7 +94,6 @@ class PlayerData {
 
     query = query_Builder.Update(con, Table_Name).Where(where).Get();
    let result = await DB(query);
-   console.log(query);
     if (typeof res !== "undefined")
     res.send("201");
   else

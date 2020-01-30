@@ -16,9 +16,15 @@ router.get('/:PlayerID', async (req, res, next) => {
 });
 router.put('/:PlayerID', async (req, res, next) => {
  let reqbody = JSON.parse(JSON.stringify(req.body))[0];
-    reqbody["PlayerID"] = req.params.PlayerID;
+      
+ let body = [];
+     body["PlayerID"] = req.params.PlayerID;
+     body["D_date"] =new Date().toISOString().slice(0, 19).replace('T', ' ');
+     body["D_cause"] = reqbody.D_cause;
+     body["D_Location"] = reqbody.D_Location;
+   
     let playerdata = await PlayerData.GET(SQL_query,req.params);
-    
+ 
     if(typeof playerdata == "undefined")
     {
         res.send("404");
@@ -30,12 +36,12 @@ router.put('/:PlayerID', async (req, res, next) => {
      {
          playerdata.PD_life=0;
          playerdata.PD_IsDeath = 1;
-         playerdata.PD_UnbanDate = reqbody.D_date;
+         playerdata.PD_UnbanDate = body.D_date;
      }
-    
+   
     await PlayerData.POST(SQL_query,playerdata);
     
-   await Death.PUT(SQL_query,reqbody,res);
+   await Death.PUT(SQL_query,body,res);
 });
 router.post('/', async (req, res, next) => {
     let reqbody = JSON.parse(JSON.stringify(req.body))[0];

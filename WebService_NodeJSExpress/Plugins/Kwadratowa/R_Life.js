@@ -17,10 +17,16 @@ router.get('/:PlayerID', async (req, res, next) => {
      await Life.GET(SQL_query,req.params,res);
 });
 router.put('/:PlayerID', async (req, res, next) => {
- let reqbody = JSON.parse(JSON.stringify(req.body))[0];
-    reqbody["PlayerID"] = req.params.PlayerID;
-    reqbody["L_date"] =  new Date().toISOString().slice(0, 19).replace('T', ' ');
-    let playerdata = await PlayerData.GET(SQL_query,req.params);
+
+    let reqbody = JSON.parse(JSON.stringify(req.body))[0];
+      
+    let body = [];
+        body["PlayerID"] = req.params.PlayerID;
+        body["L_date"] =new Date().toISOString().slice(0, 19).replace('T', ' ');
+        body["L_healer"] = reqbody.D_cause;
+        body["L_Location"] = reqbody.D_Location;
+      
+       let playerdata = await PlayerData.GET(SQL_query,req.params);
     
     if(typeof playerdata == "undefined")
     {
@@ -35,7 +41,7 @@ router.put('/:PlayerID', async (req, res, next) => {
     if(playerdata.PD_lifes ==0)
     {
         playerdata.PD_IsDeath =0;
-        playerdata.PD_UnbanDate =   reqbody["L_date"];
+        playerdata.PD_UnbanDate =  body["L_date"];
     }
     playerdata.PD_lifes +=1;
     playerdata.PD_life +=1;

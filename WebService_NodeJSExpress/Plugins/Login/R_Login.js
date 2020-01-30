@@ -11,19 +11,20 @@ const Config = require("./config");
 router.post('/', async (req, res, next) => {
   let reqbody = JSON.parse(JSON.stringify(req.body))[0];
 
+  console.log(reqbody);
   let player = await Player.GET(SQL_query, reqbody);
 
   if (typeof player == 'undefined') {
-    res.status(401).send("This players has not established password");
+    res.send("This players has not established password");
     return;
   }
   if (player.P_Pass !== reqbody.P_Pass) {
-    res.status(402).send("Wrong Password");
+    res.send("Wrong Password");
     return;
   }
   player.P_Online = 1;
   await Player.POST(SQL_query, player);
-  res.status(400).send("Success login");
+  res.send("Success login");
 });
 //PlayerQuitEvent
 router.post('/Exit/:PlayerID', async (req, res) => {
@@ -41,7 +42,7 @@ router.post('/Exit/:PlayerID', async (req, res) => {
 //haslo
 router.put('/', async (req, res) => {
   let reqbody = JSON.parse(JSON.stringify(req.body))[0];
-
+  console.log(reqbody);
   let player = await Player.GET(SQL_query, reqbody);
 
   if (typeof player !== 'undefined') {

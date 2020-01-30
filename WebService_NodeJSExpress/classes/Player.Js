@@ -21,15 +21,14 @@ class Player {
     cond['P_Pass'] = data.P_Pass;
     cond['P_Online'] = data.P_Online;
     cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
-       
+
     query = query_Builder.Select("*", Table_Name).Where(cond).Get();
-    
+
     result = await DB(query);
 
     if (typeof res !== "undefined")
       res.send(result);
-    else
-    {
+    else {
       let data = JSON.parse(JSON.stringify(result));
       return data[0];
     }
@@ -59,12 +58,11 @@ class Player {
     query = query_Builder.Insert(con, Table_Name).Get();   //add new player
     let result = await DB(query);
     if (typeof res !== "undefined")
-    res.send(result);
-  else
-  {
-    let data = JSON.parse(JSON.stringify(result));
-    return data[0];
-  }
+      res.send(result);
+    else {
+      let data = JSON.parse(JSON.stringify(result));
+      return data[0];
+    }
   }
   /////////////////////////////////////////////////
   static async POST(DB, data, res) {
@@ -83,28 +81,26 @@ class Player {
     }
 
     query = query_Builder.Update(con, Table_Name).Where(where).Get();
-    let result =   await DB(query);
+    let result = await DB(query);
     if (typeof res !== "undefined")
-    res.send(result);
-  else
-  {
-    let data = JSON.parse(JSON.stringify(result));
-    return data[0];
-  }
+      res.send(result);
+    else {
+      let data = JSON.parse(JSON.stringify(result));
+      return data[0];
+    }
   }
   /////////////////////////////////////////////////
   static async DELETE(DB, data, res) {
     let con = [];
     con["PlayerID"] = data.PlayerID;
     let query = query_Builder.Delete(Table_Name).Where(con).Get();
-    let result =   await DB(query);
+    let result = await DB(query);
     if (typeof res !== "undefined")
-    res.send(result);
-  else
-  {
-    let data = JSON.parse(JSON.stringify(result));
-    return data[0];
-  }
+      res.send(result);
+    else {
+      let data = JSON.parse(JSON.stringify(result));
+      return data[0];
+    }
   }
   /////////////////////////////////////////////////
 }

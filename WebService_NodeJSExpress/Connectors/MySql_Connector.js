@@ -4,10 +4,11 @@ const mysql = require('mysql');
 let db;
 handleDisconnect();
 
-
+//polowanie 
+//connect time out
 function handleDisconnect() {
-    db =mysql.createConnection({
-        connectionLimit: 10,
+    db = mysql.createPool({
+        connectionLimit: 100,
         password: '0fecf3c613dffed104bf',
         user: 'csrv_708300',
         database: 'csrv_708300',
@@ -16,16 +17,15 @@ function handleDisconnect() {
     });
 }
 db.on('error', function (err) {
-    if (err.code === 'PROTOCOL_CONNECTION_LOST') 
-    {
-    db = handleDisconnect();
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        db = handleDisconnect();
     }
 })
 setInterval(() => {
     db.query('SELECT 1', (err, rows) => {
         if (err) throw err;
-    });   
-},60000);
+    });
+}, 60000);
 
 const Sql_Query = async (query) => new Promise(
     (resolve, reject) => {
@@ -41,7 +41,7 @@ const Sql_Query = async (query) => new Promise(
 
             }
         });
-    }).then(value => { db.release; return value }).catch(err => { db.release; console.log("ERROR" + query); return "503"  });
+    }).then(value => { db.release; return value }).catch(err => { db.release; console.log("ERROR" + query); return "503" });
 
 
 module.exports = Sql_Query;

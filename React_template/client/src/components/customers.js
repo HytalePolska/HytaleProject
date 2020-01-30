@@ -10,19 +10,21 @@ class Customers extends Component {
   }
 
   componentDidMount() {
-    fetch('/player')
+    fetch('/players')
       .then(res => res.json())
-      .then(customers => this.setState({customers}, () => console.log('Customers fetched...', customers)));
+      .then(customers => this.setState({ customers }, () => console.log('Customers fetched...', customers)));
   }
 
   render() {
     return (
+
       <div>
-        <h2>Customers</h2>
+
+        <h2>Lista pobranych</h2>
         <ul>
-        {this.state.customers.map(customer => 
-          <li key={customer.Player_ID}>{customer.Nick}</li>
-        )}
+          {this.state.customers.map(customer =>
+            <li key={customer.PlayerID}>{customer.P_Name}</li>
+          )}
         </ul>
       </div>
     );

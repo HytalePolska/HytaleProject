@@ -12,20 +12,21 @@ const SQL_builder = require('./Tools/Sql_Builder');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/commands',command)
+app.use('/commands', command)
 app.use('/players', player);
 app.use('/groups', group);
 app.use('/plugins', plugins);
 
-app.get('/test', async (req,res) =>{
- 
-   let sql_data = await SQL('SELECT Nick FROM MC_Players'); 
-   let where = [];
-   
-   let build = new SQL_builder().Select("*","MC_Players").Where().And().In(sql_data,"Nick").Get();
-   console.log(build);
-   res.send(await SQL(build));
+app.get('/test/:paramter', async (req, res) => {
+  console.log(req.params);
+  res.status(300).send("Hello Word");
 });
+app.get('/test/test1/:paramater', async (req, res) => {
+  console.log(req.params);
+  res.send("Hello Word" + req.params.paramater);
+});
+
+
 
 const PORT = process.env.PORT | '5000';
 app.listen(PORT, () => {

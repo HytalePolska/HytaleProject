@@ -1,11 +1,12 @@
 
 const mysql = require('mysql');
 
-let db = handleDisconnect();
+let db;
+handleDisconnect();
 
 
 function handleDisconnect() {
-    return mysql.createConnection({
+    db =mysql.createConnection({
         connectionLimit: 10,
         password: '0fecf3c613dffed104bf',
         user: 'csrv_708300',
@@ -15,13 +16,16 @@ function handleDisconnect() {
     });
 }
 db.on('error', function (err) {
-    if (err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
-        db = handleDisconnect();
-        console.log("Rozłączono z bazą danych próba podłączenia");                       // lost due to either server restart, or a
-    } else {                                      // connnection idle timeout (the wait_timeout
-        throw err;                                  // server variable configures this)
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') 
+    {
+    db = handleDisconnect();
     }
 })
+setInterval(() => {
+    db.query('SELECT 1', (err, rows) => {
+        if (err) throw err;
+    });   
+},60000);
 
 const Sql_Query = async (query) => new Promise(
     (resolve, reject) => {

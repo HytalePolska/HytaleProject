@@ -23,8 +23,8 @@ router.put('/:PlayerID', async (req, res, next) => {
     let body = [];
         body["PlayerID"] = req.params.PlayerID;
         body["L_date"] =new Date().toISOString().slice(0, 19).replace('T', ' ');
-        body["L_healer"] = reqbody.D_cause;
-        body["L_Location"] = reqbody.D_Location;
+        body["L_healer"] = reqbody.L_healer;
+        body["L_Location"] = reqbody.L_Location;
       
        let playerdata = await PlayerData.GET(SQL_query,req.params);
     
@@ -48,7 +48,7 @@ router.put('/:PlayerID', async (req, res, next) => {
    
    await PlayerData.POST(SQL_query,playerdata);
     
-   await Life.PUT(SQL_query,reqbody,res);
+   await Life.PUT(SQL_query,body,res);
 });
 router.post('/', async (req, res, next) => {
     let reqbody = JSON.parse(JSON.stringify(req.body))[0];

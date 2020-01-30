@@ -15,11 +15,14 @@ Initialize();
 
 router.use('/Deaths',R_Death);
 router.use('/Lifes',R_Life);
+router.get('/', async (req, res, next) => 
+{
+    await PlayerData.GET(SQL_query,req.params,res);
+ });
 router.get('/config', async (req, res, next) => 
 {
     res.send(Plugin_Config);
  });
-
 router.get('/:PlayerID', async (req, res, next) => {
    await PlayerData.GET(SQL_query,req.params,res);
 });

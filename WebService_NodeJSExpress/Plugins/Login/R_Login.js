@@ -68,8 +68,6 @@ router.put('/', async(req,res)=>{
       await Player.PUT(SQL_query,new_player);
       res.status(400).send("Successed created account! Now you need to login ");   
 });
-
-
 function IsPasswordValid(password)
 {
   let passSize = String(password).length;

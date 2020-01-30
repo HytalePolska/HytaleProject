@@ -17,6 +17,21 @@ router.get('/', async (req, res, next) => {
     res.send('/premmissions');
     res.send('/login');
 });
+router.put('/', async (req, res, next) => {
+
+    res.send('/premmissions');
+    res.send('/login');
+});
+router.post('/', async (req, res, next) => {
+
+    res.send('/premmissions');
+    res.send('/login');
+});
+router.delete('/', async (req, res, next) => {
+
+    res.send('/premmissions');
+    res.send('/login');
+});
 
 
 

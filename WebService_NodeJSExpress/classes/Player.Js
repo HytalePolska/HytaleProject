@@ -29,7 +29,10 @@ class Player {
     if (typeof res !== "undefined")
       res.send(result);
     else
-      return JSON.parse(JSON.stringify(result));
+    {
+      let data = JSON.parse(JSON.stringify(result));
+      return data[0];
+    }
   }
   /////////////////////////////////////////////////
   static async PUT(DB, data, res) {
@@ -56,9 +59,12 @@ class Player {
     query = query_Builder.Insert(con, Table_Name).Get();   //add new player
     let result = await DB(query);
     if (typeof res !== "undefined")
-      res.send("Player has been added");
-    else
-      return JSON.parse(JSON.stringify(result));
+    res.send(result);
+  else
+  {
+    let data = JSON.parse(JSON.stringify(result));
+    return data[0];
+  }
   }
   /////////////////////////////////////////////////
   static async POST(DB, data, res) {
@@ -77,16 +83,28 @@ class Player {
     }
 
     query = query_Builder.Update(con, Table_Name).Where(where).Get();
-    await DB(query);
-    res.send("Player has been updated");
+    let result =   await DB(query);
+    if (typeof res !== "undefined")
+    res.send(result);
+  else
+  {
+    let data = JSON.parse(JSON.stringify(result));
+    return data[0];
+  }
   }
   /////////////////////////////////////////////////
   static async DELETE(DB, data, res) {
     let con = [];
     con["PlayerID"] = data.PlayerID;
     let query = query_Builder.Delete(Table_Name).Where(con).Get();
-    await DB(query);
-    res.send("Player has been deleted");
+    let result =   await DB(query);
+    if (typeof res !== "undefined")
+    res.send(result);
+  else
+  {
+    let data = JSON.parse(JSON.stringify(result));
+    return data[0];
+  }
   }
   /////////////////////////////////////////////////
 }

@@ -24,8 +24,8 @@ router.put('/', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-    //  let data =  JSON.parse(JSON.stringify(req.body))[0];
-    // await Player.POST(SQL_query, data, res);
+    let data =  JSON.parse(JSON.stringify(req.body))[0];
+    await Player.POST(SQL_query, data, res);
     res.send('tes');
 });
 

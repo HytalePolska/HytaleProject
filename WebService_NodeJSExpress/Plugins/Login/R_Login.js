@@ -14,6 +14,7 @@ router.get('/:PlayerID', async (req, res, next) => {
 
     let query = new SQL_builder().Select(tab, "S_Players").Where(where).Get();
     let result = await SQL_query(query);
+    res.status(401);
     res.send(result);
 });
 router.post('/', async (req, res, next) => {

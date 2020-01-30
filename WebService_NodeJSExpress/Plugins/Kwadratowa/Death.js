@@ -1,7 +1,7 @@
 
-const SQL_Builder = require("../Tools/Sql_Builder");
+const SQL_Builder = require("../../Tools/Sql_Builder");
 const query_Builder = new SQL_Builder();
-const Table_Name = "S_Players";
+const Table_Name = "P_KM_Deaths";
 class Death {
   constructor() {
 
@@ -14,17 +14,17 @@ class Death {
   /////////////////////////////////////////////////
   static async GET(DB, data, res) {
     let query;
-    let cond = [];
+    let con = [];
     let result;
 
-    cond["DeathID"] = data.DeathID;
-    cond['PlayerID'] = data.PlayerID;
-    cond['D_date'] = data.D_date;
-    cond['D_cause'] = data.D_cause;
-    cond['D_Location'] = data.D_Location;
-    cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
+    con["DeathID"] = data.DeathID;
+    con['PlayerID'] = data.PlayerID;
+    con['D_date'] = data.D_date;
+    con['D_cause'] = data.D_cause;
+    con['D_Location'] = data.D_Location;
+    con["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
 
-    query = query_Builder.Select("*", Table_Name).Where(cond).Get();
+    query = query_Builder.Select("*", Table_Name).Where(con).Get();
 
     result = await DB(query);
 
@@ -37,58 +37,59 @@ class Death {
   static async PUT(DB, data, res) {
     let con = [];
 
-    con["PlayerID"] = data.PlayerID;
-    con["P_Name"] = data.P_Name;
-    con["P_Pass"] = data.P_Pass;
-    con["P_Online"] = data.P_Online;
-
+    
+    con['PlayerID'] = data.PlayerID;
+    con['D_date'] = data.D_date;
+    con['D_cause'] = data.D_cause;
+    con['D_Location'] = data.D_Location;
 
     let where = [];
     where["PlayerID"] = data.PlayerID;   //check if player exists
-
+    where["D_date"] = data.D_date; 
     let query = query_Builder.Select("*", Table_Name).Where(where).Get();
 
 
     if (JSON.stringify(await DB(query)) != "[]")  //in other case return filled JSON with data
     {
-      res.send("The Player is already existing");
+      res.send("409");
       return;
     }
 
     query = query_Builder.Insert(con, Table_Name).Get();   //add new player
     let result = await DB(query);
     if (typeof res !== "undefined")
-      res.send("Player has been added");
+      res.send("201");
     else
       return JSON.parse(JSON.stringify(result));
   }
   /////////////////////////////////////////////////
   static async POST(DB, data, res) {
     let con = [];
-    con["P_Name"] = data.P_Name;
-    con["P_Pass"] = data.P_Pass;
-    con["P_Online"] = data.P_Online;
+   
+    con['D_date'] = data.D_date;
+    con['D_cause'] = data.D_cause;
+    con['D_Location'] = data.D_Location;
 
-    let where = []; where["PlayerID"] = data.PlayerID;   //check if player exists
+    let where = [];   where["DeathID"] = data.DeathID;   //check if player exists
     let query = query_Builder.Select("*", Table_Name).Where(where).Get();
 
     if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
     {
-      res.send("The Player is not existing");
+      res.send("404");
       return;
     }
 
     query = query_Builder.Update(con, Table_Name).Where(where).Get();
     await DB(query);
-    res.send("Player has been updated");
+    res.send("200");
   }
   /////////////////////////////////////////////////
   static async DELETE(DB, data, res) {
-    let con = [];
-    con["PlayerID"] = data.PlayerID;
-    let query = query_Builder.Delete(Table_Name).Where(con).Get();
+    let where = [];
+    where["DeathID"] = data.DeathID;
+    let query = query_Builder.Delete(Table_Name).Where(where).Get();
     await DB(query);
-    res.send("Player has been deleted");
+    res.send("200");
   }
   /////////////////////////////////////////////////
 }

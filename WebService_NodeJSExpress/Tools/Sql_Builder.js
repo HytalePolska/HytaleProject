@@ -135,6 +135,27 @@ class SQL_Builder {
     
     return this;
   }
-
+  CreateTable(name)
+  {
+    this.result = "CREATE TABLE IF NOT EXISTS "+name;
+    return this;
+  }
+  TableFilds(filds)
+  {
+   
+    let size = this.Get_Size(filds);
+    this.result+=" (";
+    for(let i=0;i<size;i++)
+    {
+      this.result+= filds[i];
+      if(i<size-1)
+      this.result+=',';
+    
+    }
+    this.result+=")"
+        
+    
+    return this;
+  }
 }
 module.exports = SQL_Builder;

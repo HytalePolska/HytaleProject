@@ -3,16 +3,17 @@ const express = require("express");
 
 const router = express.Router({ mergeParams: true });
 
-const Player = require('../../Classes/Player');
+
 const SQL_query = require('../../Connectors/MySql_Connector');
 const SQL_builder = require('../../Tools/Sql_Builder');
 
-const Death = require("./Death");
+const config = require('./Plugin_Config');
+const Life = require("./Life");
 const PlayerData= require("./PlayerData");
 
 
 router.get('/:PlayerID', async (req, res, next) => {
-     await Death.GET(SQL_query,req.params,res);
+     await Life.GET(SQL_query,req.params,res);
 });
 router.put('/:PlayerID', async (req, res, next) => {
  let reqbody = JSON.parse(JSON.stringify(req.body))[0];
@@ -21,21 +22,20 @@ router.put('/:PlayerID', async (req, res, next) => {
     
     if(typeof playerdata == "undefined")
     {
-        res.send("404");
+        res.send("404"); //nie mozna odlaesc gracza
         return;
     }
-    playerdata.PD_Deaths +=1;
-    playerdata.PD_life -=1;
-     if(playerdata.PD_life <= 0)
-     {
-         playerdata.PD_life=0;
-         playerdata.PD_IsDeath = 1;
-         playerdata.PD_UnbanDate = reqbody.D_date;
-     }
+    if(playerdata.PD_lifes+1 > config.MaxHealths)
+    {
+        res.send("405"); //przekracza maxymalna liczbe zyc
+        return;
+    }
+    playerdata.PD_lifes +=1;
+    playerdata.PD_life +=1;
     
-    await PlayerData.POST(SQL_query,playerdata);
+   await PlayerData.POST(SQL_query,playerdata);
     
-   await Death.PUT(SQL_query,reqbody,res);
+   await Life.PUT(SQL_query,reqbody,res);
 });
 router.post('/', async (req, res, next) => {
     let reqbody = JSON.parse(JSON.stringify(req.body))[0];

@@ -25,7 +25,7 @@ class Premission {
   }
   /////////////////////////////////////////////////
   static async GET(DB, data, res) {
-     await this.Init_table(DB);
+   
     let query;
     let selected_filds = ["PremMemberID","PlayerID","PremissionID","P_Prefix","P_AddDate","P_AddByPlayer"];
     let result;

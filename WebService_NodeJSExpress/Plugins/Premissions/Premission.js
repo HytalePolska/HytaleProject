@@ -22,19 +22,19 @@ class Premission {
   }
   /////////////////////////////////////////////////
   static async GET(DB, data, res) {
-     await this.Init_table(DB);
+   
     let query;
     let selected_filds = ["PremissionID","P_Name","P_Members"];
     let result;
 
      data = this.LoadFilds(data,selected_filds);
      data["1"]=1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
-       
+      
     
     query = SQL_Builder.Select("*", Table_Name).Where(data).Get();
    
     result = await DB(query);
-
+     console.log(query);
     if (typeof res !== "undefined")
       res.status(200).send(result);
     else

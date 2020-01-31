@@ -24,6 +24,18 @@ router.all('/',async(req,res,next) =>
       req.body = JSON.parse(JSON.stringify(req.body))[0];
       next();
 })
+router.all('/:PlayerID',async(req,res,next) =>
+{
+    let premdata = await Premission.GET(SQL_query,req.params);
+  
+    if (typeof premdata == 'undefined') {
+        res.status(404).send("This Premission is not existing "+req.params.PremissionID);
+        return;
+      }
+      req.data =premdata;
+      req.body = JSON.parse(JSON.stringify(req.body))[0];
+      next();
+})
 ////////////////////Dodawanie Premisji///////////////////////////////
 router.get('/', async (req, res, next) => {
     await Member.GET(SQL_query,req.data,res);
@@ -54,11 +66,13 @@ router.post('/', async (req, res, next) => {
 });
 router.delete('/', async (req, res, next) => {
    
-    await  Member.DELETE(SQL_query, req.params, res);
+    await  Member.DELETE(SQL_query, req.body, res);
 });
-router.delete('/:P_Name', async (req, res, next) => {
+router.delete('/:PlayerID', async (req, res, next) => {
+
    
-    await  Member.DELETE(SQL_query, req.params, res);
+   req.data["PlayerID"]  = req.params.PlayerID;
+    await  Member.DELETE(SQL_query, req.data, res);
 });
 async function Initialize()
 {

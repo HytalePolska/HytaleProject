@@ -34,7 +34,7 @@ class Premission {
     query = SQL_Builder.Select("*", Table_Name).Where(data).Get();
    
     result = await DB(query);
-     console.log(query);
+   
     if (typeof res !== "undefined")
       res.status(200).send(result);
     else
@@ -117,7 +117,7 @@ class Premission {
     let where = this.LoadFilds(data,where_filds);
     
     let query
-    if(where.length == 0)
+    if(where == "[]")
        query = SQL_Builder.Delete(Table_Name).Get();
     else
        query = SQL_Builder.Delete(Table_Name).Where(where).Get();

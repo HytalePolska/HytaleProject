@@ -117,7 +117,7 @@ class PremCmd {
     let where = this.LoadFilds(data,where_filds);
     
     let query
-    if(where.length == 0)
+    if(where == '[]')
        query = SQL_Builder.Delete(Table_Name).Get();
     else
        query = SQL_Builder.Delete(Table_Name).Where(where).Get();

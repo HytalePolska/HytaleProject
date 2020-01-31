@@ -85,7 +85,7 @@ class Premission {
   /////////////////////////////////////////////////
   static async POST(DB, data, res) {
     
-    let post_filds =  ["PremMemberID","PlayerID","PremissionID","P_Prefix","P_AddDate","P_AddByPlayer"];
+    let post_filds =  ["P_Prefix"];
 
     let where_filds =  ["PremMemberID","PlayerID","PremissionID"];
     
@@ -116,16 +116,17 @@ class Premission {
   static async DELETE(DB, data, res) {
 
     let where_filds = ["PremMemberID","PlayerID","PremissionID"];
-
+   
     let where = this.LoadFilds(data,where_filds);
     
     let query
-    if(where.length == 0)
+    if(where.length == "[]")
        query = SQL_Builder.Delete(Table_Name).Get();
     else
        query = SQL_Builder.Delete(Table_Name).Where(where).Get();
 
     let result =   await DB(query);
+  
     if (typeof res !== "undefined")
     res.status(200).send(`The ${Table_Name} has been deleted`);
   else

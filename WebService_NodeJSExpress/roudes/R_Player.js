@@ -8,6 +8,7 @@ const Player = require("../Classes/Player");
 const SQL_query = require('../Connectors/MySql_Connector');
 
 
+
 router.get('/', async (req, res, next) => {
     await Player.GET(SQL_query, req.body, res);
 });
@@ -32,7 +33,6 @@ router.post('/', async (req, res, next) => {
 router.delete('/:PlayerID', async (req, res, next) => {
     await Player.DELETE(SQL_query, req.params, res);
 });
-
 
 
 

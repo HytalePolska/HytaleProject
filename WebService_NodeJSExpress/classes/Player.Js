@@ -3,6 +3,8 @@ const SQL_Builder = require("../Tools/Sql_Builder");
 const query_Builder = new SQL_Builder();
 const Table_Name = "S_Players";
 class Player {
+
+  static is_init = false;
   constructor() {
 
     this.Player_ID = '';
@@ -10,8 +12,19 @@ class Player {
     this.P_Pass = '';
     this.P_Online = '';
   }
+   
+  static Init_table()
+  {
+    if(this.is_init == false)
+    {
+      console.log("witam");
+      this.is_init =true;
+    }
+  }
+  
   /////////////////////////////////////////////////
   static async GET(DB, data, res) {
+    this.Init_table();
     let query;
     let cond = [];
     let result;

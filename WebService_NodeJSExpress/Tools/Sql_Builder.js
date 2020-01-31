@@ -120,12 +120,22 @@ class SQL_Builder {
   }
   In(filds,TableName)
   {
+
+    let dotpoz = String(TableName).indexOf(".");
+    let lenght = String(TableName).length;
+    let New_Name  =TableName;
+    if(lenght >=0)
+    {
+      New_Name  = String(TableName).substr(dotpoz+1,lenght);
+    }
+    
+
     filds = JSON.parse(JSON.stringify(filds));
     let size = this.Get_Size(filds);
     this.result+= TableName+" In (";
     for(let i=0;i<size;i++)
     {
-      this.result+= this.NumberOrString(filds[i][TableName]);
+      this.result+= this.NumberOrString(filds[i][New_Name]);
       if(i<size-1)
       this.result+=',';
     

@@ -85,16 +85,18 @@ let query = " SELECT c.CommandID FROM S_Commands c ";
 query+= "JOIN S_Plugins p ON c.PluginID = p.PluginID WHERE "
 query+= new SQL_builder().In(cmdslist,"c.CommandID").And().Condition(pluginName,"AND").Get();
 
-let list2 = JSON.parse(JSON.stringify(await SQL_query(query)));
+let list2 = [];
+list2 = JSON.parse(JSON.stringify(await SQL_query(query)));  //komendy ktorych plugin nazywa sie wyslanemu 
+ let con = [];
+ con["PremissionID"] =req.data.PremissionID;
+    query = " DELETE FROM P_Prem_PremCmds  WHERE ";
+    query+= new SQL_builder().In(list2,"CommandID").And().Condition(con,"AND").Get();  //usuwane je z tabeli z komendami w premisji
 
-query = " DELETE P_Prem_PremCmds FROM S_Commands WHERE ";
-    query+= new SQL_builder().In(cmdslist,"CommandID").And().Condition(list2,"AND").Get();
 
 
 
-  console.log(query);
-//let result =await SQL_query(query);
-res.send("123");
+let result =await SQL_query(query);
+res.send(result);
 });
 async function Initialize()
 {

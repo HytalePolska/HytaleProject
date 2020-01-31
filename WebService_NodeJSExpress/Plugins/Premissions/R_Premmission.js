@@ -5,12 +5,15 @@ const router = express.Router({ mergeParams: true });
 
 const Group = require("../../Classes/Group/Group");
 const Member = require("../../Classes/Group/Member");
-const Command = require("../../Classes/Command");
 const SQL_query = require('../../Connectors/MySql_Connector');
 const Plugin = require('../../Classes/Plugins');
 const SQL_builder = require('../../Tools/Sql_Builder');
-
+const Command = require('./R_PremCmds');
+const Premission = require('../Premissions/R_PremCmds');
 Initialize();
+
+
+router.use("/command",Command);
 
 ////////////////////Dodawanie Premisji///////////////////////////////
 router.get('/', async (req, res, next) => {
@@ -54,92 +57,6 @@ router.delete('/:GroupID', async (req, res, next) => {
     get_data["G_Type"] = "Premission";
     get_data["GroupID"] = req.params.GroupID;
     await Group.DELETE(SQL_query, get_data, res);
-});
-////////////////////Dodawanie Komand Premissji///////////////////////////////
-router.get('/:GroupID/Cmds', async (req, res, next) => {
-    let get_data = [];
-    get_data["G_Type"] = "Premission";
-    get_data["G_Name"] = req.params.GroupID;
-
-    let result = await Group.GET(SQL_query,get_data);
-    let GroupId= result[0].GroupID;
-  
-   
-  let query = "SELECT c.* FROM S_Commands c INNER JOIN S_Members m on c.CommandID = m.M_ValueID ";
-  query+=`WHERE m.GroupID = ${GroupId} AND M_ValueTable = 'Command' `;
-
-   await Member.CUSTOM(SQL_query,query,res);
-   
-});
-router.get('/:GroupID/Cmds/:Plugin', async (req, res, next) => {
-
-    let get_data = [];
-    get_data["G_Type"] = "Premission";
-    get_data["G_Name"] = req.params.GroupID;
-
-    let result = await Group.GET(SQL_query,get_data);
-    let GroupId= result[0].GroupID;
-    let Plugin= req.params.Plugin;
-   
-  let query = "SELECT c.* FROM S_Commands c INNER JOIN S_Members m on c.CommandID = m.M_ValueID ";
-      query+=`WHERE m.GroupID = ${GroupId} AND c.C_Plugin = '${Plugin}' AND M_ValueTable = 'Command'  `;
-
-   await Member.CUSTOM(SQL_query,query,res);
-});
-router.put('/:GroupID/Cmds', async (req, res, next) => {
-    let get_data = [];
-    get_data["G_Type"] = "Premission";
-    get_data["G_Name"] = req.params.GroupID;
-    let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
-    let bodyData =  JSON.parse(JSON.stringify(req.body));
-    get_data = [];
-    get_data["GroupID"] = result[0].GroupID;
-    get_data["PlayerID"] = bodyData[0].C_CommandID;
-    get_data["Rang"] = "Command";
-     
-    await Member.PUT(SQL_query,get_data, res);
-});
-router.put('/:GroupID/Cmds/:Plugin', async (req, res, next) => {
-    let get_data = [];
-    get_data["G_Type"] = "Premission";
-    get_data["G_Name"] = req.params.GroupID;
-    let result = await Group.GET(SQL_query,get_data); //pobiernie ID S_Group po jej nazwie
-    get_data = [];
-    let GroupID = result[0].GroupID;
-    let Plugin = req.params.Plugin;
-   
-
-    let commandids = `SELECT M_PlayerID FROM S_Members WHERE M_GroupID = ${GroupID} AND M_ValueTable = 'Command' `;
-
-    let query = " INSERT INTO S_Members (GroupID,M_ValueID,M_ValueTable) ";
-    query+= ` SELECT ${GroupID} , CommandID ,'Command' FROM S_Commands`;
-    query+= ` WHERE C_Plugin = '${Plugin}' AND CommandID NOT IN (${commandids})`;
-     
-    await Member.CUSTOM(SQL_query,query,res);
-});
-router.delete('/:GroupID/Cmds', async (req, res, next) => {
-    let bodyData =  JSON.parse(JSON.stringify(req.body));
-    let data = [];
-   
-    data["M_ValueID"] =bodyData[0].CommandID;
-   
-   await Member.DELETE(SQL_query,data,res);
-});
-router.delete('/:GroupID/Cmds/:Plugin', async (req, res, next) => 
-{
-    let get_data = [];
-    get_data["G_Type"] = "Premission";
-    get_data["G_Name"] = req.params.GroupID;
-
-    let result = await Group.GET(SQL_query,get_data);
-    let GroupId= result[0].GroupID;
-    let Plugin= req.params.Plugin;
-   
-  let query = "DELETE m FROM S_Members m INNER JOIN S_Commands c ON m.M_ValueID = c.CommandID";
-      query += ` WHERE m.GroupID =${GroupId} AND m.M_ValueTable = 'Command' AND c.C_Plugin = '${Plugin}' `;
- 
-
-   await Member.CUSTOM(SQL_query,query,res);
 });
 ////////////////////Dodawanie Graczy///////////////////////////////
 router.get('/Players/:PlayerID', async (req, res, next) => {
@@ -194,24 +111,7 @@ router.delete('/:GroupID/Players', async (req, res, next) => {
 //////////////////////////////////////////////////////////////
 async function Initialize()
 {
-
-    let fildscmds=[];
-  
-    fildscmds.push("CommandID INT AUTO_INCREMENT PRIMARY KEY");
-    fildscmds.push("PluginID VARCHAR(50) NOT NULL");
-    fildscmds.push("C_Name VARCHAR(50) NOT NULL");
     
-    let TableCmds = new SQL_builder().CreateTable("P_Prem_Commands").TableFilds(fildscmds).Get();
-
-    let fildsPremrData=[];
-  
-    fildsPremrData.push("GroupID VARCHAR(50) NOT NULL");
-   
-    
-    let TablePremData = new SQL_builder().CreateTable("P_Prem_Data").TableFilds(fildsPremrData).Get();
-   
-     await SQL_query(TableCmds);
-     await SQL_query(TablePremData);
     
      let plugin_data = [];
      plugin_data["P_Name"] = "Plugin_Premisje";

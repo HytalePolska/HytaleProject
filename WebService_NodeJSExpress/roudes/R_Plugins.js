@@ -19,10 +19,11 @@ const commands = require('./R_Command');
 
 Initialize();
 
-router.use('/:P_Name/commands', commands);
-router.use('/premissions', premissions);
 router.use('/login', login);
 router.use('/kwadratowa', kwadratowa);
+router.use('/premissions', premissions);
+router.use('/:P_Name/commands', commands);
+
 
 router.get('/', async (req, res, next) => {
      await plugin.GET(SQL_query,req.body,res);

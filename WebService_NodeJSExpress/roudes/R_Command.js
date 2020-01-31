@@ -39,7 +39,7 @@ router.all('/:CommandID',async(req,res,next) =>
 
 router.get('/', async (req, res, next) => {
     
-    await Command.GET(SQL_query,req,res);
+    await Command.GET(SQL_query,req.P_data,res);
 });
 
 router.get('/:C_Name', async (req, res, next) => {

@@ -24,7 +24,6 @@ class Plugin {
     con["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
        
     query = query_Builder.Select("*", Table_Name).Where(con).Get();
-    
     result = await DB(query);
 
     if (typeof res !== "undefined")
@@ -57,7 +56,7 @@ class Plugin {
       return  res.status(400).send("The Plugin is already existing");
     else
     {
-        console.log("The Plugin is already existing "+ con['P_Name'] );
+        //console.log("The Plugin is already existing "+ con['P_Name'] );
         return "[]";
     }
       
@@ -79,7 +78,7 @@ class Plugin {
     con['P_Name'] = data.P_Name;
     con['P_Description'] = data.P_Description;
     con['P_LastComandsUpdate'] = data.P_LastComandsUpdate;
-    let where = []; where["PlayerID"] = data.PlayerID;   //check if player exists
+    let where = []; where["PluginID"] = data.PluginID;   //check if player exists
     let query = query_Builder.Select("*", Table_Name).Where(where).Get();
 
     if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data

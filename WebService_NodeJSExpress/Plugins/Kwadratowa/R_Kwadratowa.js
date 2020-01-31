@@ -10,7 +10,7 @@ const PlayerData = require("./PlayerData");
 const R_Death = require("./R_Deaths");
 const R_Life = require("./R_Life");
 const Plugin_Config = require("./Plugin_Config");
-
+const Plugin = require("../../Classes/Plugins");
 Initialize();
 
 router.use('/Deaths',R_Death);
@@ -60,7 +60,7 @@ async function Initialize()
   
     filds.push("DeathID INT AUTO_INCREMENT PRIMARY KEY");
     filds.push("PlayerID VARCHAR(50) NOT NULL");
-    filds.push("D_date DATE");
+    filds.push("D_date DATETIME");
     filds.push(" D_cause VARCHAR(50)");
     filds.push(" D_location VARCHAR(50)");
     
@@ -70,7 +70,7 @@ async function Initialize()
   
     fildslifes.push("LifeID INT AUTO_INCREMENT PRIMARY KEY");
     fildslifes.push("PlayerID VARCHAR(50) NOT NULL");
-    fildslifes.push("L_date DATE");
+    fildslifes.push("L_date DATETIME");
     fildslifes.push("L_Healer VARCHAR(50)");
     fildslifes.push("L_location VARCHAR(50)");
     
@@ -83,13 +83,19 @@ async function Initialize()
     fildsPlayerData.push("PD_lifes INT");
     fildsPlayerData.push("PD_life INT");
     fildsPlayerData.push("PD_IsDeath INT");
-    fildsPlayerData.push("PD_UnbanDate Date");
+    fildsPlayerData.push("PD_UnbanDate DATETIME");
     
     let TablePlayerData = new SQL_builder().CreateTable("P_KM_PlayerData").TableFilds(fildsPlayerData).Get();
    
      await SQL_query(TableDeaths);
      await SQL_query(TablePlayerData);
      await SQL_query(Tablelifes);
+
+     let plugin_data = [];
+     plugin_data["P_Name"] = "Plugin_Kwadratowa Masakra";
+     plugin_data["P_Description"] = "Jesli umrzesz to dosajesz bana na godzine";
+     plugin_data["P_LastComandsUpdate"] =new Date().toISOString().slice(0, 19).replace('T', ' ');
+     await Plugin.PUT(SQL_query,plugin_data);
   
 }
 

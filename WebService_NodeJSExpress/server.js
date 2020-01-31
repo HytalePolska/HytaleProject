@@ -5,14 +5,12 @@ var bodyParser = require("body-parser");
 const player = require('./roudes/R_Player');
 const group = require('./roudes/Group/R_Groups');
 const plugins = require('./roudes/R_Plugins');
-const command = require('./roudes/R_Command');
 const SQL = require('./Connectors/MySql_Connector');
 
 const SQL_builder = require('./Tools/Sql_Builder');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/commands',command)
 app.use('/players', player);
 app.use('/groups', group);
 app.use('/plugins', plugins);

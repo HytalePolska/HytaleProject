@@ -4,9 +4,16 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 
 const Player = require('../../Classes/Player');
+
 const SQL_query = require('../../Connectors/MySql_Connector');
+
 const SQL_builder = require('../../Tools/Sql_Builder');
+
 const Config = require("./config");
+
+const Plugin = require("../../Classes/Plugins");
+
+Initialize();
 //login
 router.post('/', async (req, res, next) => {
   let reqbody = JSON.parse(JSON.stringify(req.body))[0];
@@ -72,6 +79,17 @@ function IsPasswordValid(password) {
     return "Your password is too large";
 
   return true;
+}
+
+async function Initialize()
+{
+
+     let plugin_data = [];
+     plugin_data["P_Name"] = "Plugin_Login";
+     plugin_data["P_Description"] = "Slorzy do logowania sie na strony";
+     plugin_data["P_LastComandsUpdate"] =new Date().toISOString().slice(0, 19).replace('T', ' ');
+     await Plugin.PUT(SQL_query,plugin_data);
+  
 }
 
 module.exports = router;

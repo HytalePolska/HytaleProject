@@ -7,7 +7,10 @@ const Group = require("../../Classes/Group/Group");
 const Member = require("../../Classes/Group/Member");
 const Command = require("../../Classes/Command");
 const SQL_query = require('../../Connectors/MySql_Connector');
+const Plugin = require('../../Classes/Plugins');
+const SQL_builder = require('../../Tools/Sql_Builder');
 
+Initialize();
 
 ////////////////////Dodawanie Premisji///////////////////////////////
 router.get('/', async (req, res, next) => {
@@ -189,5 +192,36 @@ router.delete('/:GroupID/Players', async (req, res, next) => {
    await Member.DELETE(SQL_query,data,res);
 });
 //////////////////////////////////////////////////////////////
+async function Initialize()
+{
+
+    let fildscmds=[];
+  
+    fildscmds.push("CommandID INT AUTO_INCREMENT PRIMARY KEY");
+    fildscmds.push("PluginID VARCHAR(50) NOT NULL");
+    fildscmds.push("C_Name VARCHAR(50) NOT NULL");
+    
+    let TableCmds = new SQL_builder().CreateTable("P_Prem_Commands").TableFilds(fildscmds).Get();
+
+    let fildsPremrData=[];
+  
+    fildsPremrData.push("GroupID VARCHAR(50) NOT NULL");
+   
+    
+    let TablePremData = new SQL_builder().CreateTable("P_Prem_Data").TableFilds(fildsPremrData).Get();
+   
+     await SQL_query(TableCmds);
+     await SQL_query(TablePremData);
+    
+     let plugin_data = [];
+     plugin_data["P_Name"] = "Plugin_Premisje";
+     plugin_data["P_Description"] = "Slorzy do nadawanie rang gracza";
+     plugin_data["P_LastComandsUpdate"] =new Date().toISOString().slice(0, 19).replace('T', ' ');
+     await Plugin.PUT(SQL_query,plugin_data);
+
+}
+
+
+
 module.exports = router;
 

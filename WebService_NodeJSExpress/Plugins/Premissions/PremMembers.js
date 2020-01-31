@@ -1,8 +1,8 @@
 
 const Builder = require("../../Tools/Sql_Builder");
 const SQL_Builder = new Builder();
-const Table_Name = "P_Prem_PremCmds";
-class PremCmd {
+const Table_Name = "P_PremMembers";
+class Premission {
 
  static Is_Init =false;
 
@@ -12,9 +12,12 @@ class PremCmd {
     if(this.Is_Init == false)
     {
       let filds = [];
-      filds.push("PermCmdID INT AUTO_INCREMENT PRIMARY KEY");
-      filds.push("CommandID VARCHAR(50) NOT NULL");
-      filds.push("PremissionID VARCHAR(50) NOT NULL");
+      filds.push("PremMemberID INT AUTO_INCREMENT PRIMARY KEY");
+      filds.push("PlayerID VARCHAR(50) NOT NULL");
+      filds.push("PremissionID INT");
+      filds.push("P_Prefix VARCHAR(50)");
+      filds.push("P_AddDate DATETIME NOT NULL");
+      filds.push("P_AddByPlayer VARCHAR(50) NOT NULL");
      let Table = SQL_Builder.CreateTable(Table_Name).TableFilds(filds).Get();
      await DB(Table);
      this.Is_Init =true;
@@ -24,7 +27,7 @@ class PremCmd {
   static async GET(DB, data, res) {
      await this.Init_table(DB);
     let query;
-    let selected_filds = ["PermCmdID","CommandID","PremissionID"];
+    let selected_filds = ["PremMemberID","PlayerID","PremissionID","P_Prefix","P_AddDate","P_AddByPlayer"];
     let result;
 
      data = this.LoadFilds(data,selected_filds);
@@ -46,9 +49,9 @@ class PremCmd {
   /////////////////////////////////////////////////
   static async PUT(DB, data, res) {
 
-    let put_filds = ["PermCmdID","CommandID","PremissionID"];
+    let put_filds =  ["PremMemberID","PlayerID","PremissionID","P_Prefix","P_AddDate","P_AddByPlayer"];
 
-    let where_filds = ["CommandID","PremissionID"];
+    let where_filds = ["PremMemberID","PlayerID","PremissionID"];
     
     let put = this.LoadFilds(data,put_filds);
     let where = this.LoadFilds(data,where_filds);
@@ -82,9 +85,9 @@ class PremCmd {
   /////////////////////////////////////////////////
   static async POST(DB, data, res) {
     
-    let post_filds =  ["PermCmdID","CommandID","PremissionID"];
+    let post_filds =  ["PremMemberID","PlayerID","PremissionID","P_Prefix","P_AddDate","P_AddByPlayer"];
 
-    let where_filds =  ["CommandID","PremissionID"];
+    let where_filds =  ["PremMemberID","PlayerID","PremissionID"];
     
     let post = this.LoadFilds(data,post_filds);
     let where = this.LoadFilds(data,where_filds);
@@ -112,7 +115,7 @@ class PremCmd {
   /////////////////////////////////////////////////
   static async DELETE(DB, data, res) {
 
-    let where_filds =["PermCmdID","PremissionID"];
+    let where_filds = ["PremMemberID","PlayerID","PremissionID"];
 
     let where = this.LoadFilds(data,where_filds);
     
@@ -152,4 +155,4 @@ class PremCmd {
     }
 
 }
-module.exports = PremCmd;
+module.exports = Premission;

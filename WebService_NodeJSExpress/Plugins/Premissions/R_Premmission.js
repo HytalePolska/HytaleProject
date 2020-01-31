@@ -9,56 +9,45 @@ const SQL_query = require('../../Connectors/MySql_Connector');
 const Plugin = require('../../Classes/Plugins');
 const SQL_builder = require('../../Tools/Sql_Builder');
 const Command = require('./R_PremCmds');
-const Premission = require('../Premissions/R_PremCmds');
+const Premission = require('./Premission');
 Initialize();
 
 
-router.use("/command",Command);
+router.use("/:PremissionID/commands",Command);
 
+router.all('/',async(req,res,next) =>
+{
+      req.body = JSON.parse(JSON.stringify(req.body))[0];
+      next();
+})
 ////////////////////Dodawanie Premisji///////////////////////////////
 router.get('/', async (req, res, next) => {
-    let get_data = [];
-    get_data["G_Type"] = "Premission";
-    await Group.GET(SQL_query,get_data, res);
+    await Premission.GET(SQL_query,req.params,res);
 });
-router.get('/:GroupID', async (req, res, next) => {
-    let get_data = [];
-    get_data["G_Type"] = "Premission";
-    get_data["G_Name"] = req.params.GroupID;
+router.get('/:P_Name', async (req, res, next) => {
 
-    await Group.GET(SQL_query,get_data,res);
+    await Premission.GET(SQL_query,req.params,res);
  
 });
 router.put('/', async (req, res, next) => {
-    req.body.G_Type = "Premission";
-    await Group.PUT(SQL_query, req.body, res);
+
+    await Premission.PUT(SQL_query,req.body,res);
+
 });
-router.post('/:GroupID', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
 
-    let get_data = [];
-    get_data["G_Type"] = "Premission";
-    get_data["G_Name"] = req.params.GroupID;
-
-    let result = Group.GET(SQL_query,get_data);
-     
-    get_data = [];
-    get_data["GroupID"] = result[0].GroupID;
-    get_data["G_Name"] = req.body.G_Name;
-
-    await Group.POST(SQL_query, get_data, res);
+    await Premission.POST(SQL_query, req.body, res);
 });
 router.delete('/', async (req, res, next) => {
-    let get_data = [];
-    get_data["G_Type"] = "Premission";
-    await Group.DELETE(SQL_query,get_data, res);
+   
+    await Premission.DELETE(SQL_query, req.params, res);
 });
-router.delete('/:GroupID', async (req, res, next) => {
-    let get_data = [];
-    get_data["G_Type"] = "Premission";
-    get_data["GroupID"] = req.params.GroupID;
-    await Group.DELETE(SQL_query, get_data, res);
+router.delete('/:P_Name', async (req, res, next) => {
+   
+    await Premission.DELETE(SQL_query, req.params, res);
 });
 ////////////////////Dodawanie Graczy///////////////////////////////
+
 router.get('/Players/:PlayerID', async (req, res, next) => {
     let get_data = [];
     get_data["G_Type"] = "Premission";
@@ -111,14 +100,11 @@ router.delete('/:GroupID/Players', async (req, res, next) => {
 //////////////////////////////////////////////////////////////
 async function Initialize()
 {
-    
-    
      let plugin_data = [];
      plugin_data["P_Name"] = "Plugin_Premisje";
      plugin_data["P_Description"] = "Slorzy do nadawanie rang gracza";
      plugin_data["P_LastComandsUpdate"] =new Date().toISOString().slice(0, 19).replace('T', ' ');
      await Plugin.PUT(SQL_query,plugin_data);
-
 }
 
 

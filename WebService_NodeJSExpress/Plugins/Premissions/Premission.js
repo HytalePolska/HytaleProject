@@ -1,103 +1,155 @@
 
-const SQL_Builder = require("../../Tools/Sql_Builder");
-const query_Builder = new SQL_Builder();
+const Builder = require("../../Tools/Sql_Builder");
+const SQL_Builder = new Builder();
 const Table_Name = "P_Prem_Premissions";
 class Premission {
-  constructor() {
 
-    this.PremissionID;
-    this.P_Name;
-    this.L_date='';
-    this.L_Healer = '';
-    this.L_location ='';
-  }
+ static Is_Init =false;
+
+ static async Init_table(DB)
+  {
   
+    if(this.Is_Init == false)
+    {
+      let filds = [];
+      filds.push("PremissionID INT AUTO_INCREMENT PRIMARY KEY");
+      filds.push("P_Name VARCHAR(50) NOT NULL");
+      filds.push("P_Members INT");
+     let Table = SQL_Builder.CreateTable(Table_Name).TableFilds(filds).Get();
+     await DB(Table);
+     this.Is_Init =true;
+    }
+  }
   /////////////////////////////////////////////////
   static async GET(DB, data, res) {
+     await this.Init_table(DB);
     let query;
-    let con = [];
+    let selected_filds = ["PremissionID","P_Name","P_Members"];
     let result;
 
-    con["LifeID"] = data.LifeID;
-    con['PlayerID'] = data.PlayerID;
-    con['L_date'] = data.L_date;
-    con['L_Healer'] = data.L_Healer;
-    con['L_location'] = data.L_Location;
-
-    con["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
-
-    query = query_Builder.Select("*", Table_Name).Where(con).Get();
-
+     data = this.LoadFilds(data,selected_filds);
+     data["1"]=1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
+       
+    
+    query = SQL_Builder.Select("*", Table_Name).Where(data).Get();
+   
     result = await DB(query);
 
     if (typeof res !== "undefined")
-      res.send(result);
+      res.status(200).send(result);
     else
-      return JSON.parse(JSON.stringify(result));
+    {
+      let data = JSON.parse(JSON.stringify(result));
+      return data[0];
+    }
   }
   /////////////////////////////////////////////////
   static async PUT(DB, data, res) {
-    let con = [];
 
+    let put_filds = ["PremissionID","P_Name","P_Members"];
+
+    let where_filds = ["PremissionID","P_Name"];
     
-    con['PlayerID'] = data.PlayerID;
-    con['L_date'] = data.L_date;
-    con['L_Healer'] = data.L_Healer;
-    con['L_location'] = data.L_Location;
+    let put = this.LoadFilds(data,put_filds);
+    let where = this.LoadFilds(data,where_filds);
 
-    let where = [];
-    where["PlayerID"] = data.PlayerID;   //check if player exists
-    where["L_date"] = data.L_date; 
-    let query = query_Builder.Select("*", Table_Name).Where(where).Get();
+    let query = SQL_Builder.Select("*", Table_Name).Where(where).Get();
 
-
+ 
     if (JSON.stringify(await DB(query)) != "[]")  //in other case return filled JSON with data
     {
-      res.send("409");
-      return;
+  
+      if (typeof res !== "undefined")
+      return  res.status(400).send(`The ${Table_Name}is already existing`);
+    else
+    {
+        console.log(`The ${Table_Name} is already existing  ${con['P_Name']} `);
+        return "[]";
+    }
+      
     }
 
-    query = query_Builder.Insert(con, Table_Name).Get();   //add new player
+    query = SQL_Builder.Insert(put,Table_Name).Get();   //add new player
     let result = await DB(query);
-    if (typeof res !== "undefined")
-      res.send("201");
-    else
-      return JSON.parse(JSON.stringify(result));
+  if (typeof res !== "undefined")
+    res.status(201).send(`The ${Table_Name} has been added`);
+  else
+  {
+    let data = JSON.parse(JSON.stringify(result));
+    return data[0];
+  }
   }
   /////////////////////////////////////////////////
   static async POST(DB, data, res) {
-    let con = [];
-   
-   
-    con['PlayerID'] = data.PlayerID;
-    con['L_date'] = data.L_date;
-    con['L_Healer'] = data.L_Healer;
-    con['L_location'] = data.L_Location;
+    
+    let post_filds = ["PremissionID","P_Name","P_Members"];
 
-    let where = [];    where["LifeID"] = data.LifeID;   //check if player exists
-    let query = query_Builder.Select("*", Table_Name).Where(where).Get();
-
+    let where_filds = ["PremissionID","P_Name"];
+    
+    let post = this.LoadFilds(data,post_filds);
+    let where = this.LoadFilds(data,where_filds);
+      
+    
+    let query = SQL_Builder.Select("*", Table_Name).Where(where).Get();
+ 
+   
     if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
     {
-      res.send("404");
+        res.status(404).send(`The ${Table_Name} is not existing`);
       return;
     }
 
-    query = query_Builder.Update(con, Table_Name).Where(where).Get();
-    let result = await DB(query);
+    query = SQL_Builder.Update(post, Table_Name).Where(where).Get();
+    let result =   await DB(query);
     if (typeof res !== "undefined")
-      res.send("200");
-    else
-      return JSON.parse(JSON.stringify(result));
+    res.status(201).send(`The ${Table_Name} has been updated`);
+  else
+  {
+    let data = JSON.parse(JSON.stringify(result));
+    return data[0];
+  }
   }
   /////////////////////////////////////////////////
   static async DELETE(DB, data, res) {
-    let where = [];
-    where["LifeID"] = data.LifeID;
-    let query = query_Builder.Delete(Table_Name).Where(where).Get();
-    await DB(query);
-    res.send("200");
+
+    let where_filds =["PremissionID","P_Name"];
+
+    let where = this.LoadFilds(data,where_filds);
+    
+    let query
+    if(where.length == 0)
+       query = SQL_Builder.Delete(Table_Name).Get();
+    else
+       query = SQL_Builder.Delete(Table_Name).Where(where).Get();
+
+    let result =   await DB(query);
+    if (typeof res !== "undefined")
+    res.status(200).send(`The ${Table_Name} has been deleted`);
+  else
+  {
+    let data = JSON.parse(JSON.stringify(result));
+    return data[0];
+  }
   }
   /////////////////////////////////////////////////
+    
+   static LoadFilds(data,selectedfilds)
+    {
+     let result = [];
+      for(var record in data)
+      {
+        let keep = false;
+        for(var fild in selectedfilds)
+        {
+          if(record== selectedfilds[fild])
+          {
+           result[record] = data[record];
+           break;
+          }
+        }
+      }
+      return result;
+    }
+
 }
 module.exports = Premission;

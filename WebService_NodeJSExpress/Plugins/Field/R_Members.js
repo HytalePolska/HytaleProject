@@ -17,7 +17,7 @@ router.all('/',async(req,res,next) =>
     let data = await Field.GET(SQL_query,req.params);
   
     if (typeof data == 'undefined') {
-        res.status(404).send("This Field  is not existing "+req.params.FieldID);
+        res.status(404).send("This Field  is not existing "+req.params.F_Name);
         return;
       }
       req.data =premdata;
@@ -29,7 +29,7 @@ router.all('/:PlayerID',async(req,res,next) =>
     let data = await Field.GET(SQL_query,req.params);
   
     if (typeof data == 'undefined') {
-        res.status(404).send("This Field  is not existing "+req.params.FieldID);
+        res.status(404).send("This Field  is not existing "+req.params.F_Name);
         return;
       }
       req.data =premdata;

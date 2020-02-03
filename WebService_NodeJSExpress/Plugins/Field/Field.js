@@ -56,7 +56,7 @@ class Premission {
 
     let put_filds = ["F_Creator","F_CreDate","F_Name","F_Type","F_TNT","F_MobDamage","F_ActiveBlocks","F_DestroyBlock","F_PVP","F_MembersSize"];
 
-    let where_filds = ["F_Name"];
+    let where_filds = ["F_Name,F_Type"];
     
     let put = this.LoadFilds(data,put_filds);
     let where = this.LoadFilds(data,where_filds);
@@ -92,7 +92,7 @@ class Premission {
     
     let post_filds = ["F_Name","F_Type","F_TNT","F_MobDamage","F_ActiveBlocks","F_DestroyBlock","F_PVP","F_MembersSize"];
 
-    let where_filds = ["F_Creator","F_Name"];
+    let where_filds = ["F_Type","F_Name"];
     
     let post = this.LoadFilds(data,post_filds);
     let where = this.LoadFilds(data,where_filds);
@@ -120,7 +120,7 @@ class Premission {
   /////////////////////////////////////////////////
   static async DELETE(DB, data, res) {
 
-    let where_filds =["F_Creator","F_Name"];
+    let where_filds =["F_Type","F_Name"];
 
     let where = this.LoadFilds(data,where_filds);
     

@@ -25,9 +25,7 @@ router.get('/', async (req, res, next) => {
     await Field.GET(SQL_query,req.params,res);
 });
 router.get('/:F_Name', async (req, res, next) => {
-
     await Field.GET(SQL_query,req.params,res);
- 
 });
 router.put('/', async (req, res, next) => {
 

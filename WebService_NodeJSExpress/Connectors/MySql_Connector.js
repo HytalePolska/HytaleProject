@@ -6,12 +6,13 @@ handleDisconnect();
 
 
 function handleDisconnect() {
-    db =mysql.createConnection({
-        connectionLimit: 10,
+    db =mysql.createPool({
+        connectionLimit: 1000,
         password: '0fecf3c613dffed104bf',
         user: 'csrv_708300',
         database: 'csrv_708300',
         host: 'mysql.craftserve.pl',
+        stream:true,
         post: '3306'
     });
 }

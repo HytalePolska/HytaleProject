@@ -17,11 +17,13 @@ const kwadratowa = require('../Plugins/Kwadratowa/R_Kwadratowa');
 
 const commands = require('./R_Command');
 
+const fields = require('./../Plugins/Field/R_FieldMain');
 Initialize();
 
 router.use('/login', login);
 router.use('/kwadratowa', kwadratowa);
 router.use('/premissions', premissions);
+router.use('/fields', fields);
 router.use('/:P_Name/commands', commands);
 
 

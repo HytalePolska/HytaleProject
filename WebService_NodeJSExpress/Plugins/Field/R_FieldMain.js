@@ -52,12 +52,13 @@ router.delete('/:F_Name', async (req, res, next) => {
 //////////////////////////////////////////////////////////////
 async function Initialize()
 {
+    await Field.Init_table(SQL_query);
      let plugin_data = [];
      plugin_data["P_Name"] = "Plugin_Dzialki";
      plugin_data["P_Description"] = "nadawania gracządziałek";
      plugin_data["P_LastComandsUpdate"] =new Date().toISOString().slice(0, 19).replace('T', ' ');
      await Plugin.PUT(SQL_query,plugin_data);
-     await Field.Init_table(SQL_query);
+    
 }
 
 

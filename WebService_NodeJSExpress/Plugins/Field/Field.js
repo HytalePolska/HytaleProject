@@ -17,10 +17,12 @@ class Premission {
       filds.push("F_CreDate DATETIME NOT NULL");
       filds.push("F_Name NOT NULL");
       filds.push("F_Type NOT NULL");
-      filds.push("F_Tnt INT");
+      filds.push("F_TNT INT");
+      filds.push("F_MobDamage INT");
       filds.push("F_ActiveBlocks INT");
       filds.push("F_DestroyBlocks INT");
-      filds.push("F_Pvp INT");
+      filds.push("F_PVP INT");
+      filds.push("F_MembersSize INT");
      let Table = SQL_Builder.CreateTable(Table_Name).TableFilds(filds).Get();
      await DB(Table);
      this.Is_Init =true;
@@ -30,7 +32,7 @@ class Premission {
   static async GET(DB, data, res) {
    
     let query;
-    let selected_filds = ["PremissionID","P_Name","P_Members"];
+    let selected_filds = ["FieldID","F_Creator","F_CreDate","F_Name","F_Type","F_TNT","F_MobDamage","F_ActiveBlocks","F_DestroyBlock","F_PVP","F_MembersSize"];
     let result;
 
      data = this.LoadFilds(data,selected_filds);
@@ -52,9 +54,9 @@ class Premission {
   /////////////////////////////////////////////////
   static async PUT(DB, data, res) {
 
-    let put_filds = ["PremissionID","P_Name","P_Members"];
+    let put_filds = ["F_Creator","F_CreDate","F_Name","F_Type","F_TNT","F_MobDamage","F_ActiveBlocks","F_DestroyBlock","F_PVP","F_MembersSize"];
 
-    let where_filds = ["PremissionID","P_Name"];
+    let where_filds = ["F_Name"];
     
     let put = this.LoadFilds(data,put_filds);
     let where = this.LoadFilds(data,where_filds);
@@ -88,9 +90,9 @@ class Premission {
   /////////////////////////////////////////////////
   static async POST(DB, data, res) {
     
-    let post_filds = ["PremissionID","P_Name","P_Members"];
+    let post_filds = ["F_Name","F_Type","F_TNT","F_MobDamage","F_ActiveBlocks","F_DestroyBlock","F_PVP","F_MembersSize"];
 
-    let where_filds = ["PremissionID","P_Name"];
+    let where_filds = ["F_Creator","F_Name"];
     
     let post = this.LoadFilds(data,post_filds);
     let where = this.LoadFilds(data,where_filds);
@@ -118,7 +120,7 @@ class Premission {
   /////////////////////////////////////////////////
   static async DELETE(DB, data, res) {
 
-    let where_filds =["PremissionID","P_Name"];
+    let where_filds =["F_Creator","F_Name"];
 
     let where = this.LoadFilds(data,where_filds);
     

@@ -27,7 +27,7 @@ class Premission {
   static async GET(DB, data, res) {
    
     let query;
-    let selected_filds = ["PremMemberID","PlayerID","PremissionID","P_Prefix","P_AddDate","P_AddByPlayer"];
+    let selected_filds = ["MemberID","PlayerID","FieldID","M_Type","M_AddDate","M_AddByPlayer"];
     let result;
 
      data = this.LoadFilds(data,selected_filds);
@@ -49,9 +49,9 @@ class Premission {
   /////////////////////////////////////////////////
   static async PUT(DB, data, res) {
 
-    let put_filds =  ["PremMemberID","PlayerID","PremissionID","P_Prefix","P_AddDate","P_AddByPlayer"];
+    let put_filds =  ["PlayerID","FieldID","M_Type","M_AddDate","M_AddByPlayer"];
 
-    let where_filds = ["PremMemberID","PlayerID","PremissionID"];
+    let where_filds = ["PlayerID","FieldID"];
     
     let put = this.LoadFilds(data,put_filds);
     let where = this.LoadFilds(data,where_filds);
@@ -85,9 +85,9 @@ class Premission {
   /////////////////////////////////////////////////
   static async POST(DB, data, res) {
     
-    let post_filds =  ["P_Prefix"];
+    let post_filds =  ["M_Type"];
 
-    let where_filds =  ["PremMemberID","PlayerID","PremissionID"];
+    let where_filds =   ["PlayerID","FieldID"];
     
     let post = this.LoadFilds(data,post_filds);
     let where = this.LoadFilds(data,where_filds);
@@ -115,7 +115,7 @@ class Premission {
   /////////////////////////////////////////////////
   static async DELETE(DB, data, res) {
 
-    let where_filds = ["PremMemberID","PlayerID","PremissionID"];
+    let where_filds =   ["PlayerID","FieldID"];
    
     let where = this.LoadFilds(data,where_filds);
     

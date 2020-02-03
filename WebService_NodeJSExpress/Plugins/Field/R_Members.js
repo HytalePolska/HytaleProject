@@ -8,16 +8,16 @@ const SQL_query = require('../../Connectors/MySql_Connector');
 const SQL_builder = require('../../Tools/Sql_Builder');
 
 const Member = require('./Members');
-const Premission = require('./Field');
+const Field = require('./Field');
 const Player = require('../../Classes/Player');
 
 Initialize();
 router.all('/',async(req,res,next) =>
 {
-    let premdata = await Premission.GET(SQL_query,req.params);
+    let data = await Field.GET(SQL_query,req.params);
   
-    if (typeof premdata == 'undefined') {
-        res.status(404).send("This Premission is not existing "+req.params.PremissionID);
+    if (typeof data == 'undefined') {
+        res.status(404).send("This Field  is not existing "+req.params.FieldID);
         return;
       }
       req.data =premdata;
@@ -26,10 +26,10 @@ router.all('/',async(req,res,next) =>
 })
 router.all('/:PlayerID',async(req,res,next) =>
 {
-    let premdata = await Premission.GET(SQL_query,req.params);
+    let data = await Field.GET(SQL_query,req.params);
   
-    if (typeof premdata == 'undefined') {
-        res.status(404).send("This Premission is not existing "+req.params.PremissionID);
+    if (typeof data == 'undefined') {
+        res.status(404).send("This Field  is not existing "+req.params.FieldID);
         return;
       }
       req.data =premdata;
@@ -48,14 +48,14 @@ router.put('/', async (req, res, next) => {
       if (typeof player == 'undefined') {
         res.status(404).send("This Player is not existing "+req.body.PlayerID);
         return;
-      }
+      } 
 
-     if(typeof req.body["P_Prefix"] == "undefined")
-        req.body["P_Prefix"]  = req.data["P_Name"];
-     if(typeof  req.body["P_AddDate"] == "undefined")
+     
+        req.body["M_Type"]  = "Owner";
+     if(typeof  req.body["M_AddDate"] == "undefined")
         req.body["P_AddDate"] = new Date().toISOString().slice(0, 19).replace('T', ' ');
         
-        req.body["PremissionID"]=req.data["PremissionID"];
+        req.body["FieldID"]=req.data["FieldID"];
 
     await  Member.PUT(SQL_query,req.body,res);
 

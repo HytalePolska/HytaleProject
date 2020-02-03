@@ -12,15 +12,7 @@ class Player {
     this.P_Pass = '';
     this.P_Online = '';
   }
-   
-  static Init_table()
-  {
-    if(this.is_init == false)
-    {
-      console.log("witam");
-      this.is_init =true;
-    }
-  }
+
   
   /////////////////////////////////////////////////
   static async GET(DB, data, res) {

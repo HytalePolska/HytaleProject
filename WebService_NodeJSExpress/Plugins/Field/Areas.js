@@ -1,7 +1,7 @@
 
 const Builder = require("../../Tools/Sql_Builder");
 const SQL_Builder = new Builder();
-const Table_Name = "P_field_areas";
+const Table_Name = "P_FieldsAreas";
 class PremCmd {
 
  static Is_Init =false;
@@ -14,7 +14,7 @@ class PremCmd {
       let filds = [];
       filds.push("AreaID INT AUTO_INCREMENT PRIMARY KEY");
       filds.push("FieldID INT  NOT NULL");
-      filds.push("A_PosB INT");
+      filds.push("A_PosA INT");
       filds.push("A_PosB INT");
      let Table = SQL_Builder.CreateTable(Table_Name).TableFilds(filds).Get();
      await DB(Table);
@@ -25,7 +25,7 @@ class PremCmd {
   static async GET(DB, data, res) {
      await this.Init_table(DB);
     let query;
-    let selected_filds = ["PermCmdID","CommandID","PremissionID"];
+    let selected_filds = ["AreaID","FieldID","A_PosA","A_PosB"];
     let result;
 
      data = this.LoadFilds(data,selected_filds);
@@ -47,9 +47,9 @@ class PremCmd {
   /////////////////////////////////////////////////
   static async PUT(DB, data, res) {
 
-    let put_filds = ["PermCmdID","CommandID","PremissionID"];
+    let put_filds =["FieldID","A_PosA","A_PosB"];
 
-    let where_filds = ["CommandID","PremissionID"];
+    let where_filds = ["AreaID"];
     
     let put = this.LoadFilds(data,put_filds);
     let where = this.LoadFilds(data,where_filds);
@@ -83,9 +83,9 @@ class PremCmd {
   /////////////////////////////////////////////////
   static async POST(DB, data, res) {
     
-    let post_filds =  ["PermCmdID","CommandID","PremissionID"];
+    let post_filds =  ["A_PosA","A_PosB"];
 
-    let where_filds =  ["CommandID","PremissionID"];
+    let where_filds =  ["AreaID","FieldID"];
     
     let post = this.LoadFilds(data,post_filds);
     let where = this.LoadFilds(data,where_filds);
@@ -113,7 +113,7 @@ class PremCmd {
   /////////////////////////////////////////////////
   static async DELETE(DB, data, res) {
 
-    let where_filds =["PermCmdID","PremissionID"];
+    let where_filds = ["AreaID","FieldID"];
 
     let where = this.LoadFilds(data,where_filds);
     

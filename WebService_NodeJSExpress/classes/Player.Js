@@ -16,7 +16,7 @@ class Player {
   
   /////////////////////////////////////////////////
   static async GET(DB, data, res) {
-    this.Init_table();
+   
     let query;
     let cond = [];
     let result;

@@ -15,8 +15,8 @@ class Premission {
       filds.push("FieldID INT AUTO_INCREMENT PRIMARY KEY");
       filds.push("F_Creator VARCHAR(50) NOT NULL");
       filds.push("F_CreDate DATETIME NOT NULL");
-      filds.push("F_Name NOT NULL");
-      filds.push("F_Type NOT NULL");
+      filds.push("F_Name VARCHAR(50) NOT NULL");
+      filds.push("F_Type VARCHAR(50) NOT NULL");
       filds.push("F_TNT INT");
       filds.push("F_MobDamage INT");
       filds.push("F_ActiveBlocks INT");

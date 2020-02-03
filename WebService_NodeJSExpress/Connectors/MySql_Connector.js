@@ -36,7 +36,7 @@ const Sql_Query = async (query) => new Promise(
 
             }
             else {
-                //console.log(err);
+                console.log(err);
                 reject(err);
 
             }

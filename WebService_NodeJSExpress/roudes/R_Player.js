@@ -7,14 +7,15 @@ const Player = require("../Classes/Player");
 
 const SQL_query = require('../Connectors/MySql_Connector');
 
-
+Player.Init_table(SQL_query);
 
 router.get('/', async (req, res, next) => {
-    await Player.GET(SQL_query, req.body, res);
+    let t = [];
+    await Player.GET(SQL_query, t, res);
 });
 
 router.get('/:PlayerID', async (req, res, next) => {
-    
+
     await Player.GET(SQL_query, req.params, res);
 });
 
@@ -25,9 +26,9 @@ router.put('/', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-    let data =  JSON.parse(JSON.stringify(req.body))[0];
+    let data = JSON.parse(JSON.stringify(req.body))[0];
     await Player.POST(SQL_query, data, res);
-    res.send('tes');
+
 });
 
 router.delete('/:PlayerID', async (req, res, next) => {

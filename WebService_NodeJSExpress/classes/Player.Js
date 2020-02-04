@@ -1,38 +1,41 @@
 
-const SQL_Builder = require("../Tools/Sql_Builder");
-const query_Builder = new SQL_Builder();
+const Builder = require("../Tools/Sql_Builder");
+const SQL_Builder = new Builder();
 const Table_Name = "S_Players";
-class Player {
+class Premission {
 
-  static is_init = false;
-  constructor() {
+  static Is_Init = false;
 
-    this.Player_ID = '';
-    this.P_Name = '';
-    this.P_Pass = '';
-    this.P_Online = '';
+  static async Init_table(DB) {
+
+    if (this.Is_Init == false) {
+      let filds = [];
+      filds.push("PlayerID VARCHAR(50) NOT NULL UNIQUE ");
+      filds.push("P_Name VARCHAR(50) NOT NULL");
+      filds.push("P_Pass VARCHAR(50) NOT NULL");
+      filds.push("P_Online INT");
+      let Table = SQL_Builder.CreateTable(Table_Name).TableFilds(filds).Get();
+      await DB(Table);
+      this.Is_Init = true;
+    }
   }
-
-  
   /////////////////////////////////////////////////
   static async GET(DB, data, res) {
-   
+
     let query;
-    let cond = [];
+    let selected_filds = ["PlayerID", "P_Name", "P_Pass", "P_Online"];
     let result;
 
-    cond["PlayerID"] = data.PlayerID;
-    cond['P_Name'] = data.P_Name;
-    cond['P_Pass'] = data.P_Pass;
-    cond['P_Online'] = data.P_Online;
-    cond["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
+    data = this.LoadFilds(data, selected_filds);
+    data["1"] = 1; //JESLI G_TYPE JEST nullem query > select * forom S_group Where trzeba dac jeden warunek
 
-    query = query_Builder.Select("*", Table_Name).Where(cond).Get();
 
+    query = SQL_Builder.Select("*", Table_Name).Where(data).Get();
+    //console.log(query);
     result = await DB(query);
 
     if (typeof res !== "undefined")
-      res.send(result);
+      res.status(200).send(result);
     else {
       let data = JSON.parse(JSON.stringify(result));
       return data[0];
@@ -40,30 +43,33 @@ class Player {
   }
   /////////////////////////////////////////////////
   static async PUT(DB, data, res) {
-    let con = [];
 
-    con["PlayerID"] = data.PlayerID;
-    con["P_Name"] = data.P_Name;
-    con["P_Pass"] = data.P_Pass;
-    con["P_Online"] = data.P_Online;
+    let put_filds = ["PlayerID", "P_Name", "P_Pass", "P_Online"];
 
+    let where_filds = ["PlayerID", "P_Name"];
 
-    let where = [];
-    where["PlayerID"] = data.PlayerID;   //check if player exists
+    let put = this.LoadFilds(data, put_filds);
+    let where = this.LoadFilds(data, where_filds);
 
-    let query = query_Builder.Select("*", Table_Name).Where(where).Get();
+    let query = SQL_Builder.Select("*", Table_Name).Where(where).Get();
 
 
     if (JSON.stringify(await DB(query)) != "[]")  //in other case return filled JSON with data
     {
-      res.send("The Player is already existing");
-      return;
+
+      if (typeof res !== "undefined")
+        return res.status(400).send(`The ${Table_Name} is already existing`);
+      else {
+        console.log(`The ${Table_Name} is already existing  ${data['P_Name']} `);
+        return "[]";
+      }
+
     }
 
-    query = query_Builder.Insert(con, Table_Name).Get();   //add new player
+    query = SQL_Builder.Insert(put, Table_Name).Get();   //add new player
     let result = await DB(query);
     if (typeof res !== "undefined")
-      res.send(result);
+      res.status(201).send(`The ${Table_Name} has been added`);
     else {
       let data = JSON.parse(JSON.stringify(result));
       return data[0];
@@ -71,24 +77,28 @@ class Player {
   }
   /////////////////////////////////////////////////
   static async POST(DB, data, res) {
-    let con = [];
-    con["P_Name"] = data.P_Name;
-    con["P_Pass"] = data.P_Pass;
-    con["P_Online"] = data.P_Online;
 
-    let where = []; where["PlayerID"] = data.PlayerID;   //check if player exists
-    let query = query_Builder.Select("*", Table_Name).Where(where).Get();
+    let post_filds = ["P_Pass", "P_Online"];
+
+    let where_filds = ["PlayerID", "P_Name"];
+
+    let post = this.LoadFilds(data, post_filds);
+    let where = this.LoadFilds(data, where_filds);
+
+
+    let query = SQL_Builder.Select("*", Table_Name).Where(where).Get();
+
 
     if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
     {
-      res.send("The Player is not existing");
+      res.status(404).send(`The ${Table_Name} is not existing`);
       return;
     }
 
-    query = query_Builder.Update(con, Table_Name).Where(where).Get();
+    query = SQL_Builder.Update(post, Table_Name).Where(where).Get();
     let result = await DB(query);
     if (typeof res !== "undefined")
-      res.send(result);
+      res.status(201).send(`The ${Table_Name} has been updated`);
     else {
       let data = JSON.parse(JSON.stringify(result));
       return data[0];
@@ -96,17 +106,41 @@ class Player {
   }
   /////////////////////////////////////////////////
   static async DELETE(DB, data, res) {
-    let con = [];
-    con["PlayerID"] = data.PlayerID;
-    let query = query_Builder.Delete(Table_Name).Where(con).Get();
+
+    let where_filds = ["PlayerID", "P_Name"];
+
+    let where = this.LoadFilds(data, where_filds);
+
+    let query
+    if (where.length == "[]")
+      query = SQL_Builder.Delete(Table_Name).Get();
+    else
+      query = SQL_Builder.Delete(Table_Name).Where(where).Get();
+
     let result = await DB(query);
+
     if (typeof res !== "undefined")
-      res.send(result);
+      res.status(200).send(`The ${Table_Name} has been deleted`);
     else {
       let data = JSON.parse(JSON.stringify(result));
       return data[0];
     }
   }
   /////////////////////////////////////////////////
+
+  static LoadFilds(data, selectedfilds) {
+    let result = [];
+    for (var record in data) {
+      let keep = false;
+      for (var fild in selectedfilds) {
+        if (record == selectedfilds[fild]) {
+          result[record] = data[record];
+          break;
+        }
+      }
+    }
+    return result;
+  }
+
 }
-module.exports = Player;
+module.exports = Premission;

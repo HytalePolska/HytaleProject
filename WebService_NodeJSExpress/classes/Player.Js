@@ -142,5 +142,50 @@ class Premission {
     return result;
   }
 
+
+  static async POSTTest(DB, Json, res) {
+
+    let error_message = "Error occur updated Players "
+    let error = false;
+     
+    for(var data in Json)
+    {
+      let post_filds = ["P_Pass", "P_Online"];
+
+      let where_filds = ["PlayerID", "P_Name"];
+       
+      let post = this.LoadFilds(Json[data], post_filds);
+      let where = this.LoadFilds(Json[data], where_filds);
+  
+  
+      let query = SQL_Builder.Select("*", Table_Name).Where(where).Get();
+  
+  
+      if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
+      {
+       error_message+=`The ${Json[data]} is not existing `;
+       error = true;
+       
+        continue;
+      }
+  
+      query = SQL_Builder.Update(post, Table_Name).Where(where).Get();
+      let result = await DB(query);
+    }
+     
+    if (typeof res !== "undefined")
+    {
+      if(error == false)
+        res.status(201).send(`The ${Table_Name} has been updated`);
+      else
+        res.status(404).send(error_message);
+    }
+    else {
+      if(error == false)
+       return "201";
+      else
+       return "404";
+    }
+  }
 }
 module.exports = Premission;

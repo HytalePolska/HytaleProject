@@ -2,6 +2,7 @@
 const Builder = require("../Tools/Sql_Builder");
 const SQL_Builder = new Builder();
 const Table_Name = "S_Players";
+const FielID = 'PlayerID';
 class Premission {
 
   static Is_Init = false;
@@ -76,32 +77,48 @@ class Premission {
     }
   }
   /////////////////////////////////////////////////
-  static async POST(DB, data, res) {
+  static async POST(DB, Json, res) {
 
-    let post_filds = ["P_Pass", "P_Online"];
-
-    let where_filds = ["PlayerID", "P_Name"];
-
-    let post = this.LoadFilds(data, post_filds);
-    let where = this.LoadFilds(data, where_filds);
-
-
-    let query = SQL_Builder.Select("*", Table_Name).Where(where).Get();
-
-
-    if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
+    let error_message = "Error occur updated Players : \n"
+    let error = false;
+     
+    for(var data in Json)
     {
-      res.status(404).send(`The ${Table_Name} is not existing`);
-      return;
-    }
+      let post_filds = ["P_Pass", "P_Online"];
 
-    query = SQL_Builder.Update(post, Table_Name).Where(where).Get();
-    let result = await DB(query);
+      let where_filds = ["PlayerID", "P_Name"];
+       
+      let post = this.LoadFilds(Json[data], post_filds);
+      let where = this.LoadFilds(Json[data], where_filds);
+  
+  
+      let query = SQL_Builder.Select("*", Table_Name).Where(where).Get();
+  
+  
+      if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
+      {
+       error_message+=`PlayerID ${Json[data][FielID]} is not existing \n`;
+       error = true;
+       
+        continue;
+      }
+  
+      query = SQL_Builder.Update(post, Table_Name).Where(where).Get();
+      await DB(query);
+    }
+     
     if (typeof res !== "undefined")
-      res.status(201).send(`The ${Table_Name} has been updated`);
+    {
+      if(error == false)
+        res.status(201).send(`The ${Table_Name} has been updated`);
+      else
+        res.status(404).send(error_message);
+    }
     else {
-      let data = JSON.parse(JSON.stringify(result));
-      return data[0];
+      if(error == false)
+       return "201";
+      else
+       return "404";
     }
   }
   /////////////////////////////////////////////////
@@ -141,51 +158,6 @@ class Premission {
     }
     return result;
   }
-
-
-  static async POSTTest(DB, Json, res) {
-
-    let error_message = "Error occur updated Players "
-    let error = false;
-     
-    for(var data in Json)
-    {
-      let post_filds = ["P_Pass", "P_Online"];
-
-      let where_filds = ["PlayerID", "P_Name"];
-       
-      let post = this.LoadFilds(Json[data], post_filds);
-      let where = this.LoadFilds(Json[data], where_filds);
-  
-  
-      let query = SQL_Builder.Select("*", Table_Name).Where(where).Get();
-  
-  
-      if (JSON.stringify(await DB(query)) == "[]")  //in other case return filled JSON with data
-      {
-       error_message+=`The ${Json[data]} is not existing `;
-       error = true;
-       
-        continue;
-      }
-  
-      query = SQL_Builder.Update(post, Table_Name).Where(where).Get();
-      await DB(query);
-    }
-     
-    if (typeof res !== "undefined")
-    {
-      if(error == false)
-        res.status(201).send(`The ${Table_Name} has been updated`);
-      else
-        res.status(404).send(error_message);
-    }
-    else {
-      if(error == false)
-       return "201";
-      else
-       return "404";
-    }
-  }
+ 
 }
 module.exports = Premission;

@@ -170,7 +170,7 @@ class Premission {
       }
   
       query = SQL_Builder.Update(post, Table_Name).Where(where).Get();
-      let result = await DB(query);
+      await DB(query);
     }
      
     if (typeof res !== "undefined")

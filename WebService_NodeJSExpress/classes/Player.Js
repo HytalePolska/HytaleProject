@@ -43,10 +43,10 @@ class Premission {
     }
   }
   /////////////////////////////////////////////////
-  static async PUT(DB, data, res) {
+  static async PUT(DB,Json, res) {
 
 
-    let error_message = "Error occur add Players : \n"
+    let error_message = "Error occur add Players : \n\n"
     let error = false;
      
     for(var data in Json)
@@ -79,7 +79,7 @@ class Premission {
     if(error == false)
       res.status(201).send(`The ${Table_Name} has been Added`);
     else
-      res.status(404).send(error_message);
+      res.status(404).send(error_message +"\n Another records has been added");
   }
   else {
     if(error == false)

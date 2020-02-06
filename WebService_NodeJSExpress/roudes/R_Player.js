@@ -20,7 +20,7 @@ router.get('/:PlayerID', async (req, res, next) => {
 });
 
 router.put('/', async (req, res, next) => {
-    let data = JSON.parse(JSON.stringify(req.body))[0];
+    let data = JSON.parse(JSON.stringify(req.body));
 
     await Player.PUT(SQL_query, data, res);
 });

@@ -24,7 +24,7 @@ router.put('/', async (req, res, next) => {
 
     await Player.PUT(SQL_query, data, res);
 });
-router.post('/', async (req, res) => {
+router.post('/', async (req, res,next) => {
  let data = JSON.parse(JSON.stringify(req.body));
   await Player.POST(SQL_query, data, res);
 

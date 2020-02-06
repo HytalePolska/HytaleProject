@@ -45,36 +45,50 @@ class Premission {
   /////////////////////////////////////////////////
   static async PUT(DB, data, res) {
 
+
+    let error_message = "Error occur updated Players : \n"
+    let error = false;
+     
+    for(var data in Json)
+    {
+
     let put_filds = ["PlayerID", "P_Name", "P_Pass", "P_Online"];
 
     let where_filds = ["PlayerID", "P_Name"];
 
-    let put = this.LoadFilds(data, put_filds);
-    let where = this.LoadFilds(data, where_filds);
+    let put = this.LoadFilds(Json[data], put_filds);
+    let where = this.LoadFilds(Json[data], where_filds);
 
     let query = SQL_Builder.Select("*", Table_Name).Where(where).Get();
 
 
     if (JSON.stringify(await DB(query)) != "[]")  //in other case return filled JSON with data
     {
-
-      if (typeof res !== "undefined")
-        return res.status(400).send(`The ${Table_Name} is already existing`);
-      else {
-        console.log(`The ${Table_Name} is already existing  ${data['P_Name']} `);
-        return "[]";
-      }
-
+      
+      error_message+=`PlayerID ${Json[data][FielID]} is already existing \n`;
+      error = true;
+      
+       continue;
     }
-
     query = SQL_Builder.Insert(put, Table_Name).Get();   //add new player
-    let result = await DB(query);
-    if (typeof res !== "undefined")
-      res.status(201).send(`The ${Table_Name} has been added`);
-    else {
-      let data = JSON.parse(JSON.stringify(result));
-      return data[0];
-    }
+      await DB(query);
+  }
+
+  if (typeof res !== "undefined") //jesli checmy uzyc jako funcji res nie wkladamy do srodka
+  {
+    if(error == false)
+      res.status(201).send(`The ${Table_Name} has been Added`);
+    else
+      res.status(404).send(error_message);
+  }
+  else {
+    if(error == false)
+      
+     return "201";
+    else
+      console.log(error_message);
+     return "404";
+  }
   }
   /////////////////////////////////////////////////
   static async POST(DB, Json, res) {
@@ -107,7 +121,7 @@ class Premission {
       await DB(query);
     }
      
-    if (typeof res !== "undefined")
+    if (typeof res !== "undefined") //jesli checmy uzyc jako funcji res nie wkladamy do srodka
     {
       if(error == false)
         res.status(201).send(`The ${Table_Name} has been updated`);
@@ -116,8 +130,10 @@ class Premission {
     }
     else {
       if(error == false)
+        
        return "201";
       else
+        console.log(error_message);
        return "404";
     }
   }
@@ -148,7 +164,7 @@ class Premission {
   static LoadFilds(data, selectedfilds) {
     let result = [];
     for (var record in data) {
-      let keep = false;
+      
       for (var fild in selectedfilds) {
         if (record == selectedfilds[fild]) {
           result[record] = data[record];

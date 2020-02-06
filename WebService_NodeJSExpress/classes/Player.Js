@@ -46,7 +46,7 @@ class Premission {
   static async PUT(DB, data, res) {
 
 
-    let error_message = "Error occur updated Players : \n"
+    let error_message = "Error occur add Players : \n"
     let error = false;
      
     for(var data in Json)
@@ -138,25 +138,43 @@ class Premission {
     }
   }
   /////////////////////////////////////////////////
-  static async DELETE(DB, data, res) {
+  static async DELETE(DB, Json, res) {
 
-    let where_filds = ["PlayerID", "P_Name"];
+    let error_message = "Error occur deleted Players : \n"
+    let error = false;
 
-    let where = this.LoadFilds(data, where_filds);
+    for(var data in Json)
+    {
+      let where_filds = ["PlayerID", "P_Name"];
 
-    let query
-    if (where.length == "[]")
-      query = SQL_Builder.Delete(Table_Name).Get();
-    else
-      query = SQL_Builder.Delete(Table_Name).Where(where).Get();
+      let where = this.LoadFilds(Json[data], where_filds);
+  
+      let query
+      if (where.length == "[]")
+        query = SQL_Builder.Delete(Table_Name).Get();
+      else
+        query = SQL_Builder.Delete(Table_Name).Where(where).Get();
+  
+      await DB(query);
+    }
+  
 
-    let result = await DB(query);
 
-    if (typeof res !== "undefined")
-      res.status(200).send(`The ${Table_Name} has been deleted`);
+
+    if (typeof res !== "undefined") //jesli checmy uzyc jako funcji res nie wkladamy do srodka
+    {
+      if(error == false)
+        res.status(200).send(`The ${Table_Name} has been deleted`);
+      else
+        res.status(404).send(error_message);
+    }
     else {
-      let data = JSON.parse(JSON.stringify(result));
-      return data[0];
+      if(error == false)
+        
+       return "201";
+      else
+        console.log(error_message);
+       return "404";
     }
   }
   /////////////////////////////////////////////////

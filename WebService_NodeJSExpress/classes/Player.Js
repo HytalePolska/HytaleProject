@@ -3,7 +3,7 @@ const Builder = require("../Tools/Sql_Builder");
 const SQL_Builder = new Builder();
 const Table_Name = "S_Players";
 const FielID = 'PlayerID';
-class Premission {
+class Player {
 
   static Is_Init = false;
 
@@ -194,4 +194,4 @@ class Premission {
   }
  
 }
-module.exports = Premission;
+module.exports = Player;

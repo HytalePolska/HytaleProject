@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Customers from './components/customers';
-import Playerform from "./components/PlayerForm/playerfrom"
+import PlayerShow from "./Models/PlayerHead/Players_Show";
 class App extends Component {
 
 
@@ -14,8 +13,8 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">React Express Starter</h1>
         </header>
-        <Customers />
-        <Playerform />
+     
+        <PlayerShow/>
       </div>
     );
   }

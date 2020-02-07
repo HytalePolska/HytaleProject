@@ -17,14 +17,25 @@ router.use('/Deaths',R_Death);
 router.use('/Lifes',R_Life);
 router.get('/', async (req, res, next) => 
 {
-    await PlayerData.GET(SQL_query,req.params,res);
+    let query ="SELECT p.P_Name,pd.* FROM P_KM_PlayerData pd ";
+    query+=" JOIN S_Players p ON p.PlayerID = pd.PlayerID ";
+   
+    res.send(await SQL_query(query));
+  //  await PlayerData.GET(SQL_query,req.params,res);
  });
 router.get('/config', async (req, res, next) => 
 {
+    
     res.send(Plugin_Config);
  });
 router.get('/:PlayerID', async (req, res, next) => {
-   await PlayerData.GET(SQL_query,req.params,res);
+
+    let query ="SELECT p.P_Name,pd.* FROM P_KM_PlayerData pd ";
+    query+=" JOIN S_Players p ON p.PlayerID = pd.PlayerID ";
+    query+=" WHERE p.PlayerID ="+req.params.PlayerID;
+   
+    res.send(await SQL_query(query));
+ //  await PlayerData.GET(SQL_query,req.params,res);
 });
 router.put('/', async (req, res, next) => {
     let reqbody = JSON.parse(JSON.stringify(req.body))[0];

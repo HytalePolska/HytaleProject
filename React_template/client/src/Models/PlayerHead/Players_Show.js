@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PlayerHead from './Player_head';
-
+import Container from 'react-bootstrap/Container'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+import { Jumbotron } from 'react-bootstrap';
 class PlayerShow extends Component {
   constructor() {
     super();
@@ -18,15 +21,17 @@ class PlayerShow extends Component {
 
   render() {
     return (
-      <div>
-
-
-        
-          {this.state.players.map(player =>
-        <PlayerHead key = {player.PlayerID} playerData = {player}/>
+      
+        <Container>
+            <Jumbotron>
+            <Row>
+            {this.state.players.map(player =>
+           <Col> <PlayerHead key = {player.PlayerID} playerData = {player}/></Col>
           )}
-       
-      </div>
+            </Row>
+            </Jumbotron>
+        </Container>  
+   
     );
   }
 }

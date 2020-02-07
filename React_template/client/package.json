@@ -4,9 +4,11 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.4.1",
+    "mdbreact": "^4.25.1",
     "react": "^16.2.0",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-dom": "^16.2.0",
+    "react-icons": "^2.2.7",
     "react-scripts": "1.0.17"
   },
   "scripts": {
@@ -15,5 +17,9 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "devDependencies": {
+    "@iconify/icons-ion": "^1.0.10",
+    "@iconify/react": "^1.1.1"
+  }
 }

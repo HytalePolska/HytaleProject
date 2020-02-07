@@ -19,15 +19,11 @@ class PlayerHead extends Component {
 <Card style={{ width: '10rem' }}>
   <Card.Img variant="top" src= {'https://minotar.net/avatar/'+this.props.playerData.PlayerID+'/200'} />
   <Card.Header className="text-uppercase">{this.props.playerData.P_Name}</Card.Header>
-  <Card.Body>
-    <Row>
-      <Col>
-      <FaBeer size={25}> {this.props.playerData.PD_Deaths}</FaBeer>
-      </Col>
-      <Col>
-      <FaRegDizzy size={25} > {this.props.playerData.PD_Deaths}</FaRegDizzy>
-      </Col>
-    </Row>
+  <Card.Body style = {{ " text-align": "center"}}>
+
+      <FaBeer size={25}/> 
+      <h5>{this.props.playerData.PD_Deaths+100}</h5>
+    
   </Card.Body>
 </Card>
 

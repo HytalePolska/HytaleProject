@@ -29,6 +29,7 @@ class PlayerShow extends Component {
            <Col> <PlayerHead key = {player.PlayerID} playerData = {player}/></Col>
           )}
             </Row>
+             <h1 style={{"color":"white","margin":"10%"}}>Nalepszi z Nalepszych</h1>
             </Jumbotron>
         </Container>  
    

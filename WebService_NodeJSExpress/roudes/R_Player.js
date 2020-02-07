@@ -11,6 +11,7 @@ Player.Init_table(SQL_query);
 
 router.get('/', async (req, res, next) => {
     let t = [];
+    console.log("heelloword");
     await Player.GET(SQL_query, t, res);
 });
 
@@ -24,9 +25,9 @@ router.put('/', async (req, res, next) => {
 
     await Player.PUT(SQL_query, data, res);
 });
-router.post('/', async (req, res,next) => {
- let data = JSON.parse(JSON.stringify(req.body));
-  await Player.POST(SQL_query, data, res);
+router.post('/', async (req, res, next) => {
+    let data = JSON.parse(JSON.stringify(req.body));
+    await Player.POST(SQL_query, data, res);
 
 });
 

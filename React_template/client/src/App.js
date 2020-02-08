@@ -10,11 +10,11 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <img src='https://cdn4.iconfinder.com/data/icons/minecraft-gaming-game-pixel-pixel-art/514/art_pixel_minecraft_mine_craft_axe.png' className="App-logo" alt="logo" />
           <h1 className="App-title">React Express Starter</h1>
         </header>
-     
-        <PlayerShow/>
+
+        <PlayerShow />
       </div>
     );
   }

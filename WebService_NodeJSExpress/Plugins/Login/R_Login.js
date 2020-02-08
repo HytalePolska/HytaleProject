@@ -29,6 +29,7 @@ router.post('/', async (req, res, next) => {
   delete (reqbody["P_Pass"]);
   delete (reqbody["P_Online"]);
 
+
   let player = await Player.GET(SQL_query, reqbody);
 
   if (typeof player == 'undefined') {
@@ -39,8 +40,9 @@ router.post('/', async (req, res, next) => {
     res.status(406).send("Wrong Password");
     return;
   }
+  let players = [player]
   player.P_Online = 1;
-  await Player.POST(SQL_query, player);
+  await Player.POST(SQL_query, players);
   res.status(200).send("Success login");
 });
 //PlayerQuitEvent
@@ -51,9 +53,9 @@ router.post('/Exit/:PlayerID', async (req, res) => {
     res.status(401).send("This players in not exisitng");
     return;
   }
-
+  let players = [player]
   player.P_Online = 0;
-  await Player.POST(SQL_query, player);
+  await Player.POST(SQL_query, players);
   res.status(200).send("Player has been logined out");
 });
 //haslo
@@ -82,8 +84,8 @@ router.put('/', async (req, res) => {
   new_player["P_Pass"] = pass;
   new_player["P_Name"] = reqbody.P_Name;
   new_player["P_Online"] = 1;
-
-  await Player.PUT(SQL_query, new_player);
+  let players = [new_player];
+  await Player.PUT(SQL_query, players);
   res.status(200).send("Successed created account! Now you need to login ");
 });
 function IsPasswordValid(password) {

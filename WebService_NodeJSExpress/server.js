@@ -24,7 +24,13 @@ app.get('/test/test1/:paramater', async (req, res) => {
   res.send("Hello Word" + req.params.paramater);
 });
 
+app.get('/', async (req, res, next) => {
+  res.send("WebServiceWorks");
+});
 
+app.on('exit', function () {
+  console.log('Pa pa');
+});
 
 const PORT = process.env.PORT | '5000';
 app.listen(PORT, () => {

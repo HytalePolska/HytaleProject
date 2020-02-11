@@ -10,7 +10,8 @@ var Settings = {
     stream: true,
     post: '3306'
 };
-let pool = mysql.createPool(Settings);
+
+let pool = null;
 
 /*setInterval(() => {
     db.query('SELECT 1', (err, rows) => {
@@ -20,6 +21,9 @@ let pool = mysql.createPool(Settings);
 
 const Sql_Query = async (query) => new Promise(
     (resolve, reject) => {
+    
+      if(pool == null)
+         pool = mysql.createPool(Settings);
 
         pool.getConnection((err, connection) => {
 

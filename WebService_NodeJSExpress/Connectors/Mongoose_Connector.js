@@ -21,7 +21,7 @@ const options = {
    function err(msg){}
    function disconnected(msg){}
    function termination(msg){}
- module.exports =function(){
+ module.exports = async () =>{
 
     mongoose.createConnection(uRL,options);
 

@@ -11,6 +11,9 @@ const SQL_builder = require('./Tools/Sql_Builder');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const mongodb = require('./Connectors/Mongoose_Connector');
+
+let conn = mongodb();
+
 //app.use('/players', player);
 ////app.use('/groups', group);
 //app.use('/plugins', plugins);
@@ -29,8 +32,8 @@ app.get('/test/test1/:paramater', async (req, res) => {
 });
 
 app.get('/', async (req, res, next) => {
-  console.log(mongodb.databaseName);
- // Mongouser.Init_table(mongodb);
+  
+    Mongouser.Init_table(conn)
  // Mongouser.GET(mongodb,"[]",res);
 
 });

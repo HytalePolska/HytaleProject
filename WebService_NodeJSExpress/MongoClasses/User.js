@@ -3,21 +3,16 @@ const Builder = require("../Tools/Sql_Builder");
 const SQL_Builder = new Builder();
 const Table_Name = "S_Players";
 const FielID = 'PlayerID';
+const Model = null;
 class Player {
 
   static Is_Init = false;
 
   static async Init_table(DB) {
 
-   
-    DB.createCollection(Table_Name, function(err, res)
-     {
-        if (err)   
-        console.log(Table_Name+" ERROR "+err);
-        else
-        db.close();
-      });
-   
+    var schema = new DB.Schema({ UUID: String, P_Login: String,P_Pass: String, a_date: Date });
+    var Model=DB.model(Table_Name+"XsadadD", schema);
+     new Model.create({ size: 'small' },(err)=>{console.log(err)});
   }
   /////////////////////////////////////////////////
   static async GET(DB, data, res) {

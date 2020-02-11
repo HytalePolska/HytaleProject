@@ -43,7 +43,7 @@ const options = {
             process.exit(0)
         });
     });
-    return mongoose.connection;
+    return mongoose;
 }
 
    /* var schema = new mongoose.Schema({ UUID: String, P_Login: String,P_Pass: String, a_date: Date });

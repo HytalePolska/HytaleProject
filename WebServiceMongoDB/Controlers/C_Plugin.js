@@ -93,6 +93,7 @@ Controller.UPDATE = async  (Json, res) =>{
     Model.findOneAndUpdate(Conditions(Json[data]),SetData(Json[data]), {upsert: true }, function (err, model) {
         if (err)
             console.log("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
+            res.status(400).send(("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
            
     });
 }

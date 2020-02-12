@@ -2,12 +2,8 @@ var mongoose = require("mongoose");
 var Model = require("../Models/User");
 
 function Conditions(data){ return {'PlayerID' : data.PlayerID}  };
-function SetData(data){  return { $set:{ 'P_Online':data.P_Online ,'P_Pass':data.P_Pass } } }
+function SetData(data){  return { 'P_Online':data.P_Online ,'P_Pass':data.P_Pass } }
 var Controller = {};
-
-
-
-
 
 //GET===================================================================================
 Controller.GET = (Json, res) => {
@@ -31,12 +27,10 @@ Controller.GET = (Json, res) => {
 };
 //INSERT===================================================================================
 Controller.INSERT = function (Json, res) {
-
-
-    new Promise((resolve, reject) => {
+    
         let FinalMsg = "";
         for (let data in Json) {
-            Model.find({ PlayerID: Json[data].PlayerID }).exec(function (err, result) {
+            Model.find(Conditions(Json[data])).exec(function (err, result) {
                 if (err)
                     console.log("ERROR FIND INSERT " + Model.collection.name + JSON.stringify(Json) + err);
 
@@ -57,12 +51,7 @@ Controller.INSERT = function (Json, res) {
                 }
             });
         } resolve(FinalMsg);
-    }).then((value) => {
         res.send("INSERT " + Model.collection.name + value);
-    });
-
-
-
 
 };
 //EDIT===================================================================================
@@ -78,12 +67,9 @@ Controller.EDIT = function (Where, Json, res) {
 //UPDATE===================================================================================
 Controller.UPDATE = function (Json, res) {
     for (let data in Json) {
-         console.log(SetData(Json[data]));
     Model.findOneAndUpdate(Conditions(Json[data]),SetData(Json[data]), {upsert: true }, function (err, model) {
         if (err)
             console.log("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
-        else
-         model.save();
            
     });
 }

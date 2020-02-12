@@ -12,17 +12,23 @@ Controller.GET = async (Json, res) => {
     if (JSON.stringify(Json) === "{}") {
         Model.find({}).exec(function (err, models) {
             if (err)
-                console.log("ERROR INSERT " + Model.collection.name + JSON.stringify(Json) + err);
+            {
+                console.log("ERROR GET " + Model.collection.name + JSON.stringify(Json) + err);
+                ress.status(500).send("ERROR GET " + Model.collection.name + JSON.stringify(Json) + err);
+            }
             else
-                res.send(models);
+                res.status(200).send(models);
         });
     }
     else {
         Model.findOne(Json).exec(function (err, models) {
             if (err)
-                console.log("ERROR INSERT " + Model.collection.name + JSON.stringify(Json) + err);
+            {
+                console.log("ERROR GET " + Model.collection.name + JSON.stringify(Json) + err);
+                res.status(500).send("ERROR GET " + Model.collection.name + JSON.stringify(Json) + err);
+            }
             else
-                res.send(models);
+                res.status(200).send(models);
         });
     }
 };
@@ -52,17 +58,34 @@ Controller.INSERT = async  (Json, res) =>{
                 }
             });
         } 
-        res.send("INSERT " + Model.collection.name );
+        res.status(200).send("INSERT " + Model.collection.name );
 
 };
 //EDIT===================================================================================
-Controller.EDIT = async (Where, Json, res) =>{
-    Model.findOne(Where).exec(function (err, model) {
-        if (err)
-            console.log("ERROR EDIT  " + Model.collection.name + JSON.stringify(Json) + err);
-        else
-            res.send("EDIT " + Model.collection.name + "  " + JSON.stringify(Json));
-    });
+Controller.EDIT = async (Json) =>{
+    if (JSON.stringify(Json) === "{}") {
+        Model.find({}).exec(function (err, models) {
+            if (err)
+            {
+                console.log("ERROR GET " + Model.collection.name + JSON.stringify(Json) + err);
+                return "[]";
+            }
+            else
+              return models;
+        });
+    }
+    else {
+        Model.findOne(Json).exec(function (err, models) {
+            if (err)
+            {
+                console.log("ERROR GET " + Model.collection.name + JSON.stringify(Json) + err);
+                return "[]";
+            }
+            else
+              return models;
+        });
+    }
+    return "[]";
 };
 //UPDATE===================================================================================
 Controller.UPDATE = async  (Json, res) =>{
@@ -73,7 +96,7 @@ Controller.UPDATE = async  (Json, res) =>{
            
     });
 }
-res.send("UPDATE " + Model.collection.name + "  " + JSON.stringify(Json));
+res.status(200).send("UPDATE " + Model.collection.name + "  " + JSON.stringify(Json));
 };
 // Delete===================================================================================
 Controller.DELETE = async   (Json, res) =>{
@@ -81,9 +104,12 @@ Controller.DELETE = async   (Json, res) =>{
     if (JSON.stringify(Json) === "{}") {
         Model.remove({}, function (err) {
             if (err)
+            {
                 console.log("ERROR DELETE ALL " + Model.collection.name + err);
+                res.status(400).send("ERROR DELETE ALL " + Model.collection.name + err);
+            }
             else
-                res.send("DELETE ALL " + Model.collection.name);
+                res.status(200).send("DELETE ALL " + Model.collection.name);
         });
     }
     else {
@@ -91,11 +117,11 @@ Controller.DELETE = async   (Json, res) =>{
             Model.deleteOne(Json[data], function (err) {
                 if (err) {
                     console.log("ERROR DELETE " + Model.collection.name + JSON.stringify(Json) + err);
-                    res.send("ERROR DELETE " + Model.collection.name + JSON.stringify(Json) + err);
+                    res.status(400).send("ERROR DELETE " + Model.collection.name + JSON.stringify(Json) + err);
                 }
             });
         }
-        res.send("DELETE " + Model.collection.name + "  " + JSON.stringify(Json));
+        res.status(200).send("DELETE " + Model.collection.name + "  " + JSON.stringify(Json));
     }
 
 

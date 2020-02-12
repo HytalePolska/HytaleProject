@@ -1,6 +1,8 @@
 var mongoose = require("mongoose");
 var Model = require("../Models/User");
-var FieldID = 'PlayerID';
+
+function Conditions(data){ return {'PlayerID' : data.PlayerID}  };
+function SetData(data){  return { $set:{ 'P_Online':data.P_Online ,'P_Pass':data.P_Pass } } }
 var Controller = {};
 
 
@@ -76,14 +78,12 @@ Controller.EDIT = function (Where, Json, res) {
 //UPDATE===================================================================================
 Controller.UPDATE = function (Json, res) {
     for (let data in Json) {
-        
-        let where = [];
-        where[FieldID] = Json[data][FieldID];
-        let w = "{"+  FieldID+":'"+Json[data][FieldID]+"'}";
-        console.log(w);
-    Model.findByIdAndUpdate(w, Json[data], { new: true }, function (err, model) {
+         console.log(SetData(Json[data]));
+    Model.findOneAndUpdate(Conditions(Json[data]),SetData(Json[data]), {upsert: true }, function (err, model) {
         if (err)
             console.log("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
+        else
+         model.save();
            
     });
 }

@@ -11,7 +11,7 @@ Controller.GET = async (Json, res) => {
     if (JSON.stringify(Json) === "{}") {
         Model.find({}).exec(function (err, models) {
             if (err)
-                console.log("ERROR INSERT " + Model.collection.name + JSON.stringify(Json) + err);
+                console.log("ERROR GET " + Model.collection.name + JSON.stringify(Json) + err);
             else
                 res.send(models);
         });
@@ -31,28 +31,32 @@ Controller.INSERT = async (Json, res) => {
 
     let FinalMsg = "";
     for (let data in Json) {
-        Model.find(Conditions(Json[data])).exec(function (err, result) {
-            if (err)
-                console.log("ERROR FIND INSERT " + Model.collection.name + JSON.stringify(Json) + err);
 
-            if (JSON.stringify(result) == "[]") {
-                var model = new Model(Json[data]);
-                model.save(function (err) {
-                    if (err) {
-                        FinalMsg += "ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n';
-                        console.log("ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n');
-                    }
-                    else {
-                        FinalMsg += " INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n';
-                    }
-                });
-            }
-            else {
-                FinalMsg += Json[data].PlayerID + " Is already existing \n";
-            }
-        });
+        FinalMsg += await new Promise(function (resolve, reject) {
+            Model.find(Conditions(Json[data])).exec(function (err, result) {
+                if (err)
+                    console.log("ERROR FIND INSERT " + Model.collection.name + JSON.stringify(Json) + err);
+
+                if (JSON.stringify(result) == "[]") {
+                    var model = new Model(Json[data]);
+                    model.save(function (err) {
+                        if (err) {
+                            resolve("ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n');
+                            console.log("ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n');
+                        }
+                        else {
+                            resolve(" INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n');
+                        }
+                    });
+                }
+                else {
+                    resolve(FinalMsg += Json[data].PlayerID + " Is already existing \n");
+                }
+            });
+        }).then((value) => { return value; });
+
     }
-    res.send("INSERT " + Model.collection.name);
+    res.send("INSERT " + Model.collection.name + FinalMsg);
 };
 //EDIT===================================================================================
 Controller.EDIT = async (Where, Json, res) => {
@@ -96,9 +100,6 @@ Controller.DELETE = async (Json, res) => {
         }
         res.send("DELETE " + Model.collection.name + "  " + JSON.stringify(Json));
     }
-
-
-
 };
 
 module.exports = Controller;

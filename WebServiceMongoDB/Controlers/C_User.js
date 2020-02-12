@@ -1,8 +1,8 @@
 var mongoose = require("mongoose");
 var Model = require("../Models/User");
 
-function Conditions(data){ return {'PlayerID' : data.PlayerID}  };
-function SetData(data){  return { 'P_Online':data.P_Online ,'P_Pass':data.P_Pass } }
+function Conditions(data) { return { 'PlayerID': data.PlayerID } };
+function SetData(data) { return { 'P_Online': data.P_Online, 'P_Pass': data.P_Pass } }
 var Controller = {};
 
 //GET===================================================================================
@@ -17,6 +17,7 @@ Controller.GET = async (Json, res) => {
         });
     }
     else {
+
         Model.findOne(Json).exec(function (err, models) {
             if (err)
                 console.log("ERROR INSERT " + Model.collection.name + JSON.stringify(Json) + err);
@@ -26,36 +27,35 @@ Controller.GET = async (Json, res) => {
     }
 };
 //INSERT===================================================================================
-Controller.INSERT = async  (Json, res) =>{
-    
-        let FinalMsg = "";
-        for (let data in Json) {
-            Model.find(Conditions(Json[data])).exec(function (err, result) {
-                if (err)
-                    console.log("ERROR FIND INSERT " + Model.collection.name + JSON.stringify(Json) + err);
+Controller.INSERT = async (Json, res) => {
 
-                if (JSON.stringify(result) == "[]") {
-                    var model = new Model(Json[data]);
-                    model.save(function (err) {
-                        if (err) {
-                            FinalMsg += "ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n';
-                            console.log("ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n');
-                        }
-                        else {
-                            FinalMsg += " INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n';
-                        }
-                    });
-                }
-                else {
-                    FinalMsg += Json[data].PlayerID + " Is already existing \n";
-                }
-            });
-        } 
-        res.send("INSERT " + Model.collection.name);
+    let FinalMsg = "";
+    for (let data in Json) {
+        Model.find(Conditions(Json[data])).exec(function (err, result) {
+            if (err)
+                console.log("ERROR FIND INSERT " + Model.collection.name + JSON.stringify(Json) + err);
 
+            if (JSON.stringify(result) == "[]") {
+                var model = new Model(Json[data]);
+                model.save(function (err) {
+                    if (err) {
+                        FinalMsg += "ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n';
+                        console.log("ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n');
+                    }
+                    else {
+                        FinalMsg += " INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n';
+                    }
+                });
+            }
+            else {
+                FinalMsg += Json[data].PlayerID + " Is already existing \n";
+            }
+        });
+    }
+    res.send("INSERT " + Model.collection.name);
 };
 //EDIT===================================================================================
-Controller.EDIT = async (Where, Json, res) =>{
+Controller.EDIT = async (Where, Json, res) => {
     Model.findOne(Where).exec(function (err, model) {
         if (err)
             console.log("ERROR EDIT  " + Model.collection.name + JSON.stringify(Json) + err);
@@ -64,18 +64,18 @@ Controller.EDIT = async (Where, Json, res) =>{
     });
 };
 //UPDATE===================================================================================
-Controller.UPDATE = async  (Json, res) =>{
+Controller.UPDATE = async (Json, res) => {
     for (let data in Json) {
-    Model.findOneAndUpdate(Conditions(Json[data]),SetData(Json[data]), {upsert: true }, function (err, model) {
-        if (err)
-            console.log("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
-           
-    });
-}
-res.send("UPDATE " + Model.collection.name + "  " + JSON.stringify(Json));
+        Model.findOneAndUpdate(Conditions(Json[data]), SetData(Json[data]), { upsert: true }, function (err, model) {
+            if (err)
+                console.log("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
+
+        });
+    }
+    res.send("UPDATE " + Model.collection.name + "  " + JSON.stringify(Json));
 };
 // Delete===================================================================================
-Controller.DELETE = async   (Json, res) =>{
+Controller.DELETE = async (Json, res) => {
 
     if (JSON.stringify(Json) === "{}") {
         Model.remove({}, function (err) {

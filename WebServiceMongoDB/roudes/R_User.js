@@ -8,12 +8,12 @@ router.get('/', function (req, res) {
 });
 
 // Get single employee by id
-router.get('/:PlayerID', async (req, res) =>{
-   await  user.GET(req.params, res);
+router.get('/:PlayerID', async (req, res) => {
+    await user.GET(req.params, res);
 });
 router.put('/', async (req, res) => {
     let data = JSON.parse(JSON.stringify(req.body))[0]
-    await   user.INSERT(data, res);
+    await user.INSERT(data, res);
 });
 // Edit update
 router.post('/', async (req, res) => {
@@ -21,8 +21,8 @@ router.post('/', async (req, res) => {
     await user.UPDATE(data, res);
 });
 // Edit update
-router.delete('/',  async (req, res) =>{
+router.delete('/', async (req, res) => {
     let data = JSON.parse(JSON.stringify(req.body));
-    await   user.DELETE(data, res);
+    await user.DELETE(data, res);
 });
 module.exports = router;

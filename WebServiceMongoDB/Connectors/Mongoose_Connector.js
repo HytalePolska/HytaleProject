@@ -4,10 +4,11 @@ const options = {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
-    autoReconnect: true,
+    useUnifiedTopology: true,
+    //autoReconnect: true,
     autoIndex: false, // Don't build indexes
-    reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
-    reconnectInterval: 500, // Reconnect every 500ms
+  //  reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
+ //   reconnectInterval: 500, // Reconnect every 500ms
     poolSize: 10, // Maintain up to 10 socket connections
     // If not connected, return errors immediately rather than waiting for reconnect
     bufferMaxEntries: 0,
@@ -28,7 +29,7 @@ module.exports = async () => {
     mongoose.connect(uRL, options);
 
     mongoose.connection.on('connected', function () {
-        console.log(connected("Mongoose default connection is open to "));
+        console.log(connected("Mongoose connected "));
     });
 
     mongoose.connection.on('error', function (err) {
@@ -47,12 +48,4 @@ module.exports = async () => {
     });
     return mongoose;
 }
-
-/* var schema = new mongoose.Schema({ UUID: String, P_Login: String,P_Pass: String, a_date: Date });
- var PlayerModel= mongoose.model('Player', schema);
-
- new PlayerModel({UUID:"4321"}).save(function (err) {
-     if (err) return handleError(err);
-     // saved!
-   });*/
 

@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 var Model = require("../Models/User");
-
+var FieldID = 'PlayerID';
 var Controller = {};
 
 
@@ -43,6 +43,7 @@ Controller.INSERT = function (Json, res) {
                     model.save(function (err) {
                         if (err) {
                             FinalMsg += "ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n';
+                            console.log("ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n');
                         }
                         else {
                             FinalMsg += " INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n';
@@ -73,14 +74,20 @@ Controller.EDIT = function (Where, Json, res) {
 };
 
 //UPDATE===================================================================================
-Controller.UPDATE = function (Where, Json, res) {
-
-    Model.findByIdAndUpdate(Where, Json, { new: true }, function (err, model) {
+Controller.UPDATE = function (Json, res) {
+    for (let data in Json) {
+        
+        let where = [];
+        where[FieldID] = Json[data][FieldID];
+        let w = "{"+  FieldID+":'"+Json[data][FieldID]+"'}";
+        console.log(w);
+    Model.findByIdAndUpdate(w, Json[data], { new: true }, function (err, model) {
         if (err)
-            console.log("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json) + err);
-        else
-            res.send("UPDATE " + Model.collection.name + "  " + JSON.stringify(Json));
+            console.log("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
+           
     });
+}
+res.send("UPDATE " + Model.collection.name + "  " + JSON.stringify(Json));
 };
 
 // Delete===================================================================================

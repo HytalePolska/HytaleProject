@@ -1,8 +1,9 @@
 var mongoose = require("mongoose");
-var Model = require("../Models/User");
+var Model = require("../Models/Plugins");
 
-function Conditions(data){ return {'PlayerID' : data.PlayerID}  };
-function SetData(data){  return { 'P_Online':data.P_Online ,'P_Pass':data.P_Pass } }
+function Conditions(data){ return {'P_Name' : data.P_Name}  };
+function SetData(data){  return { 'P_Description':data.P_Description,
+                                  'P_LastComandsUpdate':data.P_LastComandsUpdate } }
 var Controller = {};
 
 //GET===================================================================================
@@ -51,7 +52,7 @@ Controller.INSERT = async  (Json, res) =>{
                 }
             });
         } 
-        res.send("INSERT " + Model.collection.name);
+        res.send("INSERT " + Model.collection.name );
 
 };
 //EDIT===================================================================================

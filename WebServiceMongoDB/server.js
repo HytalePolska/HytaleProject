@@ -3,14 +3,15 @@ const app = express();
 const bodyParser = require("body-parser");
 const DataBase = require('./Connectors/Mongoose_Connector');
 const users = require("./roudes/R_User");
-let conn = DataBase();
+const plugins = require("./roudes/R_Plugins");
+ DataBase();
 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/players', users);
-
+app.use('/plugins', plugins);
 
 
 

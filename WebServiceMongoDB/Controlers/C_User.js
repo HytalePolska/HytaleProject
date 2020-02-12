@@ -6,7 +6,7 @@ function SetData(data){  return { 'P_Online':data.P_Online ,'P_Pass':data.P_Pass
 var Controller = {};
 
 //GET===================================================================================
-Controller.GET = (Json, res) => {
+Controller.GET = async (Json, res) => {
 
     if (JSON.stringify(Json) === "{}") {
         Model.find({}).exec(function (err, models) {
@@ -26,7 +26,7 @@ Controller.GET = (Json, res) => {
     }
 };
 //INSERT===================================================================================
-Controller.INSERT = function (Json, res) {
+Controller.INSERT = async  (Json, res) =>{
     
         let FinalMsg = "";
         for (let data in Json) {
@@ -55,7 +55,7 @@ Controller.INSERT = function (Json, res) {
 
 };
 //EDIT===================================================================================
-Controller.EDIT = function (Where, Json, res) {
+Controller.EDIT = async (Where, Json, res) =>{
     Model.findOne(Where).exec(function (err, model) {
         if (err)
             console.log("ERROR EDIT  " + Model.collection.name + JSON.stringify(Json) + err);
@@ -63,9 +63,8 @@ Controller.EDIT = function (Where, Json, res) {
             res.send("EDIT " + Model.collection.name + "  " + JSON.stringify(Json));
     });
 };
-
 //UPDATE===================================================================================
-Controller.UPDATE = function (Json, res) {
+Controller.UPDATE = async  (Json, res) =>{
     for (let data in Json) {
     Model.findOneAndUpdate(Conditions(Json[data]),SetData(Json[data]), {upsert: true }, function (err, model) {
         if (err)
@@ -75,9 +74,8 @@ Controller.UPDATE = function (Json, res) {
 }
 res.send("UPDATE " + Model.collection.name + "  " + JSON.stringify(Json));
 };
-
 // Delete===================================================================================
-Controller.DELETE = function (Json, res) {
+Controller.DELETE = async   (Json, res) =>{
 
     if (JSON.stringify(Json) === "{}") {
         Model.remove({}, function (err) {

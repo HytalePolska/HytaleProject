@@ -30,6 +30,7 @@ Controller.GET = async (Json, res) => {
 Controller.INSERT = async (Json, res) => {
 
     let FinalMsg = "";
+    let error = false;
     for (let data in Json) {
 
         FinalMsg += await new Promise(function (resolve, reject) {
@@ -41,6 +42,7 @@ Controller.INSERT = async (Json, res) => {
                     var model = new Model(Json[data]);
                     model.save(function (err) {
                         if (err) {
+                            error = true;
                             resolve("ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n');
                             console.log("ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n');
                         }
@@ -50,13 +52,17 @@ Controller.INSERT = async (Json, res) => {
                     });
                 }
                 else {
+                    error = true;
                     resolve(FinalMsg += Json[data].PlayerID + " Is already existing \n");
                 }
             });
         }).then((value) => { return value; });
 
     }
-    res.send("INSERT " + Model.collection.name + FinalMsg);
+    if (error)
+        res.status(400).send("INSERT " + Model.collection.name + FinalMsg);
+    else
+        res.status(200).send("INSERT " + Model.collection.name);
 };
 //EDIT===================================================================================
 Controller.EDIT = async (Where, Json, res) => {
@@ -69,37 +75,62 @@ Controller.EDIT = async (Where, Json, res) => {
 };
 //UPDATE===================================================================================
 Controller.UPDATE = async (Json, res) => {
+    let result = "";
+    let error = false;
     for (let data in Json) {
-        Model.findOneAndUpdate(Conditions(Json[data]), SetData(Json[data]), { upsert: true }, function (err, model) {
-            if (err)
-                console.log("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
+        result += await new Promise(function (resolve, reject) {
+            Model.findOneAndUpdate(Conditions(Json[data]), SetData(Json[data]), { upsert: true }, function (err, model) {
+                if (err) {
+                    console.log("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
+                    error = true;
+                    resolve("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
+                }
+            }).then((value) => { return value });
 
         });
     }
-    res.send("UPDATE " + Model.collection.name + "  " + JSON.stringify(Json));
+
+    if (error)
+        res.status(400).send("UPDATE " + Model.collection.name + "  " + result);
+    else
+        res.status(200).send("UPDATE " + Model.collection.name);
 };
 // Delete===================================================================================
 Controller.DELETE = async (Json, res) => {
 
     if (JSON.stringify(Json) === "{}") {
-        Model.remove({}, function (err) {
-            if (err)
-                console.log("ERROR DELETE ALL " + Model.collection.name + err);
-            else
-                res.send("DELETE ALL " + Model.collection.name);
-        });
-    }
-    else {
-        for (let data in Json) {
-            Model.deleteOne(Json[data], function (err) {
-                if (err) {
-                    console.log("ERROR DELETE " + Model.collection.name + JSON.stringify(Json) + err);
-                    res.send("ERROR DELETE " + Model.collection.name + JSON.stringify(Json) + err);
-                }
-            });
+
+        if (err) {
+            console.log("ERROR DELETE ALL " + Model.collection.name + err);
+            res.status(400).send("DELETE ALL " + Model.collection.name + " \n" + err);
         }
-        res.send("DELETE " + Model.collection.name + "  " + JSON.stringify(Json));
+        else
+            res.status(200).send("DELETE ALL " + Model.collection.name);
+    }
+
+    else {
+        let FinalMsg = "";
+        let error = false;
+        for (let data in Json) {
+            FinalMsg += await new Promise(function (resolve, reject) {
+                Model.deleteOne(Json[data], function (err) {
+                    if (err) {
+                        error = true;
+                        console.log("ERROR DELETE " + Model.collection.name + JSON.stringify(Json) + err);
+                        resolve("ERROR DELETE " + Model.collection.name + JSON.stringify(Json) + err);
+                    }
+                });
+            }).then((value) => { return value });
+        }
+
+        if (error)
+            res.status(400).send("DELETE " + Model.collection.name + " \n" + FinalMsg);
+        else
+            res.status(200).send("DELETE " + Model.collection.name);
     }
 };
+
+
+
 
 module.exports = Controller;

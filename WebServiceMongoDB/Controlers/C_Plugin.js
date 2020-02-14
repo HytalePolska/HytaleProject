@@ -61,7 +61,6 @@ Controller.INSERT = async (Json, res) => {
         });
     }
     res.status(200).send("INSERT " + Model.collection.name);
-
 };
 //EDIT===================================================================================
 Controller.EDIT = async (Json) => {

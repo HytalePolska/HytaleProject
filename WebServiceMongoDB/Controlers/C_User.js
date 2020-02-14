@@ -12,8 +12,10 @@ Controller.GET = async (Json, res) => {
         Model.find({}).exec(function (err, models) {
             if (err)
                 console.log("ERROR GET " + Model.collection.name + JSON.stringify(Json) + err);
+            if (models === null)
+                res.status(200).send('[]')
             else
-                res.send(models);
+                res.status(200).send(models);
         });
     }
     else {
@@ -21,8 +23,10 @@ Controller.GET = async (Json, res) => {
         Model.findOne(Json).exec(function (err, models) {
             if (err)
                 console.log("ERROR INSERT " + Model.collection.name + JSON.stringify(Json) + err);
+            if (models === null)
+                res.status(200).send('[]')
             else
-                res.send(models);
+                res.status(200).send(models);
         });
     }
 };
@@ -85,6 +89,7 @@ Controller.UPDATE = async (Json, res) => {
                     error = true;
                     resolve("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
                 }
+                else resolve("Updated " + Json[data]);
             }).then((value) => { return value });
 
         });
@@ -97,31 +102,32 @@ Controller.UPDATE = async (Json, res) => {
 };
 // Delete===================================================================================
 Controller.DELETE = async (Json, res) => {
-
     if (JSON.stringify(Json) === "{}") {
-
-        if (err) {
-            console.log("ERROR DELETE ALL " + Model.collection.name + err);
-            res.status(400).send("DELETE ALL " + Model.collection.name + " \n" + err);
-        }
-        else
-            res.status(200).send("DELETE ALL " + Model.collection.name);
+        Model.deleteMany({}, function (err) {
+            if (err) {
+                console.log("ERROR DELETE ALL " + Model.collection.name + err);
+                res.status(400).send("DELETE ALL " + Model.collection.name + " \n" + err);
+            }
+            else
+                res.status(200).send("DELETE ALL " + Model.collection.name);
+        });
     }
-
     else {
         let FinalMsg = "";
         let error = false;
-        for (let data in Json) {
-            FinalMsg += await new Promise(function (resolve, reject) {
-                Model.deleteOne(Json[data], function (err) {
-                    if (err) {
-                        error = true;
-                        console.log("ERROR DELETE " + Model.collection.name + JSON.stringify(Json) + err);
-                        resolve("ERROR DELETE " + Model.collection.name + JSON.stringify(Json) + err);
-                    }
-                });
-            }).then((value) => { return value });
-        }
+
+
+        FinalMsg += await new Promise(function (resolve, reject) {
+            Model.deleteOne(Json, function (err) {
+                if (err) {
+                    error = true;
+                    console.log("ERROR DELETE " + Model.collection.name + JSON.stringify(Json) + err);
+                    resolve("ERROR DELETE " + Model.collection.name + JSON.stringify(Json) + err);
+                }
+                else
+                    resolve("Deleted " + Json);
+            });
+        }).then((value) => { return value });
 
         if (error)
             res.status(400).send("DELETE " + Model.collection.name + " \n" + FinalMsg);

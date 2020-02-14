@@ -30,10 +30,6 @@ router.delete('/:PlayerID', async (req, res) => {
     let data = JSON.parse(JSON.stringify(req.params));
     await user.DELETE(data, res);
 });
-router.delete('/', async (req, res) => {
-    let data = JSON.parse(JSON.stringify(req.body));
-    await user.DELETE(data, res);
-});
 
 
 module.exports = router;

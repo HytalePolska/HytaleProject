@@ -4,7 +4,8 @@ const bodyParser = require("body-parser");
 const DataBase = require('./Connectors/Mongoose_Connector');
 const users = require("./roudes/R_User");
 const plugins = require("./roudes/R_Plugins");
- DataBase();
+
+DataBase();
 
 
 app.use(bodyParser.json());

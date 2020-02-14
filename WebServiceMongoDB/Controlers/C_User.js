@@ -50,9 +50,8 @@ Controller.INSERT = async (Json, res) => {
                             resolve("ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n');
                             console.log("ERROR INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n');
                         }
-                        else {
+                        else
                             resolve(" INSERT " + Json[data].PlayerID + " Table " + Model.collection.name + err + '\n');
-                        }
                     });
                 }
                 else {
@@ -69,13 +68,21 @@ Controller.INSERT = async (Json, res) => {
         res.status(200).send("INSERT " + Model.collection.name);
 };
 //EDIT===================================================================================
-Controller.EDIT = async (Where, Json, res) => {
-    Model.findOne(Where).exec(function (err, model) {
-        if (err)
-            console.log("ERROR EDIT  " + Model.collection.name + JSON.stringify(Json) + err);
-        else
-            res.send("EDIT " + Model.collection.name + "  " + JSON.stringify(Json));
-    });
+Controller.EDIT = async (Where, Json) => {
+    if (typeof Json == 'undefined') {
+        return new Promise((resolve, reject) => {
+
+            Model.findOne(Where).exec(function (err, model) {
+                if (err) {
+                    console.log("ERROR EDIT " + Model.collection.name + JSON.stringify(Json) + err);
+                    resolve(null);
+                }
+                else
+                    resolve(model);
+            })
+        }).then((value) => { return value });
+    }
+
 };
 //UPDATE===================================================================================
 Controller.UPDATE = async (Json, res) => {

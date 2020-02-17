@@ -48,31 +48,49 @@ router.post('/register', async (req, res) => {
     let data = JSON.parse(JSON.stringify(req.body))[0];
     let p_id = { PlayerID: data["PlayerID"] };
 
-    let player = await user.EDIT(p_id);
-
+    let player =  await user.EDIT(p_id);
+ 
     if (player != null) {
         res.status(401).send("This players is exisitng");
         return;
     }
+   
     let Valid_Status = IsPasswordValid(data.P_Pass);
   if (Valid_Status != true) {
     res.status(406).send(Valid_Status);
     return;
   }
-
+  
   let new_player = [];
   new_player["PlayerID"] = data.PlayerID;
   new_player["P_Pass"] = data.P_Pass;
   new_player["P_Name"] = data.P_Name;
   new_player["P_Online"] = 1;
+   let list = {new_player};
+    await user.INSERT(list,res);
 
-    await user.INSERT(new_player,res);
    
 });
 router.post('/password', async (req, res) => {
-    //let player = await user.GET(req.params, res);
-    //  console.log(player);
-    res.send("123");
+    let data = JSON.parse(JSON.stringify(req.body))[0];
+    let p_id = { PlayerID: data["PlayerID"] };
+
+    let player = await user.EDIT(p_id);
+
+    if (player == null) {
+        res.status(401).send("This players is not exisitng");
+        return;
+    }
+    if (player.P_Pass == data["P_Pass"]) {
+        res.status(406).send("Passwords should be diffrent");
+        return;
+    }
+    player.P_Pass = data["P_Pass"];
+    player.save((err) => {
+        if (err) { res.status(500).send(err); return; }
+        else
+            res.status(200).send(`Player ${data.PlayerID} password has been changed`);
+    });
 });
 
 function IsPasswordValid(password) {

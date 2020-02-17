@@ -23,7 +23,7 @@ router.use('/premissions', premissions);
 router.use('/fields', fields);
 router.use('/:P_Name/commands', commands);
 */
-const login = require('../Plugins/Login/R_login2');
+const login = require('../Plugins/Login/R_login');
 
 const express = require("express");
 

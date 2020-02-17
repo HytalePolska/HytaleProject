@@ -40,9 +40,6 @@ router.use('/:P_Name/',command);
 router.get('/delete', async (req, res) => {
     await CPlugin.DELETE(req.params, res);
 });
-router.get('/', async (req, res) => {
-    await CPlugin.GET(req.params, res);
-});
 
 router.put('/', async (req, res) => {
     let data = JSON.parse(JSON.stringify(req.body));

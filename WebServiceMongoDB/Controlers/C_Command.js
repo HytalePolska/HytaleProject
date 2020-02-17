@@ -1,13 +1,8 @@
 var mongoose = require("mongoose");
-var Model = require("../Models/Plugins");
+var Model = require("../Models/Command");
 
-function Conditions(data) { return { 'P_Name': data.P_Name } };
-function SetData(data) {
-    return {
-        'P_Description': data.P_Description,
-        'P_LastComandsUpdate': data.P_LastComandsUpdate
-    }
-}
+function Conditions(data) { return { 'C_Name': data.C_Name , 'PluginID':data.PluginID } };
+function SetData(data) { return { 'C_Description': C_Description } }
 var Controller = {};
 
 //GET===================================================================================
@@ -147,6 +142,7 @@ Controller.DELETE = async (Json, res) => {
             res.status(200).send("DELETE " + Model.collection.name);
     }
 };
+
 
 
 

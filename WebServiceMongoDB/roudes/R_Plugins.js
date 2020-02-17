@@ -25,6 +25,8 @@ router.use('/:P_Name/commands', commands);
 */
 const login = require('../Plugins/Login/R_login');
 
+const command = require('./R_Command2');
+
 const express = require("express");
 
 const router = express.Router({ mergeParams: true });
@@ -33,7 +35,7 @@ const CPlugin = require('../Controlers/C_Plugin');
 
 router.use('/login', login);
 
-
+router.use('/:P_Name/',command);
 
 router.get('/delete', async (req, res) => {
     await CPlugin.DELETE(req.params, res);
@@ -41,10 +43,7 @@ router.get('/delete', async (req, res) => {
 router.get('/', async (req, res) => {
     await CPlugin.GET(req.params, res);
 });
-router.get('/:P_Name', async (req, res) => {
-    let data = JSON.parse(JSON.stringify(req.body))[0]
-    await CPlugin.GET(data, res);
-});
+
 router.put('/', async (req, res) => {
     let data = JSON.parse(JSON.stringify(req.body));
     await CPlugin.INSERT(data, res);

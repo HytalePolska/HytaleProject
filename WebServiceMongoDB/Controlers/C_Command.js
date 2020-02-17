@@ -20,7 +20,7 @@ Controller.GET = async (Json, res) => {
     }
     else {
 
-        Model.findOne(Json).exec(function (err, models) {
+        Model.find(Json).exec(function (err, models) {
             if (err)
                 console.log("ERROR INSERT " + Model.collection.name + JSON.stringify(Json) + err);
             if (models === null)

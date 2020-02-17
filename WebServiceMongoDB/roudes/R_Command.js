@@ -1,102 +1,59 @@
-
-const express = require("express");
-
+var express = require('express');
 const router = express.Router({ mergeParams: true });
+var Command = require("../Controlers/C_Command");
+var Plugin = require("../Controlers/C_Plugin");
 
-const Command = require("../Classes/Command");
-
-const SQL_query = require('../Connectors/MySql_Connector');
-
-const SQL_builder = require('../Tools/Sql_Builder');
-
-const Plugin = require("../Classes/Plugins");
-
-
-Initialize();
 
 router.all('/',async(req,res,next) =>
 {
-    let plugin = await Plugin.GET(SQL_query,req.params);
-    if (typeof plugin == 'undefined') {
+    let plugin = await Plugin.EDIT(req.params);
+    if (plugin == null) {
         res.status(404).send("This plugin is not existing");
         return;
       }
-      req.P_data = plugin;
-      req.body = JSON.parse(JSON.stringify(req.body))[0];
-      next();
-})
-router.all('/:CommandID',async(req,res,next) =>
-{
-    let plugin = await Plugin.GET(SQL_query,req.params);
-    if (typeof plugin == 'undefined') {
-        res.status(404).send("This plugin is not existing");
-        return;
-      }
-      req.P_data = plugin;
+      req.plugin = plugin;
       req.body = JSON.parse(JSON.stringify(req.body))[0];
       next();
 })
 
-router.get('/', async (req, res, next) => {
-    
-    await Command.GET(SQL_query,req.P_data,res);
-});
-
-router.get('/:C_Name', async (req, res, next) => {
-  
-      let data = [];
-      data["PluginID"] = req.P_data.PluginID;
-      data["C_Name"] = req.params.C_Name;
-    await Command.GET(SQL_query,data, res);
- });
-
-router.put('/', async (req, res, next) => {
-   
-   let data  = [];
-    data["PluginID"] = req.P_data.PluginID;
-    data["C_Name"] =  req.body.C_Name;
-    data["C_Description"] =req.body.C_Description;
-   await Command.PUT(SQL_query,data, res);
-
-});
-
-router.post('/', async (req, res, next) => {
-    let data  = [];
-    data["PluginID"] =  req.P_data.PluginID;
-    data["C_Name"] =  req.body.C_Name;
-    data["C_Description"] =req.body.C_Description;
-   await Command.POST(SQL_query,data, res);
-});
-
-router.delete('/:CommandName', async (req, res, next) => {
-    let data  = [];
-    data["PluginID"] = req.P_data.PluginID;
-    data["C_Name"] =  req.params.CommandName;
-   
-    await Command.DELETE(SQL_query,data, res);
-});
-router.delete('/', async (req, res, next) => {
-    await Command.DELETE(SQL_query,req.P_data, res);
-});
-async function Initialize()
+router.all('/:C_Name',async(req,res,next) =>
 {
-
-    let filds=[];
-    this.CommandID='';
-    this.PluginID = '';
-    this.C_Name = '';
-    this.C_Description = '';
-    filds.push("CommandID INT AUTO_INCREMENT PRIMARY KEY");
-    filds.push("PluginID INT NOT NULL");
-    filds.push("C_Name VARCHAR(50) NOT NULL");
-    filds.push("C_Description  VARCHAR(50)");
-    
-    let Table = new SQL_builder().CreateTable("S_Commands").TableFilds(filds).Get();
-
-     await SQL_query(Table);
+    let id = {"P_Name":req.params.P_Name};
+    let plugin = await Plugin.EDIT(id);
+    if (plugin == null) {
+        res.status(404).send("This plugin is not existing");
+        return;
+      }
+      req.plugin = plugin;
+      req.body = JSON.parse(JSON.stringify(req.body))[0];
+      next();
+})
+router.get('/', async (req, res) => {
+ 
+    let where = {"PluginID":String(req.plugin._id)}
+      
+    await Command.GET(where,res);
+});
+router.get('/:C_Name', async (req, res) => {
   
-}
-
-
+    let where = { "PluginID":req.plugin._id,"C_Name":req.params.C_Name};
+    await Command.GET(where,res);
+});
+router.put('/', async (req, res) => {
+  
+    let data = req.body;
+    data.PluginID = String(req.plugin._id);
+    let list = {data};
+  await Command.INSERT(list,res);
+});
+router.delete('/', async (req, res) => {
+  
+    let where = { "PluginID":req.plugin._id}
+    await Command.DELETE(where,res);
+});
+router.delete('/:C_Name', async (req, res) => {
+  
+    let where = { "PluginID":req.plugin._id,"C_Name":req.params.C_Name};
+    await Command.DELETE(where,res);
+});
 module.exports = router;
-

@@ -25,7 +25,7 @@ router.use('/:P_Name/commands', commands);
 */
 const login = require('../Plugins/Login/R_login');
 
-const command = require('./R_Command2');
+const command = require('./R_Command');
 
 const express = require("express");
 

@@ -1,8 +1,9 @@
 var mongoose = require("mongoose");
-var Model = require("../models/Premission");
+var Model = require("../models/PremCmds");
 
-function Conditions(data) { return { 'P_Name': data.P_Name } };
-function SetData(data) { return {'P_Access':data.P_Access  } }
+
+function Conditions(data) { return {  'PlayerID':data.PlayerID,'PremissionID': data.PremissionID,'CommandID':data.CommandID } };
+function SetData(data) { return {'P_Prefix':data.P_Prefix,'P_AddByPlayer':data.P_AddByPlayer,'P_AddDate':data.P_AddDate} }
 var Controller = {};
 
 //GET===================================================================================

@@ -5,10 +5,18 @@ const router = express.Router({ mergeParams: true });
 
 const  Premmission = require('../controlers/C_Premission');
 
+const Commands = require('../roudes/R_PremCmds');
+
+const Players = require('../roudes/R_Member');
+
+router.use('/:P_Name/commands',Commands);
+
+router.use('/:P_Name/players',Players);
+
 router.get('/delete', async (req, res) => {
     await Premmission.DELETE(req.params, res);
 });
-router.get('/delete', async (req, res) => {
+router.get('/', async (req, res) => {
     await Premmission.GET(req.params, res);
 });
 router.put('/', async (req, res) => {

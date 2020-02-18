@@ -5,18 +5,18 @@ const router = express.Router({ mergeParams: true });
 
 const  Member = require('../controlers/C_Member');
 
-
+const Premission = require('../controlers/C_Premission');
 
 
 
 router.all('/',async(req,res,next) =>
 {
-    let plugin = await Plugin.EDIT(req.params);
-    if (plugin == null) {
+    let data = await Premission.EDIT(req.params);
+    if (data == null) {
         res.status(404).send("This premission is not existing");
         return;
       }
-      req.plugin = plugin;
+      req.data = data;
       req.body = JSON.parse(JSON.stringify(req.body))[0];
       next();
 })
@@ -24,29 +24,46 @@ router.all('/',async(req,res,next) =>
 router.all('/:PlayerID',async(req,res,next) =>
 {
     let id = {"P_Name":req.params.P_Name};
-    let plugin = await Plugin.EDIT(id);
-    if (plugin == null) {
+    let data = await Premission.EDIT(id);
+    if (data == null) {
         res.status(404).send("This premission is not existing");
         return;
       }
-      req.plugin = plugin;
+      req.data = data;
       req.body = JSON.parse(JSON.stringify(req.body))[0];
       next();
 })
 
-router.get('/delete', async (req, res) => {
-    await Member.DELETE(req.params, res);
-});
+
 router.get('/', async (req, res) => {
-    await Member.GET(req.params, res);
+    let where = {"PremissionID":String(req.data._id)}
+    await Member.GET(where, res);
 });
-router.put('/', async (req, res) => {
+router.get('/:PlayerID', async (req, res) => {
+    let where = {"PremissionID":String(req.data._id),"PlayerID":req.params.PlayerID}
+    await Member.GET(where, res);
+});
+
+router.put('/:PlayerID', async (req, res) => {
     let data = JSON.parse(JSON.stringify(req.body));
-    await Member.INSERT(data, res);
+    let member = {"PremissionID":String(req.data._id),"PlayerID":req.params.PlayerID,"P_Prefix":req.data.P_Name,"P_AddByPlayer":data.P_AddByPlayer};
+   
+    await Member.INSERT({member}, res);
 });
+router.post('/:PlayerID', async (req, res) => {
+    let data = JSON.parse(JSON.stringify(req.body));
+    let member = {"PremissionID":String(req.data._id),"PlayerID":req.params.PlayerID,"P_Prefix":data.P_Prefix};
+    
+    await Member.UPDATE({member}, res);
+});
+
 router.delete('/:PluginID', async (req, res) => {
-    let data = JSON.parse(JSON.stringify(req.body));
-    await Member.DELETE(data, res);
+    let where = {"PremissionID":String(req.data._id),"PlayerID":req.params.PlayerID}
+    await Member.DELETE(where, res);
+});
+router.get('/delete', async (req, res) => {
+    let where = {"PremissionID":String(req.data._id)}
+    await Member.DELETE(where, res);
 });
 module.exports = router;
 

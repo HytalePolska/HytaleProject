@@ -1,8 +1,8 @@
 var mongoose = require("mongoose");
-var Model = require("../models/PremCmds");
+var Model = require("../models/Members");
 
 
-function Conditions(data) { return {  'PlayerID':data.PlayerID,'PremissionID': data.PremissionID,'CommandID':data.CommandID } };
+function Conditions(data) { return {  'PlayerID':data.PlayerID,'PremissionID': data.PremissionID} };
 function SetData(data) { return {'P_Prefix':data.P_Prefix,'P_AddByPlayer':data.P_AddByPlayer,'P_AddDate':data.P_AddDate} }
 var Controller = {};
 
@@ -91,7 +91,7 @@ Controller.UPDATE = async (Json, res) => {
     let error = false;
     for (let data in Json) {
         result += await new Promise(function (resolve, reject) {
-            Model.findOneAndUpdate(Conditions(Json[data]), SetData(Json[data]), { upsert: true }, function (err, model) {
+            Model.findOneAndUpdate(Conditions(Json[data]), SetData(Json[data]), { upsert: true,new: true }, function (err, model) {
                 if (err) {
                     console.log("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
                     error = true;

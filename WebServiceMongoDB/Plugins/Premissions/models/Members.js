@@ -5,6 +5,6 @@ var Schema = new mongoose.Schema({
     PremissionID:String,
     P_Prefix:String,
     P_AddByPlayer:String,
-    P_AddDate:Date
+    P_AddDate :{ type: Date, default: Date.now }
 });
 module.exports = mongoose.model('Members', Schema);

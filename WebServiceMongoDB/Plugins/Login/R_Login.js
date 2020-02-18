@@ -2,6 +2,12 @@ var express = require('express');
 var router = express.Router();
 var user = require("../../Controlers/C_User");
 const Config = require("./config");
+const plugin = require("../../Controlers/C_Plugin");
+
+
+let plug = { "P_Name":"login","P_Description":"Basic plugin helps players to create accounts"};
+let list = {plug}
+plugin.INSERT(list);
 
 
 //login out a  player 

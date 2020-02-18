@@ -1,13 +1,8 @@
 var mongoose = require("mongoose");
-var Model = require("../Models/Plugins");
+var Model = require("../models/Premission");
 
-function Conditions(data) { return { 'P_Name': data.P_Name } };
-function SetData(data) {
-    return {
-        'P_Description': data.P_Description,
-        'P_LastComandsUpdate': data.P_LastComandsUpdate
-    }
-}
+function Conditions(data) { return { 'P_Name': data.P_Name , 'P_Access':data.P_Access } };
+function SetData(data) { return {'P_Access':data.P_Access  } }
 var Controller = {};
 
 //GET===================================================================================
@@ -25,7 +20,7 @@ Controller.GET = async (Json, res) => {
     }
     else {
 
-        Model.findOne(Json).exec(function (err, models) {
+        Model.find(Json).exec(function (err, models) {
             if (err)
                 console.log("ERROR INSERT " + Model.collection.name + JSON.stringify(Json) + err);
             if (models === null)
@@ -67,14 +62,10 @@ Controller.INSERT = async (Json, res) => {
         }).then((value) => { return value; });
 
     }
-    if(typeof res != 'undefined')
-    {
-        if (error)
+    if (error)
         res.status(400).send("INSERT " + Model.collection.name + FinalMsg);
-       else
+    else
         res.status(200).send("INSERT " + Model.collection.name);
-    }
-  
 };
 //EDIT===================================================================================
 Controller.EDIT = async (Where, Json) => {
@@ -151,6 +142,7 @@ Controller.DELETE = async (Json, res) => {
             res.status(200).send("DELETE " + Model.collection.name);
     }
 };
+
 
 
 

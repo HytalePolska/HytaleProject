@@ -22,25 +22,34 @@ router.use('/kwadratowa', kwadratowa);
 router.use('/premissions', premissions);
 router.use('/fields', fields);
 router.use('/:P_Name/commands', commands);
+
+
 */
-const login = require('../Plugins/Login/R_login');
-
-const command = require('./R_Command');
-
 const express = require("express");
 
 const router = express.Router({ mergeParams: true });
 
 const CPlugin = require('../Controlers/C_Plugin');
 
+const login = require('../Plugins/Login/R_login');
+
+const command = require('./R_Command');
+
+const premmission = require('../Plugins/Premissions/roudes/R_Premission');
+
+
 router.use('/login', login);
+
+router.use('/premission', premmission);
 
 router.use('/:P_Name/',command);
 
 router.get('/delete', async (req, res) => {
     await CPlugin.DELETE(req.params, res);
 });
-
+router.get('/', async (req, res) => {
+    await CPlugin.GET(req.params, res);
+});
 router.put('/', async (req, res) => {
     let data = JSON.parse(JSON.stringify(req.body));
     await CPlugin.INSERT(data, res);

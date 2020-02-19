@@ -9,9 +9,23 @@ const Commands = require('../roudes/R_PremCmds');
 
 const Players = require('../roudes/R_Member');
 
-router.use('/:P_Name/commands',Commands);
+const Cmds = require('../controlers/C_PremCmds');
+
+const Player = require('../controlers/C_Member');
+
+router.get('/cmds', async (req, res) => {
+    await Cmds.GET(req.params, res);
+});
+router.get('/players', async (req, res) => {
+    await Player.GET(req.params, res);
+});
+
+router.use('/:P_Name/cmds',Commands);
 
 router.use('/:P_Name/players',Players);
+
+
+
 
 router.get('/delete', async (req, res) => {
     await Premmission.DELETE(req.params, res);
@@ -28,7 +42,7 @@ router.post('/', async (req, res) => {
     await Premmission.UPDATE(data, res);
 
 });
-router.delete('/:PluginID', async (req, res) => {
+router.delete('/:P_Name', async (req, res) => {
     let data = JSON.parse(JSON.stringify(req.body));
     await Premmission.DELETE(data, res);
 });

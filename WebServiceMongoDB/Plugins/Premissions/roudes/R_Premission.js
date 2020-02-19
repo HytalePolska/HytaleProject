@@ -9,6 +9,17 @@ const Commands = require('../roudes/R_PremCmds');
 
 const Players = require('../roudes/R_Member');
 
+const Cmds = require('../controlers/C_PremCmds');
+
+const Player = require('../controlers/C_Member');
+
+router.get('/cmds', async (req, res) => {
+    await Cmds.GET(req.params, res);
+});
+router.get('/players', async (req, res) => {
+    await Player.GET(req.params, res);
+});
+
 router.use('/:P_Name/cmds',Commands);
 
 router.use('/:P_Name/players',Players);

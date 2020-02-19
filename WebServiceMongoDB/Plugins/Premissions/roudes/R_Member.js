@@ -39,6 +39,7 @@ router.get('/', async (req, res) => {
     let where = {"PremissionID":String(req.data._id)}
     await Member.GET(where, res);
 });
+
 router.get('/:PlayerID', async (req, res) => {
     let where = {"PremissionID":String(req.data._id),"PlayerID":req.params.PlayerID}
     await Member.GET(where, res);

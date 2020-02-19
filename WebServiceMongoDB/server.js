@@ -15,7 +15,9 @@ app.use('/players', users);
 app.use('/plugins', plugins);
 
 
-
+app.get('/', async (req, res) => {
+  res.status(200).send("Hello World");
+});
 const PORT = process.env.PORT | '5000';
 app.listen(PORT, () => {
   console.log("Server is running on port:" + PORT);

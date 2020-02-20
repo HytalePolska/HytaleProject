@@ -3,69 +3,58 @@ const express = require("express");
 
 const router = express.Router({ mergeParams: true });
 
-const  Cmds = require('../controlers/C_Death');
+const Life =  require("../controlers/C_Life");
 
-const Commands = require('../../../Controlers/C_Command');
+const Player = require("../../../Controlers/C_User");
 
-const Premission = require('../controlers/C_PlayerData');
-
-router.all('/',async(req,res,next) =>
-{
-    let data = await Premission.EDIT(req.params);
-    if (data == null) {
-        res.status(404).send("This premission is not existing");
-        return;
-      }
-      req.data = data;
-      req.body = JSON.parse(JSON.stringify(req.body))[0];
-      next();
-})
-
-router.all('/:C_Name',async(req,res,next) =>
-{
-    let id = {"P_Name":req.params.P_Name};
+router.get('/', async (req, res, next) => {
     
-    let data = await Premission.EDIT(id);
+    await Life.GET({},res);
+});
+router.get('/:PlayerID', async (req, res, next) => {
     
-    if (data == null) {
-        res.status(404).send("This premission is not existing");
-        return;
-      }
+     await Life.GET(req.params,res);
+});
+router.put('/:PlayerID', async (req, res, next) => {
 
-      let Cmd_id = {"C_Name":req.params.C_Name};
+    let reqbody = JSON.parse(JSON.stringify(req.body))[0];
       
-      let Cmd_data = await Commands.EDIT(Cmd_id);
-      if (Cmd_data == null) {
-          res.status(404).send("This command is not existing");
-          return;
-        } 
-
-      req.data = data;
-      req.data2 = Cmd_data;
-      req.body = JSON.parse(JSON.stringify(req.body))[0];
-      next();
-})
-router.get('/', async (req, res) => {
-    await Cmds.GET(req.params, res);
+    let body = [];
+        body["PlayerID"] = req.params.PlayerID;
+        body["C_date"] =new Date().toISOString().slice(0, 19).replace('T', ' ');
+        body["C_Cause"] = reqbody.L_healer;
+        body["C_Location"] = reqbody.L_Location;
+      
+       let player = await Player.Edit(body["PlayerID"]);
+    
+    if(typeof player== "undefined")
+    {
+        res.status(404).send("This player is not existing"); //nie mozna odlaesc gracza
+        return;
+    }
+    if(player.PD_lifes+1 > config.MaxHealths)
+    {
+        res.status(405).send("Player has life limit") //przekracza maxymalna liczbe zyc
+        return;
+    }
+    if(player.PD_lifes ==0)
+    {
+        player.PD_IsDeath =0;
+        player.PD_UnbanDate =  body["L_date"];
+    }
+    player.PD_lifes +=1;
+    player.PD_life +=1;
+   
+    player.save((err) => {
+        if (err) { res.status(500).send(err); return; }
+        else
+            await Life.PUT(body,res);
+    });
+  
 });
-router.get('/:C_Name', async (req, res) => {
-    let where = {"PremissionID":String(req.data._id),"C_Name":req.params.C_Name}
-    await Cmds.GET(where, res);
-});
-router.put('/:C_Name', async (req, res) => {
-      let data_to_insert = {
-        CommandID: req.data2._id,
-        PremissionID:req.data._id,
-        C_Name: req.data2.C_Name,
-        P_Name:req.data.P_Name
+router.delete('/:PlayerID', async (req, res, next) => {
 
-      }
-    await Cmds.INSERT({data_to_insert}, res);
-});
-router.delete('/:C_Name', async (req, res) => {
-    let where = {"PremissionID":String(req.data._id),"C_Name":req.params.C_Name}
-    await Cmds.DELETE(where, res);    
-
+    await Death.DELETE(req.params,res);
 });
 module.exports = router;
 

@@ -3,68 +3,54 @@ const express = require("express");
 
 const router = express.Router({ mergeParams: true });
 
-const  Member = require('../controlers/C_Life');
+const Death = require("../controlers/C_Death");
 
-const Premission = require('../controlers/C_PlayerData');
+const PlayerData = require("../controlers/C_PlayerData");
 
-
-
-router.all('/',async(req,res,next) =>
-{
-    let data = await Premission.EDIT(req.params);
-    if (data == null) {
-        res.status(404).send("This premission is not existing");
-        return;
-      }
-      req.data = data;
-      req.body = JSON.parse(JSON.stringify(req.body))[0];
-      next();
-})
-
-router.all('/:PlayerID',async(req,res,next) =>
-{
-    let id = {"P_Name":req.params.P_Name};
-    let data = await Premission.EDIT(id);
-    if (data == null) {
-        res.status(404).send("This premission is not existing");
-        return;
-      }
-      req.data = data;
-      req.body = JSON.parse(JSON.stringify(req.body))[0];
-      next();
-})
-
-
-router.get('/', async (req, res) => {
-    let where = {"PremissionID":String(req.data._id)}
-    await Member.GET(where, res);
+router.get('/:PlayerID', async (req, res, next) => {
+  await Death.GET(req.params,res);
 });
 
-router.get('/:PlayerID', async (req, res) => {
-    let where = {"PremissionID":String(req.data._id),"PlayerID":req.params.PlayerID}
-    await Member.GET(where, res);
+router.get('/', async (req, res, next) => {
+  await Death.GET(req.params,res);
 });
 
-router.put('/:PlayerID', async (req, res) => {
-    let data = JSON.parse(JSON.stringify(req.body));
-    let member = {"PremissionID":String(req.data._id),"PlayerID":req.params.PlayerID,"P_Prefix":req.data.P_Name,"P_AddByPlayer":data.P_AddByPlayer};
+router.put('/:PlayerID', async (req, res, next) => {
+let reqbody = JSON.parse(JSON.stringify(req.body))[0];
    
-    await Member.INSERT({member}, res);
-});
-router.post('/:PlayerID', async (req, res) => {
-    let data = JSON.parse(JSON.stringify(req.body));
-    let member = {"PremissionID":String(req.data._id),"PlayerID":req.params.PlayerID,"P_Prefix":data.P_Prefix};
-    
-    await Member.UPDATE({member}, res);
+let body = [];
+  body["PlayerID"] = req.params.PlayerID;
+  body["D_date"] =new Date().toISOString().slice(0, 19).replace('T', ' ');
+  body["D_cause"] = reqbody.D_cause;
+  body["D_Location"] = reqbody.D_Location;
+
+ let playerdata = await PlayerData.EDIT(req.params);
+
+ if(typeof playerdata == "undefined")
+ {
+     res.send("404");
+     return;
+ }
+ playerdata.PD_Deaths +=1;
+ playerdata.PD_life -=1;
+  if(playerdata.PD_life <= 0)
+  {
+      playerdata.PD_life=0;
+      playerdata.PD_IsDeath = 1;
+      playerdata.PD_UnbanDate = body.D_date;
+  }
+
+ 
+ PlayerData.save((err) => {
+  if (err) { res.status(500).send(err); return; }
+  else
+  await Death.PUT(body,res);
 });
 
-router.delete('/:PluginID', async (req, res) => {
-    let where = {"PremissionID":String(req.data._id),"PlayerID":req.params.PlayerID}
-    await Member.DELETE(where, res);
 });
-router.get('/delete', async (req, res) => {
-    let where = {"PremissionID":String(req.data._id)}
-    await Member.DELETE(where, res);
+
+router.delete('/:PlayerID', async (req, res, next) => {
+ await Death.DELETE(req.params,res);
 });
 module.exports = router;
 

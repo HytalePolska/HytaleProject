@@ -3,9 +3,9 @@ const express = require("express");
 
 const router = express.Router({ mergeParams: true });
 
-const  Member = require('../controlers/C_Member');
+const  Member = require('../controlers/C_Life');
 
-const Premission = require('../controlers/C_Premission');
+const Premission = require('../controlers/C_PlayerData');
 
 
 

@@ -3,11 +3,11 @@ const express = require("express");
 
 const router = express.Router({ mergeParams: true });
 
-const  Cmds = require('../controlers/C_PremCmds');
+const  Cmds = require('../controlers/C_Death');
 
 const Commands = require('../../../Controlers/C_Command');
 
-const Premission = require('../controlers/C_Premission');
+const Premission = require('../controlers/C_PlayerData');
 
 router.all('/',async(req,res,next) =>
 {

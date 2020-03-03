@@ -1,8 +1,8 @@
 var mongoose = require("mongoose");
 var Model = require("../models/PremCmds");
 
-function Conditions(data) { return { 'PremissionID': data.PremissionID,'CommandID':data.CommandID } };
-function SetData(data) { return { } }
+function Conditions(data) { return { 'PremissionID': data.PremissionID, 'CommandID': data.CommandID } };
+function SetData(data) { return {} }
 var Controller = {};
 
 //GET===================================================================================
@@ -123,7 +123,6 @@ Controller.DELETE = async (Json, res) => {
         let FinalMsg = "";
         let error = false;
 
-
         FinalMsg += await new Promise(function (resolve, reject) {
             Model.deleteOne(Json, function (err) {
                 if (err) {
@@ -136,9 +135,9 @@ Controller.DELETE = async (Json, res) => {
             });
         }).then((value) => { return value });
 
-        if (error)
+        if (error && typeof res != 'undefined')
             res.status(400).send("DELETE " + Model.collection.name + " \n" + FinalMsg);
-        else
+        else if (typeof res != 'undefined')
             res.status(200).send("DELETE " + Model.collection.name);
     }
 };

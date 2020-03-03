@@ -3,7 +3,7 @@ const express = require("express");
 
 const router = express.Router({ mergeParams: true });
 
-const  Premmission = require('../controlers/C_Premission');
+const Premmission = require('../controlers/C_Premission');
 
 const Commands = require('../roudes/R_PremCmds');
 
@@ -19,10 +19,14 @@ router.get('/cmds', async (req, res) => {
 router.get('/players', async (req, res) => {
     await Player.GET(req.params, res);
 });
+router.get('/players/:PlayerID', async (req, res) => {
 
-router.use('/:P_Name/cmds',Commands);
+    let player = await Player.EDIT(req.params);
+    console.log(player);
+});
+router.use('/:P_Name/cmds', Commands);
 
-router.use('/:P_Name/players',Players);
+router.use('/:P_Name/players', Players);
 
 
 
@@ -42,9 +46,27 @@ router.post('/', async (req, res) => {
     await Premmission.UPDATE(data, res);
 
 });
-router.delete('/:P_Name', async (req, res) => {
-    let data = JSON.parse(JSON.stringify(req.body));
-    await Premmission.DELETE(data, res);
+router.delete('/', async (req, res) => {
+    let data = JSON.parse(JSON.stringify(req.body))[0];
+
+    let rang = await Premmission.EDIT(data);
+
+
+    if (rang != null) {
+        if (rang.P_Access > 0) {
+            res.status(402).send("You have no premission to delete this rang");
+            return;
+        }
+
+        let rangID = { PremissionID: rang._id }
+        await Cmds.DELETE(rangID);
+        await Player.DELETE(rangID);
+        await Premmission.DELETE(data, res);
+    }
+
+    else {
+        res.status(400).send("Rang has been deleted")
+    }
 });
 module.exports = router;
 

@@ -2,8 +2,8 @@ var mongoose = require("mongoose");
 var Model = require("../models/Members");
 
 
-function Conditions(data) { return {  'PlayerID':data.PlayerID,'PremissionID': data.PremissionID} };
-function SetData(data) { return {'P_Prefix':data.P_Prefix,'P_AddByPlayer':data.P_AddByPlayer,'P_AddDate':data.P_AddDate} }
+function Conditions(data) { return { 'PlayerID': data.PlayerID, 'PremissionID': data.PremissionID } };
+function SetData(data) { return { 'P_Prefix': data.P_Prefix, 'P_AddByPlayer': data.P_AddByPlayer, 'P_AddDate': data.P_AddDate } }
 var Controller = {};
 
 //GET===================================================================================
@@ -91,7 +91,7 @@ Controller.UPDATE = async (Json, res) => {
     let error = false;
     for (let data in Json) {
         result += await new Promise(function (resolve, reject) {
-            Model.findOneAndUpdate(Conditions(Json[data]), SetData(Json[data]), { upsert: true,new: true }, function (err, model) {
+            Model.findOneAndUpdate(Conditions(Json[data]), SetData(Json[data]), { upsert: true, new: true }, function (err, model) {
                 if (err) {
                     console.log("ERROR UPDATE " + Model.collection.name + JSON.stringify(Json[data]) + err);
                     error = true;
@@ -137,9 +137,9 @@ Controller.DELETE = async (Json, res) => {
             });
         }).then((value) => { return value });
 
-        if (error)
+        if (error && typeof res != 'undefined')
             res.status(400).send("DELETE " + Model.collection.name + " \n" + FinalMsg);
-        else
+        else if (typeof res != 'undefined')
             res.status(200).send("DELETE " + Model.collection.name);
     }
 };
